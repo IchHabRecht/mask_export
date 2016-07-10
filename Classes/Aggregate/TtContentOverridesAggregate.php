@@ -151,6 +151,35 @@ EOS
 tt_content.mask_{$key} = FLUIDTEMPLATE
 tt_content.mask_{$key} {
     file = {$templatesPath}/{$key}.html
+
+EOS
+        );
+
+        foreach ($element['columns'] as $columnName) {
+            if (empty($GLOBALS['TCA']['tt_content']['columns'][$columnName]['config']['foreign_table'])
+                || 'sys_file_reference' !== $GLOBALS['TCA']['tt_content']['columns'][$columnName]['config']['foreign_table']
+            ) {
+                continue;
+            }
+            $this->appendPlainTextFile(
+                $this->typoScriptFilePath . 'setup.ts',
+<<<EOS
+    dataProcessing {
+        10 = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor
+        10 {
+            references {
+                fieldName = {$columnName}
+            }
+        }
+    }
+
+EOS
+            );
+        }
+
+        $this->appendPlainTextFile(
+            $this->typoScriptFilePath . 'setup.ts',
+<<<EOS
 }
 
 EOS
