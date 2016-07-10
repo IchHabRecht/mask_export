@@ -1,5 +1,5 @@
 <?php
-namespace CPSIT\MaskExport\Controller;
+namespace CPSIT\MaskExport\FileCollection;
 
 /***************************************************************
  *  Copyright notice
@@ -25,60 +25,58 @@ namespace CPSIT\MaskExport\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use CPSIT\MaskExport\Aggregate\AggregateCollection;
-use CPSIT\MaskExport\Aggregate\ExtensionConfigurationAggregate;
-use CPSIT\MaskExport\FileCollection\FileCollection;
-use CPSIT\MaskExport\FileCollection\PhpFileCollection;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 /**
  * @package mask
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class ExportController extends ActionController
+class FileCollection
 {
     /**
      * @var array
      */
-    protected $aggregateClassNames = [
-        ExtensionConfigurationAggregate::class,
-    ];
+    private $aggregateCollection;
 
     /**
      * @var array
      */
-    protected $fileCollectionClassNames = [
-        PhpFileCollection::class,
-    ];
+    private $fileCollectionClassNames;
 
     /**
-     * StorageRepository
-     *
-     * @var \MASK\Mask\Domain\Repository\StorageRepository
-     * @inject
+     * @var array
      */
-    protected $storageRepository;
+    protected $files;
 
-    /**
-     * action list
-     */
-    public function listAction()
+    public function __construct(array $fileCollectionClassNames, array $aggregateCollection)
     {
-        $maskConfiguration = $this->storageRepository->load();
+        $this->fileCollectionClassNames = $fileCollectionClassNames;
+        $this->aggregateCollection = $aggregateCollection;
+    }
 
-        $aggregateCollection = GeneralUtility::makeInstance(
-            AggregateCollection::class,
-            $this->aggregateClassNames,
-            $maskConfiguration
-        )->getCollection();
+    /**
+     * @return array
+     */
+    public function getFiles()
+    {
+        if (null === $this->files) {
+            $this->initializeFiles();
+        }
 
-        $files = GeneralUtility::makeInstance(
-            FileCollection::class,
-            $this->fileCollectionClassNames,
-            $aggregateCollection
-        )->getFiles();
+        return $this->files;
+    }
 
-        $this->view->assign('files', $files);
+    /**
+     * Initializes aggregate objects
+     */
+    protected function initializeFiles()
+    {
+        $this->files = [];
+        foreach ($this->fileCollectionClassNames as $className) {
+            if (class_exists($className)) {
+                $fileCollection = GeneralUtility::makeInstance($className, $this->aggregateCollection);
+                $this->files = array_merge($this->files, $fileCollection->getFiles());
+            }
+        }
     }
 }
