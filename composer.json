@@ -1,0 +1,33 @@
+{
+    "name": "cpsit/mask-export",
+    "type": "typo3-cms-extension",
+    "description": "Export your mask elements as extension",
+    "homepage": "https://github.com/CPS-IT/mask_export",
+    "keywords": [
+        "TYPO3 CMS",
+        "Mask",
+        "Export",
+        "Contentelements",
+        "Wizard"
+    ],
+    "authors": [
+        {
+            "name": "Nicole Cordes | CPS-IT GmbH",
+            "email": "cordes@cps-it.de",
+            "role": "Developer",
+            "homepage": "http://cps-it.de"
+        }
+    ],
+    "license": [
+        "GPL-2.0+"
+    ],
+    "version": "2.1.0",
+    "require": {
+        "typo3/cms-core": ">=7.6.0 <8.99.99"
+    },
+    "autoload": {
+        "psr-4": {
+            "CPSIT\\MaskExport\\": "Classes/"
+        }
+    }
+}
