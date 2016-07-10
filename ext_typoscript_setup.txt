@@ -1,0 +1,6 @@
+module.tx_mask {
+    view {
+        partialRootPaths.10 = EXT:mask_export/Resources/Private/Backend/Partials/
+        templateRootPaths.10 = EXT:mask_export/Resources/Private/Backend/Templates/
+    }
+}

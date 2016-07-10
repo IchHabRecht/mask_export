@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2016-07-10T19:42:00Z" product-name="mask_export">
+		<header/>
+		<body>
+			<trans-unit id="tx_mask.all.export">
+				<source>Code Export</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
