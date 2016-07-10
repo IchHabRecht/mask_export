@@ -1,3 +1,13 @@
+config {
+    tx_extbase {
+        objects {
+            MASK\Mask\Controller\ExportController {
+                className = CPSIT\MaskExport\Controller\ExportController
+            }
+        }
+    }
+}
+
 module.tx_mask {
     view {
         partialRootPaths.10 = EXT:mask_export/Resources/Private/Backend/Partials/

@@ -1,0 +1,20 @@
+<f:layout name="Default" />
+
+<f:section name="content">
+    <f:render partial="General/Tabs" arguments="{active: 'Preview'}" />
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="DTM-mask-1">
+            <div class="form-section">
+                <f:for each="{files}" as="fileContent" key="fileName">
+                    <div class="panel panel-space panel-default">
+                        <div class="panel-heading"><strong>{fileName}</strong></div>
+                        <div data-state="expanded" id="recordlist-be_users" class="table-fit collapse in">
+                            <pre><code>{fileContent}</code></pre>
+                        </div>
+                    </div>
+                </f:for>
+            </div>
+        </div>
+    </div>
+</f:section>
