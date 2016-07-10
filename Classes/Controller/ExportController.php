@@ -27,8 +27,12 @@ namespace CPSIT\MaskExport\Controller;
 
 use CPSIT\MaskExport\Aggregate\AggregateCollection;
 use CPSIT\MaskExport\Aggregate\ExtensionConfigurationAggregate;
+use CPSIT\MaskExport\Aggregate\TtContentOverridesAggregate;
 use CPSIT\MaskExport\FileCollection\FileCollection;
+use CPSIT\MaskExport\FileCollection\LanguageFileCollection;
 use CPSIT\MaskExport\FileCollection\PhpFileCollection;
+use CPSIT\MaskExport\FileCollection\PlainTextFileCollection;
+use CPSIT\MaskExport\FileCollection\SqlFileCollection;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
@@ -43,13 +47,17 @@ class ExportController extends ActionController
      */
     protected $aggregateClassNames = [
         ExtensionConfigurationAggregate::class,
+        TtContentOverridesAggregate::class,
     ];
 
     /**
      * @var array
      */
     protected $fileCollectionClassNames = [
+        LanguageFileCollection::class,
+        PlainTextFileCollection::class,
         PhpFileCollection::class,
+        SqlFileCollection::class,
     ];
 
     /**
