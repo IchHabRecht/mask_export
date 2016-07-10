@@ -27,6 +27,7 @@ namespace CPSIT\MaskExport\Controller;
 
 use CPSIT\MaskExport\Aggregate\AggregateCollection;
 use CPSIT\MaskExport\Aggregate\ExtensionConfigurationAggregate;
+use CPSIT\MaskExport\Aggregate\NewContentElementWizardAggregate;
 use CPSIT\MaskExport\Aggregate\TtContentOverridesAggregate;
 use CPSIT\MaskExport\FileCollection\FileCollection;
 use CPSIT\MaskExport\FileCollection\LanguageFileCollection;
@@ -48,6 +49,7 @@ class ExportController extends ActionController
     protected $aggregateClassNames = [
         ExtensionConfigurationAggregate::class,
         TtContentOverridesAggregate::class,
+        NewContentElementWizardAggregate::class,
     ];
 
     /**
