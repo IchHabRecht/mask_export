@@ -87,6 +87,27 @@ class ExportController extends ActionController
             $aggregateCollection
         )->getFiles();
 
+        $files = $this->sortFiles($files);
+
         $this->view->assign('files', $files);
+    }
+
+    /**
+     * @param array $files
+     * @return array
+     */
+    protected function sortFiles(array $files)
+    {
+        uksort($files, function ($a, $b) {
+            if (substr_count($a, '/') === substr_count($b, '/')) {
+                return strcasecmp($a, $b);
+            } elseif (strpos($a, '/') === false || substr_count($a, '/') < substr_count($b, '/')) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
+
+        return $files;
     }
 }
