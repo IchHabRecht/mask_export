@@ -25,7 +25,7 @@ namespace CPSIT\MaskExport\Aggregate;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use MASK\Mask\CodeGenerator\HtmlCodeGenerator;
+use CPSIT\MaskExport\CodeGenerator\HtmlCodeGenerator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**

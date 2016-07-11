@@ -155,26 +155,23 @@ tt_content.mask_{$key} {
 EOS
         );
 
+        $index = 10;
+        $dataProcessing = '';
         foreach ($element['columns'] as $columnName) {
             if (empty($GLOBALS['TCA']['tt_content']['columns'][$columnName]['config']['foreign_table'])
-                || 'sys_file_reference' !== $GLOBALS['TCA']['tt_content']['columns'][$columnName]['config']['foreign_table']
             ) {
                 continue;
             }
-            $this->appendPlainTextFile(
-                $this->typoScriptFilePath . 'setup.ts',
-<<<EOS
-    dataProcessing {
-        10 = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor
-        10 {
-            references {
-                fieldName = {$columnName}
-            }
-        }
-    }
 
-EOS
-            );
+            switch ($GLOBALS['TCA']['tt_content']['columns'][$columnName]['config']['foreign_table']) {
+                case 'sys_file_reference':
+                    $dataProcessing .= $this->addFileProcessorForField($columnName, $index);
+                    break;
+            }
+            $index += 10;
+        }
+        if (!empty($dataProcessing)) {
+            $this->appendPlainTextFile($this->typoScriptFilePath . 'setup.ts', $dataProcessing);
         }
 
         $this->appendPlainTextFile(
@@ -184,5 +181,28 @@ EOS
 
 EOS
         );
+    }
+
+    /**
+     * @param string $columnName
+     * @param int $index
+     * @return string
+     */
+    protected function addFileProcessorForField($columnName, $index)
+    {
+        $index = (int)$index;
+        return
+<<<EOS
+    dataProcessing.{$index} = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor
+    dataProcessing.{$index} {
+        if.isTrue.field = {$columnName}
+        references {
+            fieldName = {$columnName}
+            table = tt_content
+        }
+        as = {$columnName}
+    }
+
+EOS;
     }
 }
