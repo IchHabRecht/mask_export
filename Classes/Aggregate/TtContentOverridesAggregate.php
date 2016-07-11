@@ -167,6 +167,9 @@ EOS
                 case 'sys_file_reference':
                     $dataProcessing .= $this->addFileProcessorForField($columnName, $index);
                     break;
+                case 'tt_content':
+                    $dataProcessing .= $this->addDatabaseQueryProcessorForField($columnName, $index);
+                    break;
             }
             $index += 10;
         }
@@ -199,6 +202,38 @@ EOS
         references {
             fieldName = {$columnName}
             table = tt_content
+        }
+        as = {$columnName}
+    }
+
+EOS;
+    }
+
+    /**
+     * @param string $columnName
+     * @param int $index
+     * @return string
+     */
+    protected function addDatabaseQueryProcessorForField($columnName, $index)
+    {
+        $index = (int)$index;
+        $where = '1=1';
+        if (!empty($GLOBALS['TCA']['tt_content']['columns'][$columnName]['config']['foreign_record_defaults'])) {
+            foreach ($GLOBALS['TCA']['tt_content']['columns'][$columnName]['config']['foreign_record_defaults'] as $key => $value) {
+                $where .= ' AND ' . $key . '=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, 'tt_content');
+            }
+        }
+
+        return
+<<<EOS
+    dataProcessing.{$index} = TYPO3\CMS\Frontend\DataProcessing\DatabaseQueryProcessor
+    dataProcessing.{$index} {
+        if.isTrue.field = {$columnName}
+        table = tt_content
+        pidInList.field = pid
+        where = {$columnName}_parent=###uid### AND deleted=0 AND hidden=0 AND {$where}
+        markers {
+            uid.field = uid
         }
         as = {$columnName}
     }
