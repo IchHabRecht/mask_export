@@ -155,24 +155,7 @@ tt_content.mask_{$key} {
 EOS
         );
 
-        $index = 10;
-        $dataProcessing = '';
-        foreach ($element['columns'] as $columnName) {
-            if (empty($GLOBALS['TCA']['tt_content']['columns'][$columnName]['config']['foreign_table'])
-            ) {
-                continue;
-            }
-
-            switch ($GLOBALS['TCA']['tt_content']['columns'][$columnName]['config']['foreign_table']) {
-                case 'sys_file_reference':
-                    $dataProcessing .= $this->addFileProcessorForField($columnName, $index);
-                    break;
-                case 'tt_content':
-                    $dataProcessing .= $this->addDatabaseQueryProcessorForField($columnName, $index);
-                    break;
-            }
-            $index += 10;
-        }
+        $dataProcessing = $this->addDataProcessing('tt_content', $element['columns']);
         if (!empty($dataProcessing)) {
             $this->appendPlainTextFile($this->typoScriptFilePath . 'setup.ts', $dataProcessing);
         }
@@ -187,11 +170,62 @@ EOS
     }
 
     /**
+     * @param string $table
+     * @param array $fields
+     * @return string
+     */
+    protected function addDataProcessing($table, array $fields)
+    {
+        $dataProcessing = '';
+        $index = 10;
+        foreach ($fields as $field) {
+            if (empty($GLOBALS['TCA'][$table]['columns'][$field]['config']['type'])
+                || 'inline' !== $GLOBALS['TCA'][$table]['columns'][$field]['config']['type']
+                || empty($GLOBALS['TCA'][$table]['columns'][$field]['config']['foreign_table'])
+            ) {
+                continue;
+            }
+
+            switch ($GLOBALS['TCA'][$table]['columns'][$field]['config']['foreign_table']) {
+                case 'sys_file_reference':
+                    $dataProcessing .= $this->addFileProcessorForField($table, $field, $index);
+                    break;
+                case 'tt_content':
+                    $dataProcessing .= $this->addDatabaseQueryProcessorForField($table, $field, $index);
+                    break;
+                default:
+                    $dataProcessing .= $this->addDatabaseQueryProcessorForField($table, $field, $index);
+                    $foreignTable = $GLOBALS['TCA'][$table]['columns'][$field]['config']['foreign_table'];
+                    if (!empty($GLOBALS['TCA'][$foreignTable]['columns'])) {
+                        $inlineDataProcession = $this->addDataProcessing(
+                            $GLOBALS['TCA'][$table]['columns'][$field]['config']['foreign_table'],
+                            array_keys($GLOBALS['TCA'][$foreignTable]['columns'])
+                        );
+                        if (!empty($inlineDataProcession)) {
+                            $dataProcessing .=
+<<<EOS
+dataProcessing.{$index} {
+    {$inlineDataProcession}
+}
+
+EOS;
+                        }
+                    }
+                    break;
+            }
+            $index += 10;
+        }
+
+        return $dataProcessing;
+    }
+
+    /**
+     * @param string $table
      * @param string $columnName
      * @param int $index
      * @return string
      */
-    protected function addFileProcessorForField($columnName, $index)
+    protected function addFileProcessorForField($table, $columnName, $index)
     {
         $index = (int)$index;
         return
@@ -201,25 +235,26 @@ EOS
         if.isTrue.field = {$columnName}
         references {
             fieldName = {$columnName}
-            table = tt_content
+            table = {$table}
         }
-        as = {$columnName}
+        as = data_{$columnName}
     }
 
 EOS;
     }
 
     /**
+     * @param string $table
      * @param string $columnName
      * @param int $index
      * @return string
      */
-    protected function addDatabaseQueryProcessorForField($columnName, $index)
+    protected function addDatabaseQueryProcessorForField($table, $columnName, $index)
     {
         $index = (int)$index;
         $where = '1=1';
-        if (!empty($GLOBALS['TCA']['tt_content']['columns'][$columnName]['config']['foreign_record_defaults'])) {
-            foreach ($GLOBALS['TCA']['tt_content']['columns'][$columnName]['config']['foreign_record_defaults'] as $key => $value) {
+        if (!empty($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_record_defaults'])) {
+            foreach ($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_record_defaults'] as $key => $value) {
                 $where .= ' AND ' . $key . '=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, 'tt_content');
             }
         }
@@ -229,13 +264,13 @@ EOS;
     dataProcessing.{$index} = TYPO3\CMS\Frontend\DataProcessing\DatabaseQueryProcessor
     dataProcessing.{$index} {
         if.isTrue.field = {$columnName}
-        table = tt_content
+        table = {$GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_table']}
         pidInList.field = pid
-        where = {$columnName}_parent=###uid### AND deleted=0 AND hidden=0 AND {$where}
+        where = {$GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_field']}=###uid### AND deleted=0 AND hidden=0 AND {$where}
         markers {
             uid.field = uid
         }
-        as = {$columnName}
+        as = data_{$columnName}
     }
 
 EOS;

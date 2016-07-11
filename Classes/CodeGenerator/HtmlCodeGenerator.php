@@ -88,9 +88,9 @@ EOS;
 
             case 'Content':
                 $html .= <<<EOS
-<f:if condition="{{$fieldKey}}">
-    <f:for each="{{$fieldKey}}" as="{$datafield}_item">
-        <f:cObject typoscriptObjectPath="tt_content" data="{data_item.data}" /><br />
+<f:if condition="{{$datafield}_{$fieldKey}}">
+    <f:for each="{{$datafield}_{$fieldKey}}" as="content_item">
+        <f:cObject typoscriptObjectPath="tt_content" data="{content_item.data}" /><br />
     </f:for>
 </f:if>
 
@@ -120,8 +120,8 @@ EOS;
 
             case 'File':
                 $html .= <<<EOS
-<f:if condition="{{$fieldKey}}">
-    <f:for each="{{$fieldKey}}" as="file">
+<f:if condition="{{$datafield}_{$fieldKey}}">
+    <f:for each="{{$datafield}_{$fieldKey}}" as="file">
         <f:image image="{file}" alt="{file.alternative}" title="{file.title}" width="200" /><br />
         {file.description} / {file.identifier}<br />
     </f:for>
@@ -144,15 +144,16 @@ EOS;
             case 'Inline':
                 $inlineFields = $this->storageRepository->loadInlineFields($fieldKey);
                 $inlineFieldsHtml = '';
+                $datafieldInline = strtr($datafield, '.', '_');
                 if (!empty($inlineFields)) {
                     foreach ($inlineFields as $inlineField) {
-                        $inlineFieldsHtml .= $this->generateFieldHtml($inlineField['maskKey'], $elementKey, $fieldKey, $datafield . '_item.data');
+                        $inlineFieldsHtml .= $this->generateFieldHtml($inlineField['maskKey'], $elementKey, $fieldKey, $datafieldInline . '_item.data');
                     }
                 }
                 $html .= <<<EOS
-<f:if condition="{{$fieldKey}}">
+<f:if condition="{{$datafield}_{$fieldKey}}">
     <ul>
-        <f:for each="{{$fieldKey}}" as="{$datafield}_item">
+        <f:for each="{{$datafield}_{$fieldKey}}" as="{$datafieldInline}_item">
             <li>
                 {$inlineFieldsHtml}
             </li>
