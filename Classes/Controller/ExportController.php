@@ -74,8 +74,10 @@ class ExportController extends ActionController
 
     /**
      * action list
+     *
+     * @param string $extensionName
      */
-    public function listAction()
+    public function listAction($extensionName = 'mask_example')
     {
         $maskConfiguration = $this->storageRepository->load();
 
@@ -91,9 +93,58 @@ class ExportController extends ActionController
             $aggregateCollection
         )->getFiles();
 
+        $files = $this->replaceExtensionInformation($extensionName, $files);
         $files = $this->sortFiles($files);
 
-        $this->view->assign('files', $files);
+        $this->view->assignMultiple(
+            [
+                'extensionName' => $extensionName,
+                'files' => $files,
+            ]
+        );
+    }
+
+    /**
+     * @param string $extensionKey
+     * @param array $files
+     * @return array
+     */
+    protected function replaceExtensionInformation($extensionKey, array $files)
+    {
+        $newFiles = [];
+        foreach ($files as $file => $fileContent) {
+            $newFiles[$this->replaceExtensionKey($extensionKey, $file)] = $this->replaceExtensionKey($extensionKey,
+                $fileContent);
+        }
+
+        return $newFiles;
+    }
+
+    /**
+     * @param string $extensionKey
+     * @param string $string
+     * @return string
+     */
+    protected function replaceExtensionKey($extensionKey, $string)
+    {
+        $lowercaseExtensionKey = strtolower(GeneralUtility::underscoredToUpperCamelCase($extensionKey));
+        $string = preg_replace(
+            '/(\s+|\'|,|.)(tx_)?mask_/',
+            '\\1\\2' . $lowercaseExtensionKey . '_',
+            $string
+        );
+        $string = preg_replace(
+            '/EXT:mask/',
+            'EXT:' . $extensionKey,
+            $string
+        );
+        $string = preg_replace(
+            '/(.)mask\\1/',
+            '\\1' . $extensionKey . '\\1',
+            $string
+        );
+
+        return $string;
     }
 
     /**

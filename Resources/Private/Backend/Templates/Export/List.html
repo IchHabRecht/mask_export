@@ -6,6 +6,23 @@
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="DTM-mask-1">
             <div class="form-section">
+                <f:form action="list">
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label for="meta_label" class="t3js-formengine-label">
+                                Extension name
+                            </label>
+                            <div class="t3js-formengine-field-item">
+                                <div class="form-control-wrap">
+                                    <f:form.textfield required="required" value="{extensionName}" name="extensionName" title="Extension Name" id="meta_label" class="form-control" />
+                                </div>
+                                <div class="form-control-wrap">
+                                    <f:form.submit name="submit" value="Save" class="btn btn-success col-sm-4" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </f:form>
                 <f:for each="{files}" as="fileContent" key="fileName">
                     <div class="panel panel-space panel-default">
                         <div class="panel-heading"><strong>{fileName}</strong></div>
