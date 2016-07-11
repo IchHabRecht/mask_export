@@ -54,6 +54,50 @@ trait TcaAwareTrait
     protected $table;
 
     /**
+     * @param array $fieldArray
+     */
+    protected function addFieldsSqlDefinitions(array $fieldArray)
+    {
+        foreach ($fieldArray as $field => $_) {
+            foreach ($this->maskConfiguration as $table => $tableConfiguration) {
+                if ('sys_file_reference' === $table
+                    || empty($tableConfiguration['sql'])
+                    || !array_key_exists($field, $tableConfiguration['sql'])
+                ) {
+                    continue;
+                }
+
+                $table = key($tableConfiguration['sql'][$field]);
+                $definition = $tableConfiguration['sql'][$field][$table][$field];
+                $this->addSqlDefinition(
+                    $table,
+                    $field,
+                    $definition
+                );
+                if (isset($this->maskConfiguration[$table]['tca'][$field]['config']['type'])
+                    && isset($this->maskConfiguration[$table]['tca'][$field]['config']['foreign_table'])
+                    && 'inline' === $this->maskConfiguration[$table]['tca'][$field]['config']['type']
+                    && 'tt_content' === $this->maskConfiguration[$table]['tca'][$field]['config']['foreign_table']
+                ) {
+                    $this->addSqlDefinition(
+                        'tt_content',
+                        $field . '_parent',
+                        $definition
+                    );
+                }
+                if ('pages' === $table) {
+                    $this->addSqlDefinition(
+                        'pages_language_overlay',
+                        $field,
+                        $definition
+                    );
+                }
+                break;
+            }
+        }
+    }
+
+    /**
      * @param array $fields
      * @return array
      */

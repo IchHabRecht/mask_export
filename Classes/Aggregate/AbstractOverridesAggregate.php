@@ -84,7 +84,7 @@ abstract class AbstractOverridesAggregate extends AbstractAggregate implements L
 
         ksort($newTableFields);
         $newTableFields = $this->replaceFieldLabels($newTableFields);
-        $this->addSqlDefinitions($newTableFields);
+        $this->addFieldsSqlDefinitions($newTableFields);
         $tempColumns = var_export($newTableFields, true);
         $this->appendPhpFile(
             $this->tcaOverridesFilePath . $this->table . '.php',
@@ -94,36 +94,6 @@ abstract class AbstractOverridesAggregate extends AbstractAggregate implements L
 
 EOS
         );
-    }
-
-    /**
-     * @param array $fieldArray
-     */
-    protected function addSqlDefinitions(array $fieldArray)
-    {
-        foreach ($fieldArray as $field => $_) {
-            foreach ($this->maskConfiguration as $table => $tableConfiguration) {
-                if (empty($tableConfiguration['sql']) || !array_key_exists($field, $tableConfiguration['sql'])) {
-                    continue;
-                }
-
-                $table = key($tableConfiguration['sql'][$field]);
-                $definition = $tableConfiguration['sql'][$field][$table][$field];
-                $this->addSqlDefinition(
-                    $table,
-                    $field,
-                    $definition
-                );
-                if ('pages' === $table) {
-                    $this->addSqlDefinition(
-                        'pages_language_overlay',
-                        $field,
-                        $definition
-                    );
-                }
-                break;
-            }
-        }
     }
 
     /**
