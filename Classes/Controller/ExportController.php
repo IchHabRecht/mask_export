@@ -79,6 +79,49 @@ class ExportController extends ActionController
      */
     public function listAction($extensionName = 'mask_example')
     {
+        $files = $this->getFiles($extensionName);
+
+        $this->view->assignMultiple(
+            [
+                'extensionName' => $extensionName,
+                'files' => $files,
+            ]
+        );
+    }
+
+    /**
+     * @param string $extensionName
+     */
+    public function downloadAction($extensionName)
+    {
+        $files = $this->getFiles($extensionName);
+
+        $zipFile = tempnam(sys_get_temp_dir(), 'zip');
+
+        $zipArchive = new \ZipArchive();
+        $zipArchive->open($zipFile, \ZipArchive::OVERWRITE);
+
+        foreach ($files as $file => $content) {
+            $zipArchive->addFromString($file, $content);
+        }
+
+        $zipArchive->close();
+
+        header('Content-Type: application/zip');
+        header('Content-Length: ' . filesize($zipFile));
+        header('Content-Disposition: attachment; filename="' . $extensionName . '_0.1.0_'  . date('YmdHi', $GLOBALS['EXEC_TIME']) . '.zip"');
+
+        readfile($zipFile);
+        unlink($zipFile);
+        exit;
+    }
+
+    /**
+     * @param string $extensionName
+     * @return array
+     */
+    protected function getFiles($extensionName)
+    {
         $maskConfiguration = $this->storageRepository->load();
 
         $aggregateCollection = GeneralUtility::makeInstance(
@@ -96,12 +139,7 @@ class ExportController extends ActionController
         $files = $this->replaceExtensionInformation($extensionName, $files);
         $files = $this->sortFiles($files);
 
-        $this->view->assignMultiple(
-            [
-                'extensionName' => $extensionName,
-                'files' => $files,
-            ]
-        );
+        return $files;
     }
 
     /**
