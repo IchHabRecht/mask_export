@@ -25,8 +25,6 @@ namespace CPSIT\MaskExport\Aggregate;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 /**
  * @package mask
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
@@ -52,7 +50,6 @@ class TtContentOverridesAggregate extends AbstractOverridesAggregate
         $tableConfiguration = $GLOBALS['TCA'][$this->table];
         $this->addTableColumns($tableConfiguration);
         $this->addTableTypes($tableConfiguration);
-        $this->addContentElementsRendering();
     }
 
     /**
@@ -104,175 +101,5 @@ EOS
 
 EOS
         );
-    }
-
-    protected function addContentElementsRendering()
-    {
-        if (empty($this->maskConfiguration[$this->table]['elements'])) {
-            return;
-        }
-
-        $this->addPlainTextFile(
-            $this->typoScriptFilePath . 'constants.ts',
-            ''
-        );
-        $this->addPlainTextFile(
-            $this->typoScriptFilePath . 'setup.ts',
-            ''
-        );
-        $this->appendPhpFile(
-            $this->tcaOverridesFilePath . $this->table . '.php',
-<<<EOS
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
-    'mask',
-    '{$this->typoScriptFilePath}',
-    'mask'
-);
-
-EOS
-        );
-
-        foreach ($this->maskConfiguration[$this->table]['elements'] as $element) {
-            $this->addTypoScript($element);
-            $this->addFluidTemplate($element);
-        }
-    }
-
-    /**
-     * @param array $element
-     */
-    protected function addTypoScript(array $element)
-    {
-        $templatesPath = 'EXT:mask/' . $this->templatesFilePath . GeneralUtility::underscoredToUpperCamelCase($this->table);
-        $key = $element['key'];
-        $this->appendPlainTextFile(
-            $this->typoScriptFilePath . 'setup.ts',
-<<<EOS
-tt_content.mask_{$key} = FLUIDTEMPLATE
-tt_content.mask_{$key} {
-    file = {$templatesPath}/{$key}.html
-
-EOS
-        );
-
-        $dataProcessing = $this->addDataProcessing('tt_content', $element['columns']);
-        if (!empty($dataProcessing)) {
-            $this->appendPlainTextFile($this->typoScriptFilePath . 'setup.ts', $dataProcessing);
-        }
-
-        $this->appendPlainTextFile(
-            $this->typoScriptFilePath . 'setup.ts',
-<<<EOS
-}
-
-EOS
-        );
-    }
-
-    /**
-     * @param string $table
-     * @param array $fields
-     * @return string
-     */
-    protected function addDataProcessing($table, array $fields)
-    {
-        $dataProcessing = '';
-        $index = 10;
-        foreach ($fields as $field) {
-            if (empty($GLOBALS['TCA'][$table]['columns'][$field]['config']['type'])
-                || 'inline' !== $GLOBALS['TCA'][$table]['columns'][$field]['config']['type']
-                || empty($GLOBALS['TCA'][$table]['columns'][$field]['config']['foreign_table'])
-            ) {
-                continue;
-            }
-
-            switch ($GLOBALS['TCA'][$table]['columns'][$field]['config']['foreign_table']) {
-                case 'sys_file_reference':
-                    $dataProcessing .= $this->addFileProcessorForField($table, $field, $index);
-                    break;
-                case 'tt_content':
-                    $dataProcessing .= $this->addDatabaseQueryProcessorForField($table, $field, $index);
-                    break;
-                default:
-                    $dataProcessing .= $this->addDatabaseQueryProcessorForField($table, $field, $index);
-                    $foreignTable = $GLOBALS['TCA'][$table]['columns'][$field]['config']['foreign_table'];
-                    if (!empty($GLOBALS['TCA'][$foreignTable]['columns'])) {
-                        $inlineDataProcession = $this->addDataProcessing(
-                            $GLOBALS['TCA'][$table]['columns'][$field]['config']['foreign_table'],
-                            array_keys($GLOBALS['TCA'][$foreignTable]['columns'])
-                        );
-                        if (!empty($inlineDataProcession)) {
-                            $dataProcessing .=
-<<<EOS
-dataProcessing.{$index} {
-    {$inlineDataProcession}
-}
-
-EOS;
-                        }
-                    }
-                    break;
-            }
-            $index += 10;
-        }
-
-        return $dataProcessing;
-    }
-
-    /**
-     * @param string $table
-     * @param string $columnName
-     * @param int $index
-     * @return string
-     */
-    protected function addFileProcessorForField($table, $columnName, $index)
-    {
-        $index = (int)$index;
-        return
-<<<EOS
-    dataProcessing.{$index} = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor
-    dataProcessing.{$index} {
-        if.isTrue.field = {$columnName}
-        references {
-            fieldName = {$columnName}
-            table = {$table}
-        }
-        as = data_{$columnName}
-    }
-
-EOS;
-    }
-
-    /**
-     * @param string $table
-     * @param string $columnName
-     * @param int $index
-     * @return string
-     */
-    protected function addDatabaseQueryProcessorForField($table, $columnName, $index)
-    {
-        $index = (int)$index;
-        $where = '1=1';
-        if (!empty($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_record_defaults'])) {
-            foreach ($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_record_defaults'] as $key => $value) {
-                $where .= ' AND ' . $key . '=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, 'tt_content');
-            }
-        }
-
-        return
-<<<EOS
-    dataProcessing.{$index} = TYPO3\CMS\Frontend\DataProcessing\DatabaseQueryProcessor
-    dataProcessing.{$index} {
-        if.isTrue.field = {$columnName}
-        table = {$GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_table']}
-        pidInList.field = pid
-        where = {$GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_field']}=###uid### AND deleted=0 AND hidden=0 AND {$where}
-        markers {
-            uid.field = uid
-        }
-        as = data_{$columnName}
-    }
-
-EOS;
     }
 }

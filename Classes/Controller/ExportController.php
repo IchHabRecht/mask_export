@@ -26,6 +26,7 @@ namespace CPSIT\MaskExport\Controller;
  ***************************************************************/
 
 use CPSIT\MaskExport\Aggregate\AggregateCollection;
+use CPSIT\MaskExport\Aggregate\ContentRenderingAggregate;
 use CPSIT\MaskExport\Aggregate\ExtensionConfigurationAggregate;
 use CPSIT\MaskExport\Aggregate\NewContentElementWizardAggregate;
 use CPSIT\MaskExport\Aggregate\TcaAggregate;
@@ -51,6 +52,7 @@ class ExportController extends ActionController
         ExtensionConfigurationAggregate::class,
         TcaAggregate::class,
         TtContentOverridesAggregate::class,
+        ContentRenderingAggregate::class,
         NewContentElementWizardAggregate::class,
     ];
 
