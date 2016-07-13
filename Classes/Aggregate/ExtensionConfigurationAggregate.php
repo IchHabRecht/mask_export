@@ -25,24 +25,32 @@ namespace CPSIT\MaskExport\Aggregate;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
 /**
  * @package mask
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAwareInterface
+class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAwareInterface, PlainTextFileAwareInterface
 {
     use PhpAwareTrait;
+    use PlainTextFileAwareTrait;
 
     /**
-     * Adds ext_emconf.php information
+     * Adds typical extension files
      */
     protected function process()
     {
-        $typo3Constraint = sprintf(
-            '%s.0-%s.99',
-            TYPO3_branch,
-            TYPO3_branch
-        );
+        $this->addExtEmconf();
+        $this->addExtIcon();
+    }
+
+    /**
+     * Adds ext_emconf.php file
+     */
+    protected function addExtEmconf()
+    {
+        $typo3Constraint = sprintf('%s.0-%s.99', TYPO3_branch, TYPO3_branch);
         $this->addPhpFile(
             'ext_emconf.php',
 <<<EOS
@@ -65,6 +73,17 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
 );
 
 EOS
+        );
+    }
+
+    /**
+     * Adds ext_icon.png from mask_export extension
+     */
+    protected function addExtIcon()
+    {
+        $this->addPlainTextFile(
+            'ext_icon.png',
+            file_get_contents(ExtensionManagementUtility::extPath('mask_export') . 'ext_icon.png')
         );
     }
 }
