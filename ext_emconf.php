@@ -18,7 +18,7 @@ $EM_CONF[$_EXTKEY] = array (
   'author_email' => 'cordes@cps-it.de',
   'author_company' => 'CPS-IT GmbH',
   'state' => 'beta',
-  'version' => '0.2.0',
+  'version' => '0.3.0-dev',
   'constraints' => 
   array (
     'depends' => 
