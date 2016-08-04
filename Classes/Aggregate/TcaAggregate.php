@@ -62,7 +62,7 @@ class TcaAggregate extends AbstractAggregate implements LanguageAwareInterface, 
             $tableConfiguration = $GLOBALS['TCA'][$table];
 
             $tcaConfiguration = $this->replaceTableLabels($tableConfiguration);
-            $this->addSqlDefinitions($tableConfiguration);
+            $this->addTableSqlDefinitions($tableConfiguration);
             $this->addPhpFile(
                 $this->tcaFilePath . $table . '.php',
                 'return ' . var_export($tcaConfiguration, true) . ';'
@@ -107,11 +107,14 @@ EOS
     /**
      * @param array $tableConfiguration
      */
-    protected function addSqlDefinitions(array $tableConfiguration)
+    protected function addTableSqlDefinitions(array $tableConfiguration)
     {
         $sqlDefinitions = [
             'uid' => 'int(11) NOT NULL auto_increment',
             'pid' => 'int(11) DEFAULT \'0\' NOT NULL',
+            'parentid' => 'int(11) DEFAULT \'0\' NOT NULL',
+            'parenttable' => 'varchar(255) DEFAULT \'\' NOT NULL',
+            'sorting' => 'int(11) unsigned DEFAULT \'0\' NOT NULL',
             't3ver_oid' => 'int(11) unsigned DEFAULT \'0\' NOT NULL',
             't3ver_id' => 'int(11) DEFAULT \'0\' NOT NULL',
             't3ver_wsid' => 'int(11) DEFAULT \'0\' NOT NULL',
@@ -154,29 +157,17 @@ EOS
             $sqlDefinitions[$tableConfiguration['ctrl']['transOrigDiffSourceField']] = 'mediumblob';
         }
 
+        $this->addSqlDefinitions($this->table, $sqlDefinitions);
+
         if (!empty($tableConfiguration['columns'])) {
-            foreach ($tableConfiguration['columns'] as $field => $_) {
-                if (isset($this->maskConfiguration[$this->table]['sql'][$field])) {
-                    $table = key($this->maskConfiguration[$this->table]['sql'][$field]);
-                    $definition = $this->maskConfiguration[$this->table]['sql'][$field][$table][$field];
-                    $sqlDefinitions[$field] = $definition;
-                }
-            }
+            $this->addFieldsSqlDefinitions($tableConfiguration['columns']);
         }
 
-        $sqlDefinitions = array_merge($sqlDefinitions, [
+        $this->addSqlDefinitions($this->table, [
             'PRIMARY KEY' => '(uid)',
             'KEY parent' => '(pid)',
             'KEY t3ver_oid' => '(t3ver_oid,t3ver_wsid)',
             'KEY language' => '(l10n_parent,sys_language_uid)',
         ]);
-
-        foreach ($sqlDefinitions as $field => $definition) {
-            $this->addSqlDefinition(
-                $this->table,
-                $field,
-                $definition
-            );
-        }
     }
 }

@@ -25,8 +25,6 @@ namespace CPSIT\MaskExport\Aggregate;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 /**
  * @package mask
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
@@ -52,7 +50,6 @@ class TtContentOverridesAggregate extends AbstractOverridesAggregate
         $tableConfiguration = $GLOBALS['TCA'][$this->table];
         $this->addTableColumns($tableConfiguration);
         $this->addTableTypes($tableConfiguration);
-        $this->addContentElementsRendering();
     }
 
     /**
@@ -101,86 +98,6 @@ EOS
 <<<EOS
 \$tempTypes = {$tempTypes};
 \$GLOBALS['TCA']['{$this->table}']['types'] += \$tempTypes;
-
-EOS
-        );
-    }
-
-    protected function addContentElementsRendering()
-    {
-        if (empty($this->maskConfiguration[$this->table]['elements'])) {
-            return;
-        }
-
-        $this->addPlainTextFile(
-            $this->typoScriptFilePath . 'constants.ts',
-            ''
-        );
-        $this->addPlainTextFile(
-            $this->typoScriptFilePath . 'setup.ts',
-            ''
-        );
-        $this->appendPhpFile(
-            $this->tcaOverridesFilePath . $this->table . '.php',
-<<<EOS
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
-    'mask',
-    '{$this->typoScriptFilePath}',
-    'mask'
-);
-
-EOS
-        );
-
-        foreach ($this->maskConfiguration[$this->table]['elements'] as $element) {
-            $this->addTypoScript($element);
-            $this->addFluidTemplate($element);
-        }
-    }
-
-    /**
-     * @param array $element
-     */
-    protected function addTypoScript(array $element)
-    {
-        $templatesPath = 'EXT:mask/' . $this->templatesFilePath . GeneralUtility::underscoredToUpperCamelCase($this->table);
-        $key = $element['key'];
-        $this->appendPlainTextFile(
-            $this->typoScriptFilePath . 'setup.ts',
-<<<EOS
-tt_content.mask_{$key} = FLUIDTEMPLATE
-tt_content.mask_{$key} {
-    file = {$templatesPath}/{$key}.html
-
-EOS
-        );
-
-        foreach ($element['columns'] as $columnName) {
-            if (empty($GLOBALS['TCA']['tt_content']['columns'][$columnName]['config']['foreign_table'])
-                || 'sys_file_reference' !== $GLOBALS['TCA']['tt_content']['columns'][$columnName]['config']['foreign_table']
-            ) {
-                continue;
-            }
-            $this->appendPlainTextFile(
-                $this->typoScriptFilePath . 'setup.ts',
-<<<EOS
-    dataProcessing {
-        10 = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor
-        10 {
-            references {
-                fieldName = {$columnName}
-            }
-        }
-    }
-
-EOS
-            );
-        }
-
-        $this->appendPlainTextFile(
-            $this->typoScriptFilePath . 'setup.ts',
-<<<EOS
-}
 
 EOS
         );

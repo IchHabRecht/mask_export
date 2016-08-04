@@ -57,4 +57,15 @@ trait SqlAwareTrait
 
         $this->sqlDefinitions[$table][$field] = $definition;
     }
+
+    /**
+     * @param string $table
+     * @param array $definitions
+     */
+    protected function addSqlDefinitions($table, array $definitions)
+    {
+        foreach ($definitions as $field => $definition) {
+            $this->addSqlDefinition($table, $field, $definition);
+        }
+    }
 }
