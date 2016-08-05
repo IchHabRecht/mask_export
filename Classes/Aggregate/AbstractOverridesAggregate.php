@@ -29,7 +29,7 @@ namespace CPSIT\MaskExport\Aggregate;
  * @package mask
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-abstract class AbstractOverridesAggregate extends AbstractAggregate implements PhpAwareInterface, SqlAwareInterface
+abstract class AbstractOverridesAggregate extends AbstractAggregate implements LanguageAwareInterface, PhpAwareInterface, SqlAwareInterface
 {
     use PhpAwareTrait;
     use SqlAwareTrait;
