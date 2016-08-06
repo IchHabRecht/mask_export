@@ -74,6 +74,21 @@ class TtContentOverridesAggregate extends AbstractOverridesAggregate
 
         ksort($newTypeFields);
 
+        $this->addLabel(
+            $this->languageFilePath . $this->languageFileIdentifier,
+            $this->table. '.CType.div._mask_',
+            '_mask_'
+        );
+        $this->appendPhpFile(
+            $this->tcaOverridesFilePath . $this->table . '.php',
+<<<EOS
+\$GLOBALS['TCA']['{$this->table}']['columns']['CType']['config']['items'][] = array(
+    'LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:{$this->table}.CType.div._mask_',
+    '--div--',
+);
+
+EOS
+        );
         foreach ($newTypeFields as $type => $_) {
             $this->addLabel(
                 $this->languageFilePath . $this->languageFileIdentifier,
