@@ -1,3 +1,8 @@
+2016-08-07         [RELEASE] Release of mask_export 0.2.1 (Nicole Cordes)
+2016-08-07 05fc43c [TASK] Set version to 0.2.1 (Nicole Cordes)
+2016-08-05 c8df25a [BUGFIX] Re-add generation of locallang_db labels (Nicole Cordes)
+2016-08-04 a918ba3 [TASK] Set version to 0.3.0-dev (Nicole Cordes)
+
 2016-08-04         [RELEASE] Release of mask_export 0.2.0 (Nicole Cordes)
 2016-07-14 d46ece5 [FEATURE] Use extension icon in export (Nicole Cordes)
 2016-07-14 be3e944 [TASK] Replace extension icon (Nicole Cordes)
