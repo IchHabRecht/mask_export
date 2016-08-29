@@ -1,3 +1,9 @@
+2016-08-29         [RELEASE] Release of mask_export 0.3.0 (Nicole Cordes)
+2016-08-29 078bbb3 [TASK] Set version to 0.3.0 (Nicole Cordes)
+2016-08-29 69ab273 [BUGFIX] Ensure array return in AbstractFileCollection (Nicole Cordes)
+2016-08-04 ef71793 [TASK] Set version to 0.3.0-dev (Nicole Cordes)
+2016-08-06 200d050 [FEATURE] Add CType separator for extension types (Nicole Cordes)
+
 2016-08-07         [RELEASE] Release of mask_export 0.2.1 (Nicole Cordes)
 2016-08-07 05fc43c [TASK] Set version to 0.2.1 (Nicole Cordes)
 2016-08-05 c8df25a [BUGFIX] Re-add generation of locallang_db labels (Nicole Cordes)
