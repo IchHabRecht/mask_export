@@ -41,7 +41,7 @@ abstract class AbstractFileCollection
     /**
      * @var array
      */
-    protected $files;
+    protected $files = [];
 
     /**
      * @param array $aggregateCollection
