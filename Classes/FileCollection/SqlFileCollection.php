@@ -52,6 +52,10 @@ class SqlFileCollection extends AbstractFileCollection
             $sqlDefinitions = array_replace_recursive($sqlDefinitions, $aggregate->getSqlDefinitions());
         }
 
+        if (empty($sqlDefinitions)) {
+            return [];
+        }
+
         ksort($sqlDefinitions);
         $this->files[$this->fileIdentifier] = '';
         foreach ($sqlDefinitions as $table => $fields) {

@@ -57,6 +57,10 @@ class TtContentOverridesAggregate extends AbstractOverridesAggregate
      */
     protected function addTableTypes(array $tableConfiguration)
     {
+        if (empty($tableConfiguration['types']) || empty($this->maskConfiguration[$this->table]['elements'])) {
+            return;
+        }
+
         $types = array_keys($this->maskConfiguration[$this->table]['elements']);
         $newTypeFields = array_intersect_key(
             $tableConfiguration['types'],
@@ -67,11 +71,6 @@ class TtContentOverridesAggregate extends AbstractOverridesAggregate
                 $types
             )
         );
-
-        if (empty($newTypeFields)) {
-            return;
-        }
-
         ksort($newTypeFields);
 
         $this->addLabel(
