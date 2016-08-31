@@ -41,7 +41,7 @@ abstract class AbstractFileCollection
     /**
      * @var array
      */
-    protected $files = [];
+    protected $files;
 
     /**
      * @param array $aggregateCollection
@@ -57,7 +57,7 @@ abstract class AbstractFileCollection
     public function getFiles()
     {
         if (null === $this->files) {
-            $this->processAggregateCollection();
+            $this->files = $this->processAggregateCollection();
         }
 
         return $this->files;

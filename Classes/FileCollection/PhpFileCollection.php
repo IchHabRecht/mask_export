@@ -38,6 +38,7 @@ class PhpFileCollection extends AbstractFileCollection
      */
     protected function processAggregateCollection()
     {
+        $files = [];
         foreach ($this->aggregateCollection as $aggregate) {
             if (!$aggregate instanceof PhpAwareInterface) {
                 continue;
@@ -46,10 +47,12 @@ class PhpFileCollection extends AbstractFileCollection
             $aggregateFiles = $aggregate->getPhpFiles();
             foreach ($aggregateFiles as $file => $content) {
                 if (!isset($this->files[$file])) {
-                    $this->files[$file] = '<?php' . PHP_EOL;
+                    $files[$file] = '<?php' . PHP_EOL;
                 }
-                $this->files[$file] .= $content;
+                $files[$file] .= $content;
             }
         }
+
+        return $files;
     }
 }

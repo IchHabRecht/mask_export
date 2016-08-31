@@ -47,9 +47,12 @@ class LanguageFileCollection extends AbstractFileCollection
             $labels = array_replace_recursive($labels, $aggregate->getLabels());
         }
 
+        $files = [];
         foreach ($labels as $file => $body) {
-            $this->files[$file] = $this->generateLanguageFile($body);
+            $files[$file] = $this->generateLanguageFile($body);
         }
+
+        return $files;
     }
 
     /**

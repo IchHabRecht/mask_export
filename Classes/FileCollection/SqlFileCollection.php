@@ -43,6 +43,7 @@ class SqlFileCollection extends AbstractFileCollection
      */
     protected function processAggregateCollection()
     {
+        $files = [];
         $sqlDefinitions = [];
         foreach ($this->aggregateCollection as $aggregate) {
             if (!$aggregate instanceof SqlAwareInterface) {
@@ -57,13 +58,13 @@ class SqlFileCollection extends AbstractFileCollection
         }
 
         ksort($sqlDefinitions);
-        $this->files[$this->fileIdentifier] = '';
+        $files[$this->fileIdentifier] = '';
         foreach ($sqlDefinitions as $table => $fields) {
             array_walk($fields, function (&$definition, $field) {
                 $definition = sprintf('    %s %s', $field, $definition);
             });
             $fieldDefinitions = implode(',' . PHP_EOL, $fields);
-            $this->files[$this->fileIdentifier] .=
+            $files[$this->fileIdentifier] .=
 <<<EOS
 CREATE TABLE {$table} (
 {$fieldDefinitions}
@@ -71,5 +72,7 @@ CREATE TABLE {$table} (
 
 EOS;
         }
+
+        return $files;
     }
 }
