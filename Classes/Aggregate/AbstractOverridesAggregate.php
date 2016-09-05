@@ -45,13 +45,12 @@ abstract class AbstractOverridesAggregate extends AbstractAggregate implements L
      */
     protected function addTableColumns(array $tableConfiguration)
     {
-        $newTableFields = array_intersect_key($tableConfiguration['columns'],
-            $this->maskConfiguration[$this->table]['tca']);
-
-        if (empty($newTableFields)) {
+        if (empty($tableConfiguration['columns']) || empty($this->maskConfiguration[$this->table]['tca'])) {
             return;
         }
 
+        $newTableFields = array_intersect_key($tableConfiguration['columns'],
+            $this->maskConfiguration[$this->table]['tca']);
         ksort($newTableFields);
         $newTableFields = $this->replaceFieldLabels($newTableFields);
         $this->addFieldsSqlDefinitions($newTableFields);

@@ -38,6 +38,7 @@ class PlainTextFileCollection extends AbstractFileCollection
      */
     protected function processAggregateCollection()
     {
+        $files = [];
         foreach ($this->aggregateCollection as $aggregate) {
             if (!$aggregate instanceof PlainTextFileAwareInterface) {
                 continue;
@@ -45,11 +46,13 @@ class PlainTextFileCollection extends AbstractFileCollection
 
             $aggregateFiles = $aggregate->getPlainTextFiles();
             foreach ($aggregateFiles as $file => $content) {
-                if (!isset($this->files[$file])) {
-                    $this->files[$file] = '';
+                if (!isset($files[$file])) {
+                    $files[$file] = '';
                 }
-                $this->files[$file] .= $content;
+                $files[$file] .= $content;
             }
         }
+
+        return $files;
     }
 }
