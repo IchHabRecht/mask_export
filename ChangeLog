@@ -1,3 +1,7 @@
+2016-09-05         [RELEASE] Release of mask_export 0.3.1 (Nicole Cordes)
+2016-08-31 6d3262f [BUGFIX] Restore file aggregation (Nicole Cordes)
+2016-08-31 fdb3b80 [BUGFIX] Rework guard clauses (Nicole Cordes)
+
 2016-08-29         [RELEASE] Release of mask_export 0.3.0 (Nicole Cordes)
 2016-08-29 078bbb3 [TASK] Set version to 0.3.0 (Nicole Cordes)
 2016-08-29 69ab273 [BUGFIX] Ensure array return in AbstractFileCollection (Nicole Cordes)
