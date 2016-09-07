@@ -46,7 +46,7 @@ class PhpFileCollection extends AbstractFileCollection
 
             $aggregateFiles = $aggregate->getPhpFiles();
             foreach ($aggregateFiles as $file => $content) {
-                if (!isset($this->files[$file])) {
+                if (!isset($files[$file])) {
                     $files[$file] = '<?php' . PHP_EOL;
                 }
                 $files[$file] .= $content;
