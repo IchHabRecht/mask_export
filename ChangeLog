@@ -1,3 +1,6 @@
+2016-09-13         [RELEASE] Release of mask_export 0.3.2 (Nicole Cordes)
+2016-09-07 c9bc4cd [BUGFIX] Follow up for 6d3262f to append PHP files correctly (Nicole Cordes)
+
 2016-09-05         [RELEASE] Release of mask_export 0.3.1 (Nicole Cordes)
 2016-08-31 6d3262f [BUGFIX] Restore file aggregation (Nicole Cordes)
 2016-08-31 fdb3b80 [BUGFIX] Rework guard clauses (Nicole Cordes)
