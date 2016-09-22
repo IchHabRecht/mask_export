@@ -3,7 +3,7 @@
 /***************************************************************
  * Extension Manager/Repository config file for ext "mask_export".
  *
- * Auto generated 13-09-2016 16:55
+ * Auto generated 22-09-2016 14:35
  *
  * Manual updates:
  * Only the data in the array - everything else is removed by next
@@ -18,7 +18,7 @@ $EM_CONF[$_EXTKEY] = array (
   'author_email' => 'cordes@cps-it.de',
   'author_company' => 'CPS-IT GmbH',
   'state' => 'beta',
-  'version' => '0.3.2',
+  'version' => '0.4.0',
   'constraints' => 
   array (
     'depends' => 
@@ -40,6 +40,6 @@ $EM_CONF[$_EXTKEY] = array (
       'CPSIT\\MaskExport\\' => 'Classes/',
     ),
   ),
-  '_md5_values_when_last_written' => 'a:33:{s:9:"ChangeLog";s:4:"6305";s:13:"composer.json";s:4:"10e2";s:12:"ext_icon.png";s:4:"03b4";s:14:"ext_tables.php";s:4:"042f";s:24:"ext_typoscript_setup.txt";s:4:"64d2";s:39:"Classes/Aggregate/AbstractAggregate.php";s:4:"2824";s:48:"Classes/Aggregate/AbstractOverridesAggregate.php";s:4:"389b";s:41:"Classes/Aggregate/AggregateCollection.php";s:4:"2ae6";s:47:"Classes/Aggregate/ContentRenderingAggregate.php";s:4:"262e";s:53:"Classes/Aggregate/ExtensionConfigurationAggregate.php";s:4:"b9c0";s:44:"Classes/Aggregate/LanguageAwareInterface.php";s:4:"9589";s:40:"Classes/Aggregate/LanguageAwareTrait.php";s:4:"8175";s:54:"Classes/Aggregate/NewContentElementWizardAggregate.php";s:4:"ce0a";s:39:"Classes/Aggregate/PhpAwareInterface.php";s:4:"6a54";s:35:"Classes/Aggregate/PhpAwareTrait.php";s:4:"e3ef";s:49:"Classes/Aggregate/PlainTextFileAwareInterface.php";s:4:"f0ec";s:45:"Classes/Aggregate/PlainTextFileAwareTrait.php";s:4:"d52d";s:39:"Classes/Aggregate/SqlAwareInterface.php";s:4:"74b7";s:35:"Classes/Aggregate/SqlAwareTrait.php";s:4:"65ec";s:34:"Classes/Aggregate/TcaAggregate.php";s:4:"26b0";s:35:"Classes/Aggregate/TcaAwareTrait.php";s:4:"9ece";s:49:"Classes/Aggregate/TtContentOverridesAggregate.php";s:4:"81a9";s:43:"Classes/CodeGenerator/HtmlCodeGenerator.php";s:4:"1742";s:39:"Classes/Controller/ExportController.php";s:4:"af5a";s:49:"Classes/FileCollection/AbstractFileCollection.php";s:4:"6364";s:41:"Classes/FileCollection/FileCollection.php";s:4:"269c";s:49:"Classes/FileCollection/LanguageFileCollection.php";s:4:"0469";s:44:"Classes/FileCollection/PhpFileCollection.php";s:4:"1f8f";s:50:"Classes/FileCollection/PlainTextFileCollection.php";s:4:"2a24";s:44:"Classes/FileCollection/SqlFileCollection.php";s:4:"b35f";s:52:"Resources/Private/Backend/Partials/General/Tabs.html";s:4:"7e6e";s:52:"Resources/Private/Backend/Templates/Export/List.html";s:4:"ddcf";s:40:"Resources/Private/Language/locallang.xlf";s:4:"38d5";}',
+  '_md5_values_when_last_written' => 'a:33:{s:9:"ChangeLog";s:4:"5188";s:13:"composer.json";s:4:"10e2";s:12:"ext_icon.png";s:4:"03b4";s:14:"ext_tables.php";s:4:"042f";s:24:"ext_typoscript_setup.txt";s:4:"1014";s:39:"Classes/Aggregate/AbstractAggregate.php";s:4:"2824";s:48:"Classes/Aggregate/AbstractOverridesAggregate.php";s:4:"389b";s:41:"Classes/Aggregate/AggregateCollection.php";s:4:"2ae6";s:47:"Classes/Aggregate/ContentRenderingAggregate.php";s:4:"262e";s:53:"Classes/Aggregate/ExtensionConfigurationAggregate.php";s:4:"b9c0";s:44:"Classes/Aggregate/LanguageAwareInterface.php";s:4:"9589";s:40:"Classes/Aggregate/LanguageAwareTrait.php";s:4:"8175";s:54:"Classes/Aggregate/NewContentElementWizardAggregate.php";s:4:"ce0a";s:39:"Classes/Aggregate/PhpAwareInterface.php";s:4:"6a54";s:35:"Classes/Aggregate/PhpAwareTrait.php";s:4:"e3ef";s:49:"Classes/Aggregate/PlainTextFileAwareInterface.php";s:4:"f0ec";s:45:"Classes/Aggregate/PlainTextFileAwareTrait.php";s:4:"d52d";s:39:"Classes/Aggregate/SqlAwareInterface.php";s:4:"74b7";s:35:"Classes/Aggregate/SqlAwareTrait.php";s:4:"65ec";s:34:"Classes/Aggregate/TcaAggregate.php";s:4:"26b0";s:35:"Classes/Aggregate/TcaAwareTrait.php";s:4:"5bb6";s:49:"Classes/Aggregate/TtContentOverridesAggregate.php";s:4:"81a9";s:43:"Classes/CodeGenerator/HtmlCodeGenerator.php";s:4:"1742";s:39:"Classes/Controller/ExportController.php";s:4:"af5a";s:49:"Classes/FileCollection/AbstractFileCollection.php";s:4:"6364";s:41:"Classes/FileCollection/FileCollection.php";s:4:"269c";s:49:"Classes/FileCollection/LanguageFileCollection.php";s:4:"0469";s:44:"Classes/FileCollection/PhpFileCollection.php";s:4:"1f8f";s:50:"Classes/FileCollection/PlainTextFileCollection.php";s:4:"2a24";s:44:"Classes/FileCollection/SqlFileCollection.php";s:4:"b35f";s:52:"Resources/Private/Backend/Partials/General/Tabs.html";s:4:"7e6e";s:52:"Resources/Private/Backend/Templates/Export/List.html";s:4:"ddcf";s:40:"Resources/Private/Language/locallang.xlf";s:4:"38d5";}',
 );
 
