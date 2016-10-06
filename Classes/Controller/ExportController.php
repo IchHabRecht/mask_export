@@ -169,13 +169,13 @@ class ExportController extends ActionController
     {
         $lowercaseExtensionKey = strtolower(GeneralUtility::underscoredToUpperCamelCase($extensionKey));
         $string = preg_replace(
-            '/(.)mask\\1/',
-            '\\1' . $extensionKey . '\\1',
+            '/(\s+|\'|,|.)(tx_)?mask_/',
+            '\\1\\2' . $lowercaseExtensionKey . '_',
             $string
         );
         $string = preg_replace(
-            '/(\s+|\'|,|.)(tx_)?mask_/',
-            '\\1\\2' . $lowercaseExtensionKey . '_',
+            '/(.)mask\\1/',
+            '\\1' . $extensionKey . '\\1',
             $string
         );
         $string = preg_replace(
