@@ -62,6 +62,7 @@ class TcaAggregate extends AbstractAggregate implements LanguageAwareInterface, 
             $tableConfiguration = $GLOBALS['TCA'][$table];
 
             $tcaConfiguration = $this->replaceTableLabels($tableConfiguration);
+            $tcaConfiguration['ctrl']['iconfile'] = 'EXT:mask/ext_icon.png';
             $this->addTableSqlDefinitions($tableConfiguration);
             $this->addPhpFile(
                 $this->tcaFilePath . $table . '.php',
