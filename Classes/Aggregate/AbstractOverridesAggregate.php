@@ -63,5 +63,25 @@ abstract class AbstractOverridesAggregate extends AbstractAggregate implements L
 
 EOS
         );
+        if ('pages' === $this->table) {
+            $newTableFieldNames = implode(', ', array_keys($newTableFields));
+            $this->appendPhpFile(
+                $this->tcaOverridesFilePath . $this->table . '.php',
+<<<EOS
+\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::addToAllTCAtypes('{$this->table}', '{$newTableFieldNames}');
+
+EOS
+            );
+
+            $this->appendPhpFile(
+                $this->tcaOverridesFilePath . 'pages_language_overlay.php',
+<<<EOS
+\$tempColumns = {$tempColumns};
+\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::addTCAcolumns('pages_language_overlay', \$tempColumns);
+\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::addToAllTCAtypes('{$this->table}', '{$newTableFieldNames}');
+
+EOS
+            );
+        }
     }
 }

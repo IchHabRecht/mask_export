@@ -29,6 +29,7 @@ use CPSIT\MaskExport\Aggregate\AggregateCollection;
 use CPSIT\MaskExport\Aggregate\ContentRenderingAggregate;
 use CPSIT\MaskExport\Aggregate\ExtensionConfigurationAggregate;
 use CPSIT\MaskExport\Aggregate\NewContentElementWizardAggregate;
+use CPSIT\MaskExport\Aggregate\PagesOverridesAggregate;
 use CPSIT\MaskExport\Aggregate\TcaAggregate;
 use CPSIT\MaskExport\Aggregate\TtContentOverridesAggregate;
 use CPSIT\MaskExport\FileCollection\FileCollection;
@@ -54,6 +55,7 @@ class ExportController extends ActionController
         TtContentOverridesAggregate::class,
         ContentRenderingAggregate::class,
         NewContentElementWizardAggregate::class,
+        PagesOverridesAggregate::class,
     ];
 
     /**
