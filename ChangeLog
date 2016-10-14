@@ -1,3 +1,8 @@
+2016-10-14         [RELEASE] Release of mask_export 0.4.1 (Nicole Cordes)
+2016-10-06 3b2b243 [BUGFIX] Use correct extension icon for inline tables (Nicole Cordes)
+2016-10-06 e544267 [BUGFIX] Fix reorder for extension keys with 'mask' prefix (Nicole Cordes)
+2016-09-26 43c66fd [BUGFIX] Reorder extension key replacement (Nicole Cordes)
+
 2016-09-22         [RELEASE] Release of mask_export 0.4.0 (Nicole Cordes)
 2016-09-16 e61c4c6 [TASK] Raise version compatibility to TYPO3 8.3.99 (Nicole Cordes)
 2016-09-16 fb71e97 [BUGFIX] Increase view root paths index (Nicole Cordes)
