@@ -48,6 +48,71 @@ class PagesOverridesAggregate extends AbstractOverridesAggregate
         }
 
         $tableConfiguration = $GLOBALS['TCA'][$this->table];
+        $this->addDisplayCondition($tableConfiguration);
         $this->addTableColumns($tableConfiguration);
+    }
+
+    /**
+     * @param array $tableConfiguration
+     */
+    protected function addDisplayCondition(array &$tableConfiguration)
+    {
+        $newTableFields = $this->getNewTableFields($tableConfiguration);
+        foreach ($newTableFields as $key => &$field) {
+            $field['displayCond'] = 'USER:MASK\\Mask\\Hooks\\BackendLayoutDisplayCondition->checkBackendLayout:' . $this->getBackendLayoutsByField($key);
+        }
+        $this->addPhpFile(
+            'Classes/Hooks/BackendLayoutDisplayCondition.php',
+<<<EOS
+namespace MASK\Mask\Hooks;
+
+use TYPO3\CMS\Backend\View\BackendLayoutView;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+class BackendLayoutDisplayCondition
+{
+    /**
+     * @param string \$parameter
+     * @return bool
+     */
+    public function checkBackendLayout(\$parameter)
+    {
+        \$backendLayouts = GeneralUtility::trimExplode(',', \$parameter['conditionParameters'][0], true);
+        \$backendLayoutView = GeneralUtility::makeInstance(BackendLayoutView::class);
+        \$pageId = \$parameter['record']['uid'];
+        \$selectedCombinedIdentifier = \$backendLayoutView->getSelectedCombinedIdentifier(\$pageId);
+        if (empty(\$selectedCombinedIdentifier)) {
+            \$selectedCombinedIdentifier = 'default';
+        }
+        \$backendLayout = \$backendLayoutView->getDataProviderCollection()->getBackendLayout(\$selectedCombinedIdentifier, \$pageId);
+        if (null === \$backendLayout) {
+            return false;
+        }
+
+        return in_array(\$backendLayout->getIdentifier(), \$backendLayouts);
+    }
+}
+EOS
+        );
+    }
+
+    /**
+     * @param string $fieldName
+     * @return string
+     */
+    protected function getBackendLayoutsByField($fieldName)
+    {
+        $backendLayouts = [];
+        foreach ($this->maskConfiguration['pages']['elements'] as $backendLayoutIdentifier => $configuration) {
+            if (empty($configuration['columns'])) {
+                continue;
+            }
+
+            if (in_array($fieldName, $configuration['columns'], true)) {
+                $backendLayouts[] = $backendLayoutIdentifier;
+            }
+        }
+
+        return implode(',', $backendLayouts);
     }
 }

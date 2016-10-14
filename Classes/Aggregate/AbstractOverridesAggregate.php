@@ -49,12 +49,12 @@ abstract class AbstractOverridesAggregate extends AbstractAggregate implements L
             return;
         }
 
-        $newTableFields = array_intersect_key($tableConfiguration['columns'],
-            $this->maskConfiguration[$this->table]['tca']);
-        ksort($newTableFields);
+        $newTableFields = $this->getNewTableFields($tableConfiguration);
         $newTableFields = $this->replaceFieldLabels($newTableFields);
         $this->addFieldsSqlDefinitions($newTableFields);
-        $tempColumns = var_export($newTableFields, true);
+        $sortedNewTableFields = $newTableFields;
+        ksort($sortedNewTableFields);
+        $tempColumns = var_export($sortedNewTableFields, true);
         $this->appendPhpFile(
             $this->tcaOverridesFilePath . $this->table . '.php',
 <<<EOS
@@ -83,5 +83,16 @@ EOS
 EOS
             );
         }
+    }
+
+    /**
+     * @param array $tableConfiguration
+     *
+     * @return array
+     */
+    protected function getNewTableFields(array $tableConfiguration)
+    {
+        return $newTableFields = array_intersect_key($tableConfiguration['columns'],
+            $this->maskConfiguration[$this->table]['tca']);
     }
 }

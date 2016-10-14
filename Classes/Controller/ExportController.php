@@ -169,7 +169,8 @@ class ExportController extends ActionController
      */
     protected function replaceExtensionKey($extensionKey, $string)
     {
-        $lowercaseExtensionKey = strtolower(GeneralUtility::underscoredToUpperCamelCase($extensionKey));
+        $camelCasedExtensionKey = GeneralUtility::underscoredToUpperCamelCase($extensionKey);
+        $lowercaseExtensionKey = strtolower($camelCasedExtensionKey);
         $string = preg_replace(
             '/(\s+|\'|,|.)(tx_)?mask_/',
             '\\1\\2' . $lowercaseExtensionKey . '_',
@@ -178,6 +179,16 @@ class ExportController extends ActionController
         $string = preg_replace(
             '/(.)mask\\1/',
             '\\1' . $extensionKey . '\\1',
+            $string
+        );
+        $string = preg_replace(
+            '/(.)Mask\\1/',
+            '\\1' . $camelCasedExtensionKey . '\\1',
+            $string
+        );
+        $string = preg_replace(
+            '/MASK/',
+            strtoupper($camelCasedExtensionKey),
             $string
         );
         $string = preg_replace(
