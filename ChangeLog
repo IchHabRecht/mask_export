@@ -1,3 +1,7 @@
+2016-11-08         [RELEASE] Release of mask_export 0.4.2 (Nicole Cordes)
+2016-11-08 7ea1671 [TASK] Raise version compatibility to TYPO3 8.4.99 (Nicole Cordes)
+2016-11-08 522f8c4 [BUGFIX] Add sorting for inline elements in DatabaseQueryProcessor (Nicole Cordes)
+
 2016-10-14         [RELEASE] Release of mask_export 0.4.1 (Nicole Cordes)
 2016-10-06 3b2b243 [BUGFIX] Use correct extension icon for inline tables (Nicole Cordes)
 2016-10-06 e544267 [BUGFIX] Fix reorder for extension keys with 'mask' prefix (Nicole Cordes)
