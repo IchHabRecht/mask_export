@@ -224,6 +224,11 @@ EOS;
             }
         }
 
+        $sorting = 'uid';
+        if (!empty($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_sortby'])) {
+            $sorting = $GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_sortby'];
+        }
+
         return
 <<<EOS
     dataProcessing.{$index} = TYPO3\CMS\Frontend\DataProcessing\DatabaseQueryProcessor
@@ -232,6 +237,7 @@ EOS;
         table = {$GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_table']}
         pidInList.field = pid
         where = {$GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_field']}=###uid### AND deleted=0 AND hidden=0 AND {$where}
+        orderBy = {$sorting}
         markers {
             uid.field = uid
         }
