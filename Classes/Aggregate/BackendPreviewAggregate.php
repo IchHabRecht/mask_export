@@ -35,16 +35,21 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements PhpA
 {
     use PhpAwareTrait;
     use PlainTextFileAwareTrait;
-
-    /**
-     * @var string
-     */
-    protected $table = 'tt_content';
+    use TcaAwareTrait;
 
     /**
      * @var string
      */
     protected $templatesFilePath = 'Resources/Private/Backend/Templates/';
+
+    /**
+     * @param array $maskConfiguration
+     */
+    public function __construct(array $maskConfiguration)
+    {
+        $this->table = 'tt_content';
+        parent::__construct($maskConfiguration);
+    }
 
     /**
      * Adds PHP and Fluid files
@@ -79,6 +84,12 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements PhpA
 EOS
         );
 
+        $contentTypes = [];
+        foreach ($this->maskConfiguration[$this->table]['elements'] as $key => $element) {
+            $contentTypes['mask_' . $key] = $element['columns'];
+        }
+        $supportedContentTypes = var_export($contentTypes, true);
+
         $this->addPhpFile(
             'Classes/Hooks/PageLayoutViewDrawItem.php',
 <<<EOS
@@ -93,6 +104,16 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
 {
     /**
+     * @var array
+     */
+    protected \$supportedContentTypes = {$supportedContentTypes};
+
+    /**
+     * @var string
+     */
+    protected \$rootPath = 'EXT:mask/Resources/Private/Backend/';
+
+    /**
      * Preprocesses the preview rendering of a content element.
      *
      * @param PageLayoutView \$parentObject
@@ -101,8 +122,33 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
      * @param string \$itemContent
      * @param array \$row
      */
-    public function preProcess(PageLayoutView \$parentObject, &\$drawItem, &\$headerContent, &\$itemContent, array &\$row)
+    public function preProcess(PageLayoutView &\$parentObject, &\$drawItem, &\$headerContent, &\$itemContent, array &\$row)
     {
+        if (!isset(\$this->supportedContentTypes[\$row['CType']])) {
+            return;
+        }
+
+        \$contentType = explode('_', \$row['CType'], 2);
+        \$templateKey = GeneralUtility::underscoredToUpperCamelCase(\$contentType[1]);
+        \$templatePath = GeneralUtility::getFileAbsFileName(\$this->rootPath . 'Templates/' . \$templateKey . '.html');
+        if (!file_exists(\$templatePath)) {
+            return;
+        }
+
+        \$objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        \$view = \$objectManager->get(StandaloneView::class);
+        \$view->setTemplatePathAndFilename(\$templatePath);
+        \$view->setLayoutRootPaths([\$this->rootPath . 'Layouts/']);
+        \$view->setPartialRootPaths([\$this->rootPath . 'Partials/']);
+
+        \$view->assignMultiple(
+            [
+                'row' => \$row,
+            ]
+        );
+
+        \$itemContent = \$view->render();
+        \$drawItem = false;
     }
 }
 
@@ -116,12 +162,27 @@ EOS
     protected function addFluidTemplates(array $elements)
     {
         foreach ($elements as $key => $element) {
-            $this->addPlainTextFile(
-                $this->templatesFilePath . GeneralUtility::underscoredToUpperCamelCase($key) . '.html',
+            if (empty($element['columns'])) {
+                continue;
+            }
+
+            $templateKey = GeneralUtility::underscoredToUpperCamelCase($key);
+            foreach ($element['columns'] as $field) {
+                if (!isset($GLOBALS['TCA'][$this->table]['columns'][$field]) && !isset($GLOBALS['TCA'][$this->table]['columns']['tx_mask_' . $field])) {
+                    continue;
+                }
+                $fieldConfiguration = isset($GLOBALS['TCA'][$this->table]['columns'][$field])
+                    ? $GLOBALS['TCA'][$this->table]['columns'][$field] : $GLOBALS['TCA'][$this->table]['columns']['tx_mask_' . $field];
+                $fieldConfiguration = $this->replaceFieldLabels([$field => $fieldConfiguration]);
+                $label = $fieldConfiguration[$field]['label'];
+                $this->appendPlainTextFile(
+                    $this->templatesFilePath . $templateKey . '.html',
 <<<EOS
+<strong><f:translate key="{$label}" /></strong> {row.{$field}}<br>
 
 EOS
-            );
+                );
+            }
         }
     }
 }
