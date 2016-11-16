@@ -95,6 +95,8 @@ EOS
 <<<EOS
 namespace MASK\Mask\Hooks;
 
+use TYPO3\CMS\Backend\Form\FormDataCompiler;
+use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
 use TYPO3\CMS\Backend\View\PageLayoutView;
 use TYPO3\CMS\Backend\View\PageLayoutViewDrawItemHookInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -140,10 +142,30 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
         \$view->setTemplatePathAndFilename(\$templatePath);
         \$view->setLayoutRootPaths([\$this->rootPath . 'Layouts/']);
         \$view->setPartialRootPaths([\$this->rootPath . 'Partials/']);
+        
+        \$formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
+        \$formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, \$formDataGroup);
+        \$formDataCompilerInput = [
+            'tableName' => 'tt_content',
+            'vanillaUid' => (int)\$row['uid'],
+            'command' => 'edit',
+        ];
+        \$result = \$formDataCompiler->compile(\$formDataCompilerInput);
+        \$processedRow = \$result['databaseRow'];
+        foreach (\$result['processedTca']['columns'] as \$field => \$config) {
+            if (empty(\$config['children'])) {
+                continue;
+            }
+            \$processedRow[\$field] = [];
+            foreach (\$config['children'] as \$child) {
+                \$processedRow[\$field][] = \$child['databaseRow'];
+            }
+        }
 
         \$view->assignMultiple(
             [
                 'row' => \$row,
+                'processedRow' => \$processedRow,
             ]
         );
 
@@ -171,18 +193,53 @@ EOS
                 if (!isset($GLOBALS['TCA'][$this->table]['columns'][$field]) && !isset($GLOBALS['TCA'][$this->table]['columns']['tx_mask_' . $field])) {
                     continue;
                 }
-                $fieldConfiguration = isset($GLOBALS['TCA'][$this->table]['columns'][$field])
-                    ? $GLOBALS['TCA'][$this->table]['columns'][$field] : $GLOBALS['TCA'][$this->table]['columns']['tx_mask_' . $field];
-                $fieldConfiguration = $this->replaceFieldLabels([$field => $fieldConfiguration]);
-                $label = $fieldConfiguration[$field]['label'];
                 $this->appendPlainTextFile(
                     $this->templatesFilePath . $templateKey . '.html',
-<<<EOS
-<strong><f:translate key="{$label}" /></strong> {row.{$field}}<br>
-
-EOS
+                    $this->getFluidByFieldType($field)
                 );
             }
         }
+    }
+
+    /**
+     * @param string $field
+     * @return string
+     */
+    protected function getFluidByFieldType($field)
+    {
+        $fieldConfiguration = isset($GLOBALS['TCA'][$this->table]['columns'][$field])
+            ? $GLOBALS['TCA'][$this->table]['columns'][$field] : $GLOBALS['TCA'][$this->table]['columns']['tx_mask_' . $field];
+        $fieldConfiguration = $this->replaceFieldLabels([$field => $fieldConfiguration], $this->table);
+        $label = $fieldConfiguration[$field]['label'];
+
+        switch ($fieldConfiguration[$field]['config']['type']) {
+            case 'inline':
+                $foreignTable = $fieldConfiguration[$field]['config']['foreign_table'];
+                $foreignLabelField = $GLOBALS['TCA'][$foreignTable]['ctrl']['label'];
+                $foreignLabelFieldConfiguration = $this->replaceFieldLabels(
+                    [
+                        $foreignLabelField => $GLOBALS['TCA'][$foreignTable]['columns'][$foreignLabelField]
+                    ],
+                    $foreignTable
+                );
+                $foreignLabel = $foreignLabelFieldConfiguration[$foreignLabelField]['label'];
+                $content =
+<<<EOS
+<strong><f:translate key="{$label}" /></strong><br>
+<f:for each="{processedRow.{$field}}" as="item">
+    <f:translate key="{$foreignLabel}" />: {item.{$foreignLabelField}} (id={item.uid})<br/>
+</f:for>
+
+EOS;
+                break;
+            default:
+                $content =
+<<<EOS
+<strong><f:translate key="{$label}" /></strong> {row.{$field}}<br>
+
+EOS;
+        }
+
+        return $content;
     }
 }
