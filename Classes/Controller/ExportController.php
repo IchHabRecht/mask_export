@@ -191,6 +191,11 @@ class ExportController extends ActionController
             $string
         );
         $string = preg_replace(
+            '/([>(])mask([<)])/',
+            '\\1' . $extensionKey . '\\2',
+            $string
+        );
+        $string = preg_replace(
             '/EXT:mask/',
             'EXT:' . $extensionKey,
             $string
