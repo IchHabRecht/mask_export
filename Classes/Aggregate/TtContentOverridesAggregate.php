@@ -76,7 +76,7 @@ class TtContentOverridesAggregate extends AbstractOverridesAggregate
         $this->addLabel(
             $this->languageFilePath . $this->languageFileIdentifier,
             $this->table. '.CType.div._mask_',
-            '_mask_'
+            'mask'
         );
         $this->appendPhpFile(
             $this->tcaOverridesFilePath . $this->table . '.php',

@@ -28,6 +28,7 @@ namespace CPSIT\MaskExport\Controller;
 use CPSIT\MaskExport\Aggregate\AggregateCollection;
 use CPSIT\MaskExport\Aggregate\ContentRenderingAggregate;
 use CPSIT\MaskExport\Aggregate\ExtensionConfigurationAggregate;
+use CPSIT\MaskExport\Aggregate\InlineContentColPosAggregate;
 use CPSIT\MaskExport\Aggregate\NewContentElementWizardAggregate;
 use CPSIT\MaskExport\Aggregate\TcaAggregate;
 use CPSIT\MaskExport\Aggregate\TtContentOverridesAggregate;
@@ -54,6 +55,7 @@ class ExportController extends ActionController
         TtContentOverridesAggregate::class,
         ContentRenderingAggregate::class,
         NewContentElementWizardAggregate::class,
+        InlineContentColPosAggregate::class,
     ];
 
     /**
@@ -167,15 +169,32 @@ class ExportController extends ActionController
      */
     protected function replaceExtensionKey($extensionKey, $string)
     {
-        $lowercaseExtensionKey = strtolower(GeneralUtility::underscoredToUpperCamelCase($extensionKey));
+        $camelCasedExtensionKey = GeneralUtility::underscoredToUpperCamelCase($extensionKey);
+        $lowercaseExtensionKey = strtolower($camelCasedExtensionKey);
+
         $string = preg_replace(
             '/(\s+|\'|,|.)(tx_)?mask_/',
             '\\1\\2' . $lowercaseExtensionKey . '_',
             $string
         );
         $string = preg_replace(
+            '/(.)Mask\\1/',
+            '\\1' . $camelCasedExtensionKey . '\\1',
+            $string
+        );
+        $string = preg_replace(
+            '/MASK/',
+            strtoupper($camelCasedExtensionKey),
+            $string
+        );
+        $string = preg_replace(
             '/(.)mask\\1/',
             '\\1' . $extensionKey . '\\1',
+            $string
+        );
+        $string = preg_replace(
+            '/([>(])mask([<)])/',
+            '\\1' . $extensionKey . '\\2',
             $string
         );
         $string = preg_replace(
