@@ -25,6 +25,7 @@ namespace CPSIT\MaskExport\Aggregate;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use CPSIT\MaskExport\CodeGenerator\BackendFluidCodeGenerator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -38,15 +39,22 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements PhpA
     use TcaAwareTrait;
 
     /**
+     * @var BackendFluidCodeGenerator
+     */
+    protected $fluidCodeGenerator;
+
+    /**
      * @var string
      */
     protected $templatesFilePath = 'Resources/Private/Backend/Templates/';
 
     /**
      * @param array $maskConfiguration
+     * @param BackendFluidCodeGenerator $fluidCodeGenerator
      */
-    public function __construct(array $maskConfiguration)
+    public function __construct(array $maskConfiguration, BackendFluidCodeGenerator $fluidCodeGenerator = null)
     {
+        $this->fluidCodeGenerator = (null !== $fluidCodeGenerator) ? $fluidCodeGenerator : GeneralUtility::makeInstance(BackendFluidCodeGenerator::class);
         $this->table = 'tt_content';
         parent::__construct($maskConfiguration);
     }
@@ -66,6 +74,7 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements PhpA
         }
 
         $this->addDrawItemHook();
+        $this->replaceTableLabels();
         $this->addFluidTemplates($this->maskConfiguration[$this->table]['elements']);
     }
 
@@ -151,16 +160,7 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
             'command' => 'edit',
         ];
         \$result = \$formDataCompiler->compile(\$formDataCompilerInput);
-        \$processedRow = \$result['databaseRow'];
-        foreach (\$result['processedTca']['columns'] as \$field => \$config) {
-            if (empty(\$config['children'])) {
-                continue;
-            }
-            \$processedRow[\$field] = [];
-            foreach (\$config['children'] as \$child) {
-                \$processedRow[\$field][] = \$child['databaseRow'];
-            }
-        }
+        \$processedRow = \$this->getProcessedData(\$result['databaseRow'], \$result['processedTca']['columns']);
 
         \$view->assignMultiple(
             [
@@ -172,10 +172,45 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
         \$itemContent = \$view->render();
         \$drawItem = false;
     }
+
+    /**
+     * @param array \$databaseRow
+     * @param array \$processedTcaColumns
+     * @return array
+     */
+    protected function getProcessedData(array \$databaseRow, array \$processedTcaColumns)
+    {
+        \$processedRow = \$databaseRow;
+        foreach (\$processedTcaColumns as \$field => \$config) {
+            if (empty(\$config['children'])) {
+                continue;
+            }
+            \$processedRow[\$field] = [];
+            foreach (\$config['children'] as \$child) {
+                \$processedRow[\$field][] = \$this->getProcessedData(\$child['databaseRow'], \$child['processedTca']['columns']);
+            }
+        }
+
+        return \$processedRow;
+    }
 }
 
 EOS
         );
+    }
+
+    /**
+     * Ensure proper labels in $GLOBALS['TCA'] configuration
+     */
+    protected function replaceTableLabels()
+    {
+        foreach ($this->maskConfiguration as $table => $_) {
+            if (!isset($GLOBALS['TCA'][$table]) || empty($GLOBALS['TCA'][$table]['columns'])) {
+                continue;
+            }
+
+            $GLOBALS['TCA'][$table]['columns'] = $this->replaceFieldLabels($GLOBALS['TCA'][$table]['columns'], $table);
+        }
     }
 
     /**
@@ -190,56 +225,15 @@ EOS
 
             $templateKey = GeneralUtility::underscoredToUpperCamelCase($key);
             foreach ($element['columns'] as $field) {
-                if (!isset($GLOBALS['TCA'][$this->table]['columns'][$field]) && !isset($GLOBALS['TCA'][$this->table]['columns']['tx_mask_' . $field])) {
+                $field = isset($GLOBALS['TCA'][$this->table]['columns'][$field]) ? $field : 'tx_mask_' . $field;
+                if (!isset($GLOBALS['TCA'][$this->table]['columns'][$field])) {
                     continue;
                 }
                 $this->appendPlainTextFile(
                     $this->templatesFilePath . $templateKey . '.html',
-                    $this->getFluidByFieldType($field)
+                    $this->fluidCodeGenerator->generateFluid($this->table, $field)
                 );
             }
         }
-    }
-
-    /**
-     * @param string $field
-     * @return string
-     */
-    protected function getFluidByFieldType($field)
-    {
-        $fieldConfiguration = isset($GLOBALS['TCA'][$this->table]['columns'][$field])
-            ? $GLOBALS['TCA'][$this->table]['columns'][$field] : $GLOBALS['TCA'][$this->table]['columns']['tx_mask_' . $field];
-        $fieldConfiguration = $this->replaceFieldLabels([$field => $fieldConfiguration], $this->table);
-        $label = $fieldConfiguration[$field]['label'];
-
-        switch ($fieldConfiguration[$field]['config']['type']) {
-            case 'inline':
-                $foreignTable = $fieldConfiguration[$field]['config']['foreign_table'];
-                $foreignLabelField = $GLOBALS['TCA'][$foreignTable]['ctrl']['label'];
-                $foreignLabelFieldConfiguration = $this->replaceFieldLabels(
-                    [
-                        $foreignLabelField => $GLOBALS['TCA'][$foreignTable]['columns'][$foreignLabelField]
-                    ],
-                    $foreignTable
-                );
-                $foreignLabel = $foreignLabelFieldConfiguration[$foreignLabelField]['label'];
-                $content =
-<<<EOS
-<strong><f:translate key="{$label}" /></strong><br>
-<f:for each="{processedRow.{$field}}" as="item">
-    <f:translate key="{$foreignLabel}" />: {item.{$foreignLabelField}} (id={item.uid})<br/>
-</f:for>
-
-EOS;
-                break;
-            default:
-                $content =
-<<<EOS
-<strong><f:translate key="{$label}" /></strong> {row.{$field}}<br>
-
-EOS;
-        }
-
-        return $content;
     }
 }
