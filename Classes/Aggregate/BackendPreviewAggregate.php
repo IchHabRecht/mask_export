@@ -182,7 +182,7 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
     {
         \$processedRow = \$databaseRow;
         foreach (\$processedTcaColumns as \$field => \$config) {
-            if (empty(\$config['children'])) {
+            if (!isset(\$config['children'])) {
                 continue;
             }
             \$processedRow[\$field] = [];
