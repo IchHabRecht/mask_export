@@ -46,22 +46,32 @@ class BackendFluidCodeGenerator
         $fieldConfiguration = $GLOBALS['TCA'][$table]['columns'][$field];
         $label = $fieldConfiguration['label'];
 
-        switch ($fieldConfiguration['config']['type']) {
-            case 'inline':
-                $content =
+        $content =
 <<<EOS
-<strong><f:translate key="{$label}" /></strong><br>
+<f:if condition="{processedRow.{$field}}">
+    <strong><f:translate key="{$label}" /></strong>
 
 EOS;
+
+        switch ($fieldConfiguration['config']['type']) {
+            case 'inline':
+                $content .= '<br>';
                 $content .= $this->getInlineFluid($field, $fieldConfiguration);
                 break;
             default:
-                $content =
+                $content .=
 <<<EOS
-<strong><f:translate key="{$label}" /></strong> {processedRow.{$field}} (raw={row.{$field}})<br>
+    {processedRow.{$field}} (raw={row.{$field}})<br>
 
 EOS;
         }
+
+        $content .=
+<<<EOS
+</f:if>
+
+EOS;
+
 
         return $content;
     }
