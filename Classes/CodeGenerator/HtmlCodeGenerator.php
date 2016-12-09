@@ -90,7 +90,7 @@ EOS;
                 $html .= <<<EOS
 <f:if condition="{{$datafield}_{$fieldKey}}">
     <f:for each="{{$datafield}_{$fieldKey}}" as="content_item">
-        <f:cObject typoscriptObjectPath="tt_content" data="{content_item.data}" /><br />
+        <f:cObject typoscriptObjectPath="tt_content" data="{content_item.data}" table="tt_content" /><br />
     </f:for>
 </f:if>
 
