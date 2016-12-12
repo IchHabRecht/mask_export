@@ -27,10 +27,6 @@ namespace CPSIT\MaskExport\FileCollection;
 
 use CPSIT\MaskExport\Aggregate\LanguageAwareInterface;
 
-/**
- * @package mask
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- */
 class LanguageFileCollection extends AbstractFileCollection
 {
     /**

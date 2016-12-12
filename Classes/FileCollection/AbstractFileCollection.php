@@ -27,10 +27,6 @@ namespace CPSIT\MaskExport\FileCollection;
 
 use CPSIT\MaskExport\Aggregate\AbstractAggregate;
 
-/**
- * @package mask
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- */
 abstract class AbstractFileCollection
 {
     /**

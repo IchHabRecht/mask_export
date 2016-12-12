@@ -41,10 +41,6 @@ use CPSIT\MaskExport\FileCollection\SqlFileCollection;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
-/**
- * @package mask
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- */
 class ExportController extends ActionController
 {
     /**

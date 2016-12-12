@@ -27,10 +27,6 @@ namespace CPSIT\MaskExport\FileCollection;
 
 use CPSIT\MaskExport\Aggregate\SqlAwareInterface;
 
-/**
- * @package mask
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- */
 class SqlFileCollection extends AbstractFileCollection
 {
     /**

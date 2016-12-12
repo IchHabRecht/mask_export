@@ -28,10 +28,6 @@ namespace CPSIT\MaskExport\Aggregate;
 use CPSIT\MaskExport\CodeGenerator\HtmlCodeGenerator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * @package mask
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- */
 class ContentRenderingAggregate extends AbstractOverridesAggregate implements PlainTextFileAwareInterface
 {
     use PlainTextFileAwareTrait;

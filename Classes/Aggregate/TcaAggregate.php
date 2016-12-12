@@ -25,10 +25,6 @@ namespace CPSIT\MaskExport\Aggregate;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-/**
- * @package mask
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- */
 class TcaAggregate extends AbstractAggregate implements LanguageAwareInterface, PhpAwareInterface, SqlAwareInterface
 {
     use PhpAwareTrait;
