@@ -99,7 +99,7 @@ EOS
             . $this->languageFilePath . $this->languageFileIdentifier . ':' . $this->table;
 
         if (!empty($tableConfiguration['columns'])) {
-            $tableConfiguration['columns'] = $this->replaceFieldLabels($tableConfiguration['columns']);
+            $tableConfiguration['columns'] = $this->replaceFieldLabels($tableConfiguration['columns'], $this->table);
         }
 
         return $tableConfiguration;

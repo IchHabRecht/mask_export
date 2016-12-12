@@ -115,15 +115,16 @@ trait TcaAwareTrait
 
     /**
      * @param array $fields
+     * @param string $table
      * @return array
      */
-    protected function replaceFieldLabels(array $fields)
+    protected function replaceFieldLabels(array $fields, $table)
     {
         foreach ($fields as $field => &$configuration) {
             if (0 === strpos($configuration['label'], 'LLL:')) {
                 continue;
             }
-            if (!isset($configuration['label']) && empty($this->maskConfiguration[$this->table]['elements'])) {
+            if (!isset($configuration['label']) && empty($this->maskConfiguration[$table]['elements'])) {
                 continue;
             }
 
@@ -131,7 +132,7 @@ trait TcaAwareTrait
             if (isset($configuration['label'])) {
                 $label = $configuration['label'];
             } else {
-                foreach ($this->maskConfiguration[$this->table]['elements'] as $element) {
+                foreach ($this->maskConfiguration[$table]['elements'] as $element) {
                     if (!in_array($field, $element['columns'], true)) {
                         continue;
                     }
@@ -146,11 +147,11 @@ trait TcaAwareTrait
 
             $this->addLabel(
                 $this->languageFilePath . $this->languageFileIdentifier,
-                $this->table . '.' . $field,
+                $table . '.' . $field,
                 $label
             );
             $configuration['label'] = 'LLL:EXT:mask/'
-                . $this->languageFilePath . $this->languageFileIdentifier . ':' . $this->table . '.' . $field;
+                . $this->languageFilePath . $this->languageFileIdentifier . ':' . $table . '.' . $field;
         }
 
         return $fields;

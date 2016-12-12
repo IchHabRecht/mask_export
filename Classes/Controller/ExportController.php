@@ -26,6 +26,7 @@ namespace CPSIT\MaskExport\Controller;
  ***************************************************************/
 
 use CPSIT\MaskExport\Aggregate\AggregateCollection;
+use CPSIT\MaskExport\Aggregate\BackendPreviewAggregate;
 use CPSIT\MaskExport\Aggregate\ContentRenderingAggregate;
 use CPSIT\MaskExport\Aggregate\ExtensionConfigurationAggregate;
 use CPSIT\MaskExport\Aggregate\InlineContentColPosAggregate;
@@ -56,6 +57,7 @@ class ExportController extends ActionController
         ContentRenderingAggregate::class,
         NewContentElementWizardAggregate::class,
         InlineContentColPosAggregate::class,
+        BackendPreviewAggregate::class,
     ];
 
     /**

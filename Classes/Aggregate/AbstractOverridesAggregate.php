@@ -52,7 +52,7 @@ abstract class AbstractOverridesAggregate extends AbstractAggregate implements L
         $newTableFields = array_intersect_key($tableConfiguration['columns'],
             $this->maskConfiguration[$this->table]['tca']);
         ksort($newTableFields);
-        $newTableFields = $this->replaceFieldLabels($newTableFields);
+        $newTableFields = $this->replaceFieldLabels($newTableFields, $this->table);
         $this->addFieldsSqlDefinitions($newTableFields);
         $tempColumns = var_export($newTableFields, true);
         $this->appendPhpFile(
