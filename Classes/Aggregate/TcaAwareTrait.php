@@ -129,7 +129,7 @@ trait TcaAwareTrait
                 $label = $configuration['label'];
             } else {
                 foreach ($this->maskConfiguration[$table]['elements'] as $element) {
-                    if (!in_array($field, $element['columns'], true)) {
+                    if (empty($element['columns']) || !in_array($field, $element['columns'], true)) {
                         continue;
                     }
 
