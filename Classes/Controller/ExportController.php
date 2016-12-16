@@ -38,6 +38,7 @@ use CPSIT\MaskExport\FileCollection\LanguageFileCollection;
 use CPSIT\MaskExport\FileCollection\PhpFileCollection;
 use CPSIT\MaskExport\FileCollection\PlainTextFileCollection;
 use CPSIT\MaskExport\FileCollection\SqlFileCollection;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
@@ -55,6 +56,11 @@ class ExportController extends ActionController
         InlineContentColPosAggregate::class,
         BackendPreviewAggregate::class,
     ];
+
+    /**
+     * @var string
+     */
+    protected $defaultExtensionName = 'mask_export';
 
     /**
      * @var array
@@ -79,8 +85,18 @@ class ExportController extends ActionController
      *
      * @param string $extensionName
      */
-    public function listAction($extensionName = 'mask_example')
+    public function listAction($extensionName = '')
     {
+        $backendUser = $this->getBackendUser();
+        if (!empty($extensionName)) {
+            $backendUser->uc['mask_export']['extensionName'] = $extensionName;
+            $backendUser->writeUC();
+        } elseif (!empty($backendUser->uc['mask_export']['extensionName'])) {
+            $extensionName = $backendUser->uc['mask_export']['extensionName'];
+        } else {
+            $extensionName = $this->defaultExtensionName;
+        }
+
         $files = $this->getFiles($extensionName);
 
         $this->view->assignMultiple(
@@ -221,5 +237,13 @@ class ExportController extends ActionController
         });
 
         return $files;
+    }
+
+    /**
+     * @return BackendUserAuthentication
+     */
+    protected function getBackendUser()
+    {
+        return $GLOBALS['BE_USER'];
     }
 }
