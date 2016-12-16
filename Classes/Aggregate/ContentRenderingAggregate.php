@@ -121,7 +121,7 @@ EOS
         $resourcesPath = 'EXT:mask/' . $this->resourcePath;
         $layoutsPath = $resourcesPath . $this->layoutPath;
         $partialPath = $resourcesPath . $this->partialPath;
-        $templatesPath = $resourcesPath . $this->templatePath . GeneralUtility::underscoredToUpperCamelCase($this->table);
+        $templatesPath = $resourcesPath . $this->templatePath . GeneralUtility::underscoredToUpperCamelCase($this->table) . '/';
         $key = $element['key'];
         $templateName = GeneralUtility::underscoredToUpperCamelCase($key);
         $this->appendPlainTextFile(
@@ -131,7 +131,8 @@ tt_content.mask_{$key} = FLUIDTEMPLATE
 tt_content.mask_{$key} {
     layoutRootPaths.0 = {$layoutsPath}
     partialRootPaths.0 = {$partialPath}
-    file = {$templatesPath}/{$templateName}.html
+    templateRootPaths.0 = {$templatesPath}
+    templateName = {$templateName}
 
 EOS
         );
@@ -270,10 +271,12 @@ EOS;
     protected function addFluidTemplate(array $element)
     {
         $key = $element['key'];
+        $templatePath = $this->resourcePath . $this->templatePath . GeneralUtility::underscoredToUpperCamelCase($this->table) . '/';
+        $templateName = GeneralUtility::underscoredToUpperCamelCase($key);
         $html = $this->htmlCodeGenerator->generateHtml($key);
         if (!empty($html)) {
             $this->addPlainTextFile(
-                $this->templatesFilePath . GeneralUtility::underscoredToUpperCamelCase($this->table) . '/' . $key . '.html',
+                $templatePath . $templateName . '.html',
                 $html
             );
         }
