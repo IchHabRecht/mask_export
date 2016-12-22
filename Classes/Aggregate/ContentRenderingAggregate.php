@@ -45,7 +45,22 @@ class ContentRenderingAggregate extends AbstractOverridesAggregate implements Pl
     /**
      * @var string
      */
-    protected $templatesFilePath = 'Resources/Private/Templates/';
+    protected $resourcePath = 'Resources/Private/';
+
+    /**
+     * @var string
+     */
+    protected $templatePath = 'Templates/';
+
+    /**
+     * @var string
+     */
+    protected $layoutPath = 'Layouts/';
+
+    /**
+     * @var string
+     */
+    protected $partialPath = 'Partials/';
 
     /**
      * @var string
@@ -103,14 +118,21 @@ EOS
      */
     protected function addTypoScript(array $element)
     {
-        $templatesPath = 'EXT:mask/' . $this->templatesFilePath . GeneralUtility::underscoredToUpperCamelCase($this->table);
+        $resourcesPath = 'EXT:mask/' . $this->resourcePath;
+        $layoutsPath = $resourcesPath . $this->layoutPath;
+        $partialPath = $resourcesPath . $this->partialPath;
+        $templatesPath = $resourcesPath . $this->templatePath . GeneralUtility::underscoredToUpperCamelCase($this->table) . '/';
         $key = $element['key'];
+        $templateName = GeneralUtility::underscoredToUpperCamelCase($key);
         $this->appendPlainTextFile(
             $this->typoScriptFilePath . 'setup.ts',
 <<<EOS
 tt_content.mask_{$key} = FLUIDTEMPLATE
 tt_content.mask_{$key} {
-    file = {$templatesPath}/{$key}.html
+    layoutRootPaths.0 = {$layoutsPath}
+    partialRootPaths.0 = {$partialPath}
+    templateRootPaths.0 = {$templatesPath}
+    templateName = {$templateName}
 
 EOS
         );
@@ -249,10 +271,13 @@ EOS;
     protected function addFluidTemplate(array $element)
     {
         $key = $element['key'];
+        $templateSubFolder = 'tt_content' === $this->table ? 'Content' : GeneralUtility::underscoredToUpperCamelCase($this->table);
+        $templatePath = $this->resourcePath . $this->templatePath . $templateSubFolder . '/';
+        $templateName = GeneralUtility::underscoredToUpperCamelCase($key);
         $html = $this->htmlCodeGenerator->generateHtml($key);
         if (!empty($html)) {
             $this->addPlainTextFile(
-                $this->templatesFilePath . GeneralUtility::underscoredToUpperCamelCase($this->table) . '/' . $key . '.html',
+                $templatePath . $templateName . '.html',
                 $html
             );
         }

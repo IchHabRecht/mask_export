@@ -219,6 +219,7 @@ EOS
                 continue;
             }
 
+            $templateSubFolder = 'tt_content' === $this->table ? 'Content/' : GeneralUtility::underscoredToUpperCamelCase($this->table) . '/';
             $templateKey = GeneralUtility::underscoredToUpperCamelCase($key);
             foreach ($element['columns'] as $field) {
                 $field = isset($GLOBALS['TCA'][$this->table]['columns'][$field]) ? $field : 'tx_mask_' . $field;
@@ -226,7 +227,7 @@ EOS
                     continue;
                 }
                 $this->appendPlainTextFile(
-                    $this->templatesFilePath . $templateKey . '.html',
+                    $this->templatesFilePath . $templateSubFolder . $templateKey . '.html',
                     $this->fluidCodeGenerator->generateFluid($this->table, $field)
                 );
             }
