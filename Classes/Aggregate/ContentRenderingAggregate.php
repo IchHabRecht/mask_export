@@ -271,7 +271,8 @@ EOS;
     protected function addFluidTemplate(array $element)
     {
         $key = $element['key'];
-        $templatePath = $this->resourcePath . $this->templatePath . GeneralUtility::underscoredToUpperCamelCase($this->table) . '/';
+        $templateSubFolder = 'tt_content' === $this->table ? 'Content' : GeneralUtility::underscoredToUpperCamelCase($this->table);
+        $templatePath = $this->resourcePath . $this->templatePath . $templateSubFolder . '/';
         $templateName = GeneralUtility::underscoredToUpperCamelCase($key);
         $html = $this->htmlCodeGenerator->generateHtml($key);
         if (!empty($html)) {
