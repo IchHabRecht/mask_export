@@ -1,3 +1,12 @@
+2016-12-22         [RELEASE] Release of mask_export 0.6.0 (Nicole Cordes)
+2016-12-22 1423218 [TASK] Raise compatibility to TYPO3 8.5 (Nicole Cordes)
+2016-12-22 e574b7e [TASK] Streamline backend template path (Nicole Cordes)
+2016-12-22 8835230 [TASK] Adjust template path for content elements (Nicole Cordes)
+2016-12-16 ae5ed1c [FEATURE] Use templatePaths and templateName instead of file (Nicole Cordes)
+2016-12-16 153565a [FEATURE] Store extension key in backend user settings (Nicole Cordes)
+2016-12-16 0112c0d [TASK] Ensure correct Fluid paths for content element rendering (Nicole Cordes)
+2016-12-13 31111c5 [BUGFIX] Prevent warning for empty elements (Nicole Cordes)
+
 2016-12-12         [RELEASE] Release of mask_export 0.5.0 (Nicole Cordes)
 2016-12-12 359c15c [TASK] Remove wrong package header (Nicole Cordes)
 2016-12-09 430193d [BUGFIX] Enforce table in <f:cObject> to ensure correct FileProcessing (Nicole Cordes)
