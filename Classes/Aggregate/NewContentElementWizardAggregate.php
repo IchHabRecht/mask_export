@@ -52,6 +52,11 @@ class NewContentElementWizardAggregate extends AbstractAggregate implements Lang
     protected $pageTSConfigFilePath = 'Configuration/PageTSconfig/';
 
     /**
+     * @var array
+     */
+    protected $icons;
+
+    /**
      * Adds content elements to the newContentElementWizard
      */
     protected function process()
@@ -90,9 +95,30 @@ EOS
 \\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::addPageTSConfig(
     '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:mask/{$this->pageTSConfigFilePath}{$this->pageTSConfigFileIdentifier}">'
 );
+EOS
+
+        );
+
+        $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask_export']);
+        if (!empty($extensionConfiguration['exportIcons'])) {
+            $this->appendPhpFile(
+                'ext_localconf.php',
+<<<EOS
+\$iconRegistry = \\TYPO3\\CMS\\Core\\Utility\\GeneralUtility::makeInstance(\\TYPO3\\CMS\\Core\\Imaging\\IconRegistry::class);
 
 EOS
-        );
+            );
+
+            foreach ($this->icons as $icon) {
+                $this->appendPhpFile(
+                    'ext_localconf.php',
+<<<EOS
+$icon
+
+EOS
+                );
+            }
+        }
     }
 
     /**
@@ -113,11 +139,19 @@ EOS
             (!empty($element['description'])) ? $element['description'] : ''
         );
 
+        /*if (!empty($extensionConfiguration['exportIcons'])) {
+            $this->addLabel(
+                $this->languageFilePath . $this->languageFileIdentifier,
+                'wizards.newContentElement.' . $key . '_icon',
+                (!empty($element['icon'])) ? $element['icon'] : ''
+            );
+        }*/
+
         $this->appendPlainTextFile(
             $this->pageTSConfigFilePath . $this->pageTSConfigFileIdentifier,
 <<<EOS
             {$key} {
-                iconIdentifier = content-textpic
+                iconIdentifier = LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:wizards.newContentElement.{$key}_icon
                 title = LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:wizards.newContentElement.{$key}_title
                 description = LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:wizards.newContentElement.{$key}_description
                 tt_content_defValues {
@@ -127,5 +161,22 @@ EOS
 
 EOS
         );
+
+        $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask_export']);
+        if (!empty($extensionConfiguration['exportIcons'])) {
+            $iconName = substr($element['icon'], 3);
+            $contentElementIcon =
+<<<ICON
+            \$iconRegistry->registerIcon(
+                '$iconName',
+                \TYPO3\CMS\Core\Imaging\IconProvider\FontawesomeIconProvider::class,
+                [
+                    'name'     => '$iconName'
+                ]
+            );
+
+ICON;
+            array_push($this->icons, $contentElementIcon);
+        }
     }
 }
