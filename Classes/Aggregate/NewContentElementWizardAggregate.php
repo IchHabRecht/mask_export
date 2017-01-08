@@ -54,7 +54,7 @@ class NewContentElementWizardAggregate extends AbstractAggregate implements Lang
     /**
      * @var array
      */
-    protected $icons;
+    protected $icons = [];
 
     /**
      * Adds content elements to the newContentElementWizard
@@ -67,8 +67,8 @@ class NewContentElementWizardAggregate extends AbstractAggregate implements Lang
 
         $this->appendPlainTextFile(
             $this->pageTSConfigFilePath . $this->pageTSConfigFileIdentifier,
-<<<EOS
-mod.wizards.newContentElement.wizardItems.common {
+            <<<EOS
+            mod.wizards.newContentElement.wizardItems.common {
     elements {
 
 EOS
@@ -81,8 +81,8 @@ EOS
         $elementKeys = implode(', ', array_keys($this->maskConfiguration['tt_content']['elements']));
         $this->appendPlainTextFile(
             $this->pageTSConfigFilePath. $this->pageTSConfigFileIdentifier,
-<<<EOS
-    }
+            <<<EOS
+                }
     show := addToList({$elementKeys})
 }
 
@@ -91,10 +91,11 @@ EOS
 
         $this->addPhpFile(
             'ext_localconf.php',
-<<<EOS
-\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::addPageTSConfig(
+            <<<EOS
+            \\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::addPageTSConfig(
     '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:mask/{$this->pageTSConfigFilePath}{$this->pageTSConfigFileIdentifier}">'
 );
+
 EOS
 
         );
@@ -103,7 +104,8 @@ EOS
         if (!empty($extensionConfiguration['exportIcons'])) {
             $this->appendPhpFile(
                 'ext_localconf.php',
-<<<EOS
+                <<<EOS
+                
 \$iconRegistry = \\TYPO3\\CMS\\Core\\Utility\\GeneralUtility::makeInstance(\\TYPO3\\CMS\\Core\\Imaging\\IconRegistry::class);
 
 EOS
@@ -112,7 +114,8 @@ EOS
             foreach ($this->icons as $icon) {
                 $this->appendPhpFile(
                     'ext_localconf.php',
-<<<EOS
+                    <<<EOS
+                    
 $icon
 
 EOS
@@ -139,18 +142,10 @@ EOS
             (!empty($element['description'])) ? $element['description'] : ''
         );
 
-        /*if (!empty($extensionConfiguration['exportIcons'])) {
-            $this->addLabel(
-                $this->languageFilePath . $this->languageFileIdentifier,
-                'wizards.newContentElement.' . $key . '_icon',
-                (!empty($element['icon'])) ? $element['icon'] : ''
-            );
-        }*/
-
         $this->appendPlainTextFile(
             $this->pageTSConfigFilePath . $this->pageTSConfigFileIdentifier,
-<<<EOS
-            {$key} {
+            <<<EOS
+                        {$key} {
                 iconIdentifier = LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:wizards.newContentElement.{$key}_icon
                 title = LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:wizards.newContentElement.{$key}_title
                 description = LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:wizards.newContentElement.{$key}_description
@@ -166,15 +161,14 @@ EOS
         if (!empty($extensionConfiguration['exportIcons'])) {
             $iconName = substr($element['icon'], 3);
             $contentElementIcon =
-<<<ICON
-            \$iconRegistry->registerIcon(
-                '$iconName',
-                \TYPO3\CMS\Core\Imaging\IconProvider\FontawesomeIconProvider::class,
-                [
-                    'name'     => '$iconName'
-                ]
-            );
-
+                <<<ICON
+                \$iconRegistry->registerIcon(
+    '$iconName',
+    \TYPO3\CMS\Core\Imaging\IconProvider\FontawesomeIconProvider::class,
+    [
+        'name'     => '$iconName'
+    ]
+);
 ICON;
             array_push($this->icons, $contentElementIcon);
         }
