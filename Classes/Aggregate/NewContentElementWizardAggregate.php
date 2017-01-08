@@ -142,11 +142,17 @@ EOS
             (!empty($element['description'])) ? $element['description'] : ''
         );
 
-        $this->appendPlainTextFile(
+        $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask_export']);
+        if (!empty($extensionConfiguration['exportIcons'])) {
+            $iconName = substr($element['icon'], 3);
+        } else {
+            $iconName = 'content-textpic';
+        }
+            $this->appendPlainTextFile(
             $this->pageTSConfigFilePath . $this->pageTSConfigFileIdentifier,
 <<<EOS
             {$key} {
-                iconIdentifier = LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:wizards.newContentElement.{$key}_icon
+                iconIdentifier = $iconName
                 title = LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:wizards.newContentElement.{$key}_title
                 description = LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:wizards.newContentElement.{$key}_description
                 tt_content_defValues {
@@ -159,7 +165,6 @@ EOS
 
         $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask_export']);
         if (!empty($extensionConfiguration['exportIcons'])) {
-            $iconName = substr($element['icon'], 3);
             $contentElementIcon =
 <<<ICON
 \$iconRegistry->registerIcon(
