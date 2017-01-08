@@ -148,7 +148,8 @@ EOS
         } else {
             $iconName = 'content-textpic';
         }
-            $this->appendPlainTextFile(
+
+        $this->appendPlainTextFile(
             $this->pageTSConfigFilePath . $this->pageTSConfigFileIdentifier,
 <<<EOS
             {$key} {
