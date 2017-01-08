@@ -57,11 +57,6 @@ class NewContentElementWizardAggregate extends AbstractAggregate implements Lang
     protected $icons = [];
 
     /**
-     * @var array
-     */
-    protected $iconNames = [];
-
-    /**
      * Adds content elements to the newContentElementWizard
      */
     protected function process()
@@ -121,9 +116,13 @@ EOS
                 $this->appendPhpFile(
                     'ext_localconf.php',
 <<<EOS
-
-$icon
-
+\$iconRegistry->registerIcon(
+    '$icon',
+    \TYPO3\CMS\Core\Imaging\IconProvider\FontawesomeIconProvider::class,
+    [
+        'name'     => '$icon'
+    ]
+);
 EOS
                 );
             }
@@ -170,21 +169,10 @@ EOS
 EOS
         );
 
-        if(!in_array($iconName, $this->iconNames)) {
+        if(!in_array($iconName, $this->icons)) {
             $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask_export']);
             if (!empty($extensionConfiguration['exportIcons'])) {
-                $contentElementIcon =
-<<<ICON
-\$iconRegistry->registerIcon(
-    '$iconName',
-    \TYPO3\CMS\Core\Imaging\IconProvider\FontawesomeIconProvider::class,
-    [
-        'name'     => '$iconName'
-    ]
-);
-ICON;
-                array_push($this->icons, $contentElementIcon);
-                array_push($this->iconNames, $iconName);
+                array_push($this->icons, $iconName);
             }
         }
     }
