@@ -164,9 +164,10 @@ EOS
 EOS
         );
 
-        $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask_export']);
-        if (!empty($extensionConfiguration['exportIcons'])) {
-            $contentElementIcon =
+        if(!in_array($iconName, $this->icons)) {
+            $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask_export']);
+            if (!empty($extensionConfiguration['exportIcons'])) {
+                $contentElementIcon =
 <<<ICON
 \$iconRegistry->registerIcon(
     '$iconName',
@@ -176,7 +177,8 @@ EOS
     ]
 );
 ICON;
-            array_push($this->icons, $contentElementIcon);
+                array_push($this->icons, $contentElementIcon);
+            }
         }
     }
 }
