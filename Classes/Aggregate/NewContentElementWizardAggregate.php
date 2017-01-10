@@ -69,7 +69,10 @@ mod.wizards.newContentElement.wizardItems.common {
 EOS
         );
 
-        foreach ($this->maskConfiguration['tt_content']['elements'] as $element) {
+        $elements = $this->maskConfiguration['tt_content']['elements'];
+        ksort($elements);
+
+        foreach ($elements as $element) {
             $this->processElement($element);
         }
 
