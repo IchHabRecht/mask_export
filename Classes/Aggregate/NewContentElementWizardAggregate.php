@@ -34,6 +34,21 @@ class NewContentElementWizardAggregate extends AbstractAggregate implements Lang
     /**
      * @var string
      */
+    protected static $defaultIconIdentifier = 'content-textpic';
+
+    /**
+     * @var string[]
+     */
+    protected $icons = [];
+
+    /**
+     * @var string
+     */
+    protected $iconResourceFilePath = 'Resources/Public/Icons/Content/';
+
+    /**
+     * @var string
+     */
     protected $languageFileIdentifier = 'locallang_db_new_content_el.xlf';
 
     /**
@@ -72,6 +87,8 @@ EOS
         $elements = $this->maskConfiguration['tt_content']['elements'];
         ksort($elements);
 
+        $this->prepareContentElementIcons($elements);
+
         foreach ($elements as $element) {
             $this->processElement($element);
         }
@@ -87,7 +104,7 @@ EOS
 EOS
         );
 
-        $this->addPhpFile(
+        $this->appendPhpFile(
             'ext_localconf.php',
 <<<EOS
 \\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::addPageTSConfig(
@@ -99,11 +116,78 @@ EOS
     }
 
     /**
+     * @param array $elements
+     */
+    protected function prepareContentElementIcons(array $elements)
+    {
+        $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask_export']);
+        if (empty($extensionConfiguration['contentElementIcons'])) {
+            return;
+        }
+
+        $maskConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask']);
+        $maskIconFolder = PATH_site . $maskConfiguration['preview'];
+
+        $iconRegistryConfiguration = '';
+        foreach ($elements as $element) {
+            $key = $element['key'];
+            $iconIdentifier = 'tx_mask_' . $key;
+            $icon = 'ce_' . $key . '.png';
+            if (file_exists($maskIconFolder . $icon)) {
+                $iconPath = $this->iconResourceFilePath . $icon;
+                $this->addPlainTextFile(
+                    $iconPath,
+                    file_get_contents($maskIconFolder . $icon)
+                );
+                $iconRegistryConfiguration .=
+<<<EOS
+\$iconRegistry->registerIcon(
+    '$iconIdentifier',
+    \TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider::class,
+    [
+        'source' => 'EXT:mask/$iconPath',
+    ]
+);
+
+EOS;
+                $this->icons[$key] = $iconIdentifier;
+            } elseif (!empty($element['icon'])) {
+                $iconName = substr($element['icon'], 3);
+                $iconRegistryConfiguration .=
+<<<EOS
+\$iconRegistry->registerIcon(
+    '$iconIdentifier',
+    \TYPO3\CMS\Core\Imaging\IconProvider\FontawesomeIconProvider::class,
+    [
+        'name' => '$iconName',
+    ]
+);
+
+EOS;
+                $this->icons[$key] = $iconIdentifier;
+            }
+        }
+
+        if (!empty($iconRegistryConfiguration)) {
+            $this->appendPhpFile(
+                'ext_localconf.php',
+<<<EOS
+// Register content element icons
+\$iconRegistry = \\TYPO3\\CMS\\Core\\Utility\\GeneralUtility::makeInstance(\\TYPO3\\CMS\\Core\\Imaging\\IconRegistry::class);
+$iconRegistryConfiguration
+
+EOS
+            );
+        }
+    }
+
+    /**
      * @param array $element
      */
     protected function processElement(array $element)
     {
         $key = $element['key'];
+        $iconIdentifier = !empty($this->icons[$key]) ? $this->icons[$key] : static::$defaultIconIdentifier;
 
         $this->addLabel(
             $this->languageFilePath . $this->languageFileIdentifier,
@@ -120,7 +204,7 @@ EOS
             $this->pageTSConfigFilePath . $this->pageTSConfigFileIdentifier,
 <<<EOS
             {$key} {
-                iconIdentifier = content-textpic
+                iconIdentifier = $iconIdentifier
                 title = LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:wizards.newContentElement.{$key}_title
                 description = LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:wizards.newContentElement.{$key}_description
                 tt_content_defValues {
