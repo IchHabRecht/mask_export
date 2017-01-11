@@ -137,7 +137,7 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
 
         \$contentType = explode('_', \$row['CType'], 2);
         \$templateKey = GeneralUtility::underscoredToUpperCamelCase(\$contentType[1]);
-        \$templatePath = GeneralUtility::getFileAbsFileName(\$this->rootPath . 'Templates/' . \$templateKey . '.html');
+        \$templatePath = GeneralUtility::getFileAbsFileName(\$this->rootPath . 'Templates/Content/' . \$templateKey . '.html');
         if (!file_exists(\$templatePath)) {
             return;
         }
@@ -219,7 +219,6 @@ EOS
                 continue;
             }
 
-            $templateSubFolder = 'tt_content' === $this->table ? 'Content/' : GeneralUtility::underscoredToUpperCamelCase($this->table) . '/';
             $templateKey = GeneralUtility::underscoredToUpperCamelCase($key);
             foreach ($element['columns'] as $field) {
                 $field = isset($GLOBALS['TCA'][$this->table]['columns'][$field]) ? $field : 'tx_mask_' . $field;
@@ -227,7 +226,7 @@ EOS
                     continue;
                 }
                 $this->appendPlainTextFile(
-                    $this->templatesFilePath . $templateSubFolder . $templateKey . '.html',
+                    $this->templatesFilePath . 'Content/' . $templateKey . '.html',
                     $this->fluidCodeGenerator->generateFluid($this->table, $field)
                 );
             }
