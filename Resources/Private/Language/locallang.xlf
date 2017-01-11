@@ -6,6 +6,9 @@
 			<trans-unit id="config.backendPreview">
 				<source>Add backend preview templates: If enabled the export contains some PHP and Fluid files to show a record preview in the page layout.</source>
 			</trans-unit>
+			<trans-unit id="config.exportIcons">
+				<source>Export content element icons: If enabled the export contains some PHP to export defined content element icons.</source>
+			</trans-unit>
 			<trans-unit id="tx_mask.all.export">
 				<source>Code Export</source>
 			</trans-unit>
