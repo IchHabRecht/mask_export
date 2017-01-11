@@ -137,7 +137,7 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
 
         \$contentType = explode('_', \$row['CType'], 2);
         \$templateKey = GeneralUtility::underscoredToUpperCamelCase(\$contentType[1]);
-        \$templatePath = GeneralUtility::getFileAbsFileName(\$this->rootPath . 'Templates/' . \$templateKey . '.html');
+        \$templatePath = GeneralUtility::getFileAbsFileName(\$this->rootPath . 'Templates/Content/' . \$templateKey . '.html');
         if (!file_exists(\$templatePath)) {
             return;
         }
