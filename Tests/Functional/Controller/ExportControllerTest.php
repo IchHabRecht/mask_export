@@ -116,4 +116,46 @@ class ExportControllerTest extends FunctionalTestCase
             $this->assertArrayHasKey($templatePath, $this->files);
         }
     }
+
+    /**
+     * @test
+     */
+    public function checkFluidTemplatePathInBackendPreview()
+    {
+        $this->assertArrayHasKey('Classes/Hooks/PageLayoutViewDrawItem.php', $this->files);
+        $matches = [];
+        preg_match(
+            '#\\$templatePath = GeneralUtility::getFileAbsFileName\\(([^)]+)\\);#',
+            $this->files['Classes/Hooks/PageLayoutViewDrawItem.php'],
+            $matches
+        );
+        $this->assertCount(2, $matches);
+        $templateRootPath = str_replace(
+            [
+                '\'',
+                ' . ',
+                '$this->rootPath',
+            ],
+            [
+                '',
+                '',
+                'Resources/Private/Backend/',
+            ],
+            $matches[1]
+        );
+        $matches = [];
+        preg_match(
+            '#protected \\$supportedContentTypes = ([^;]+);#',
+            $this->files['Classes/Hooks/PageLayoutViewDrawItem.php'],
+            $matches
+        );
+        $this->assertCount(2, $matches);
+        $supportedContentTypes = eval('return ' . $matches[1] . ';');
+        foreach ($supportedContentTypes as $contentType => $_) {
+            $contentType = explode('_', $contentType, 2);
+            $templateKey = GeneralUtility::underscoredToUpperCamelCase($contentType[1]);
+            $templatePath = str_replace('$templateKey', $templateKey, $templateRootPath);
+            $this->assertArrayHasKey($templatePath, $this->files);
+        }
+    }
 }
