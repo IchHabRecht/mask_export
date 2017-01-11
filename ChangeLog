@@ -1,3 +1,6 @@
+2017-01-11         [RELEASE] Release of mask_export 0.6.2 (Nicole Cordes)
+2017-01-11 e002800 [BUGFIX] Correct backend preview template paths (Nicole Cordes)
+
 2017-01-11         [RELEASE] Release of mask_export 0.6.1 (Nicole Cordes)
 2017-01-11 6e2a32d [BUGFIX] Fix inconsistency in template paths for content elements (Nicole Cordes)
 
