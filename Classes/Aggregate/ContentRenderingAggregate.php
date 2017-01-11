@@ -121,7 +121,8 @@ EOS
         $resourcesPath = 'EXT:mask/' . $this->resourcePath;
         $layoutsPath = $resourcesPath . $this->layoutPath;
         $partialPath = $resourcesPath . $this->partialPath;
-        $templatesPath = $resourcesPath . $this->templatePath . GeneralUtility::underscoredToUpperCamelCase($this->table) . '/';
+        $templateSubFolder = 'tt_content' === $this->table ? 'Content' : GeneralUtility::underscoredToUpperCamelCase($this->table);
+        $templatesPath = $resourcesPath . $this->templatePath . $templateSubFolder . '/';
         $key = $element['key'];
         $templateName = GeneralUtility::underscoredToUpperCamelCase($key);
         $this->appendPlainTextFile(
