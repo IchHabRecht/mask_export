@@ -85,8 +85,16 @@ class ExportControllerTest extends FunctionalTestCase
         $subject = $objectManager->get(ExportController::class);
         $subject->processRequest($request, $response);
 
-        $variables = $viewMock->getRenderingContext()->getVariableProvider();
-        $this->files = $variables->getByPath('files');
+        $closure = \Closure::bind(function () use ($viewMock) {
+            return $viewMock->baseRenderingContext;
+        }, null, TemplateView::class);
+        $renderingContext = $closure();
+        if (method_exists($renderingContext, 'getVariableProvider')) {
+            $variables = $renderingContext->getVariableProvider();
+        } else {
+            $variables = $renderingContext->getTemplateVariableContainer();
+        }
+        $this->files = $variables->get('files');
     }
 
     /**
