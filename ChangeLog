@@ -1,3 +1,6 @@
+2017-01-11         [RELEASE] Release of mask_export 0.6.1 (Nicole Cordes)
+2017-01-11 6e2a32d [BUGFIX] Fix inconsistency in template paths for content elements (Nicole Cordes)
+
 2016-12-22         [RELEASE] Release of mask_export 0.6.0 (Nicole Cordes)
 2016-12-22 1423218 [TASK] Raise compatibility to TYPO3 8.5 (Nicole Cordes)
 2016-12-22 e574b7e [TASK] Streamline backend template path (Nicole Cordes)
