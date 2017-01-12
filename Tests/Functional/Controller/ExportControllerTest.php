@@ -41,7 +41,7 @@ class ExportControllerTest extends FunctionalTestCase
     protected $configurationToUseInTestInstance = [
         'EXT' => [
             'extConf' => [
-                'mask' => 'a:1:{s:4:"json";s:61:"typo3conf/ext/mask_export/Tests/Functional/Fixtures/mask.json";}',
+                'mask' => 'a:2:{s:4:"json";s:61:"typo3conf/ext/mask_export/Tests/Functional/Fixtures/mask.json";s:7:"preview";s:70:"typo3conf/ext/mask_export/Tests/Functional/Fixtures/Templates/Preview/";}',
                 'mask_export' => 'a:2:{s:14:"backendPreview";s:1:"1";s:19:"contentElementIcons";s:1:"1";}',
             ],
         ],
@@ -165,5 +165,17 @@ class ExportControllerTest extends FunctionalTestCase
             $templatePath = str_replace('$templateKey', $templateKey, $templateRootPath);
             $this->assertArrayHasKey($templatePath, $this->files);
         }
+    }
+
+    /**
+     * @test
+     */
+    public function ensureContentElementIconFromPreviewFolderInExport()
+    {
+        $this->assertArrayHasKey('Resources/Public/Icons/Content/ce_nested-content-elements.png', $this->files);
+        $this->assertStringEqualsFile(
+            __DIR__ . '/../Fixtures/Templates/Preview/ce_nested-content-elements.png',
+            $this->files['Resources/Public/Icons/Content/ce_nested-content-elements.png']
+        );
     }
 }
