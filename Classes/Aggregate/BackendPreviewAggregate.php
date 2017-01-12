@@ -28,11 +28,9 @@ namespace CPSIT\MaskExport\Aggregate;
 use CPSIT\MaskExport\CodeGenerator\BackendFluidCodeGenerator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class BackendPreviewAggregate extends AbstractOverridesAggregate implements PhpAwareInterface, PlainTextFileAwareInterface
+class BackendPreviewAggregate extends AbstractOverridesAggregate implements PlainTextFileAwareInterface
 {
-    use PhpAwareTrait;
     use PlainTextFileAwareTrait;
-    use TcaAwareTrait;
 
     /**
      * @var BackendFluidCodeGenerator
