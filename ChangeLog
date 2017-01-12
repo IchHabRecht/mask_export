@@ -1,3 +1,13 @@
+2017-01-12         [RELEASE] Release of mask_export 0.6.3 (Nicole Cordes)
+2017-01-12 40cbbb8 [TASK] Add TYPO3 CSMS dependencies to composer.json (Nicole Cordes)
+2017-01-12 d73b9a6 [BUGFIX] Remove superfluous interfaces from BackendPreviewAggregate (Nicole Cordes)
+2017-01-12 368af31 [TASK] Enforce latest stable TYPO3 version (Nicole Cordes)
+2017-01-12 f1b8b68 [BUGFIX] Adjust setup for TYPO3 7.6 (Nicole Cordes)
+2017-01-12 765342c [FEATURE] Add test for existing Fluid Templates in backend preview (Nicole Cordes)
+2017-01-11 83d210b [FEATURE] Add test for existing Fluid Templates in TypoScript (Nicole Cordes)
+2017-01-11 143d99e [TASK] Adjust composer.json (Nicole Cordes)
+2017-01-11 9f1cd04 [FEATURE] Add .travis.yml (Nicole Cordes)
+
 2017-01-11         [RELEASE] Release of mask_export 0.6.2 (Nicole Cordes)
 2017-01-11 e002800 [BUGFIX] Correct backend preview template paths (Nicole Cordes)
 
