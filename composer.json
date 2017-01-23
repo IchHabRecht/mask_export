@@ -37,6 +37,9 @@
         "friendsofphp/php-cs-fixer": "^2.0",
         "phpunit/phpunit": "^4.8"
     },
+    "suggest": {
+        "phpstan/phpstan": "Use PHPStan for static PHP analysis"
+    },
     "autoload": {
         "psr-4": {
             "CPSIT\\MaskExport\\": "Classes/"
