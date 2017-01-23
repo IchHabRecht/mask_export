@@ -58,7 +58,7 @@ class LanguageFileCollection extends AbstractFileCollection
     protected function generateLanguageFile(array $body)
     {
         $domDocument = new \DOMDocument('1.0', 'utf-8');
-        $domDocument->formatOutput = TRUE;
+        $domDocument->formatOutput = true;
 
         $domFile = $domDocument->createElement('file');
         $domFile->appendChild(new \DOMAttr('source-language', 'en'));

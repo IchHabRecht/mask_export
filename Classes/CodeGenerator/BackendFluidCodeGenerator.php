@@ -72,7 +72,6 @@ EOS;
 
 EOS;
 
-
         return $content;
     }
 
