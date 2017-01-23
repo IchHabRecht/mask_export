@@ -127,7 +127,7 @@ class ExportController extends ActionController
 
         header('Content-Type: application/zip');
         header('Content-Length: ' . filesize($zipFile));
-        header('Content-Disposition: attachment; filename="' . $extensionName . '_0.1.0_'  . date('YmdHi', $GLOBALS['EXEC_TIME']) . '.zip"');
+        header('Content-Disposition: attachment; filename="' . $extensionName . '_0.1.0_' . date('YmdHi', $GLOBALS['EXEC_TIME']) . '.zip"');
 
         readfile($zipFile);
         unlink($zipFile);
@@ -231,9 +231,8 @@ class ExportController extends ActionController
                 return strcasecmp($a, $b);
             } elseif (strpos($a, '/') === false || substr_count($a, '/') < substr_count($b, '/')) {
                 return -1;
-            } else {
-                return 1;
             }
+            return 1;
         });
 
         return $files;

@@ -71,7 +71,7 @@ class TtContentOverridesAggregate extends AbstractOverridesAggregate
 
         $this->addLabel(
             $this->languageFilePath . $this->languageFileIdentifier,
-            $this->table. '.CType.div._mask_',
+            $this->table . '.CType.div._mask_',
             'mask'
         );
         $this->appendPhpFile(
@@ -87,7 +87,7 @@ EOS
         foreach ($newTypeFields as $type => $_) {
             $this->addLabel(
                 $this->languageFilePath . $this->languageFileIdentifier,
-                $this->table. '.CType.' . $type,
+                $this->table . '.CType.' . $type,
                 $this->maskConfiguration[$this->table]['elements'][substr($type, 5)]['label']
             );
             $this->appendPhpFile(

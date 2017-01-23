@@ -95,7 +95,7 @@ EOS
 
         $elementKeys = implode(', ', array_keys($this->maskConfiguration['tt_content']['elements']));
         $this->appendPlainTextFile(
-            $this->pageTSConfigFilePath. $this->pageTSConfigFileIdentifier,
+            $this->pageTSConfigFilePath . $this->pageTSConfigFileIdentifier,
 <<<EOS
     }
     show := addToList({$elementKeys})

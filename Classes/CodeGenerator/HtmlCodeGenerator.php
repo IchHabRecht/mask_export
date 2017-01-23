@@ -36,7 +36,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class HtmlCodeGenerator extends AbstractCodeGenerator
 {
-
     /**
      * Generates Fluid HTML for Contentelements
      *
