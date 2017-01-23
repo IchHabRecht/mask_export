@@ -50,7 +50,9 @@ enabled:
 finder:
   name:
     - "*.php"
-  not-path:
+  exclude:
     - ".Build"
     - "doc"
     - "Resources"
+  not-name:
+    - "ext_emconf.php"
