@@ -26,6 +26,7 @@ namespace CPSIT\MaskExport\Aggregate;
  ***************************************************************/
 
 use CPSIT\MaskExport\CodeGenerator\HtmlCodeGenerator;
+use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ContentRenderingAggregate extends AbstractOverridesAggregate implements PlainTextFileAwareInterface
@@ -210,8 +211,6 @@ EOS;
      */
     protected function addFileProcessorForField($table, $columnName, $index)
     {
-        $index = (int)$index;
-
         return
 <<<EOS
     dataProcessing.{$index} = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor
@@ -235,11 +234,10 @@ EOS;
      */
     protected function addDatabaseQueryProcessorForField($table, $columnName, $index)
     {
-        $index = (int)$index;
         $where = '1=1';
         if (!empty($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_record_defaults'])) {
             foreach ($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_record_defaults'] as $key => $value) {
-                $where .= ' AND ' . $key . '=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, 'tt_content');
+                $where .= ' AND ' . $key . '=' . $this->getDatabaseConnection()->fullQuoteStr($value, 'tt_content');
             }
         }
 
@@ -282,5 +280,13 @@ EOS;
                 $html
             );
         }
+    }
+
+    /**
+     * @return DatabaseConnection
+     */
+    protected function getDatabaseConnection()
+    {
+        return $GLOBALS['TYPO3_DB'];
     }
 }
