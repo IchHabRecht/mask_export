@@ -33,7 +33,7 @@ use TYPO3\CMS\Extbase\Mvc\Web\Response;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Fluid\View\TemplateView;
 
-class ExportControllerTest extends FunctionalTestCase
+abstract class AbstractExportControllerTestCase extends FunctionalTestCase
 {
     /**
      * @var array
@@ -95,87 +95,5 @@ class ExportControllerTest extends FunctionalTestCase
             $variables = $renderingContext->getTemplateVariableContainer();
         }
         $this->files = $variables->get('files');
-    }
-
-    /**
-     * @test
-     */
-    public function checkFluidTemplatePathsInTypoScript()
-    {
-        $this->assertArrayHasKey('Configuration/TypoScript/setup.ts', $this->files);
-        $templatePaths = [];
-        preg_match_all(
-            '#templateRootPaths\\.0 = EXT:mask_export/(.+)$#m',
-            $this->files['Configuration/TypoScript/setup.ts'],
-            $templatePaths,
-            PREG_SET_ORDER
-        );
-        $this->assertNotEmpty($templatePaths);
-        $templateNames = [];
-        preg_match_all(
-            '#templateName = (.+)$#m',
-            $this->files['Configuration/TypoScript/setup.ts'],
-            $templateNames,
-            PREG_SET_ORDER
-        );
-        $this->assertCount(count($templatePaths), $templateNames);
-        foreach ($templatePaths as $key => $templatePathArray) {
-            $templatePath = $templatePathArray[1] . $templateNames[$key][1] . '.html';
-            $this->assertArrayHasKey($templatePath, $this->files);
-        }
-    }
-
-    /**
-     * @test
-     */
-    public function checkFluidTemplatePathInBackendPreview()
-    {
-        $this->assertArrayHasKey('Classes/Hooks/PageLayoutViewDrawItem.php', $this->files);
-        $matches = [];
-        preg_match(
-            '#\\$templatePath = GeneralUtility::getFileAbsFileName\\(([^)]+)\\);#',
-            $this->files['Classes/Hooks/PageLayoutViewDrawItem.php'],
-            $matches
-        );
-        $this->assertCount(2, $matches);
-        $templateRootPath = str_replace(
-            [
-                '\'',
-                ' . ',
-                '$this->rootPath',
-            ],
-            [
-                '',
-                '',
-                'Resources/Private/Backend/',
-            ],
-            $matches[1]
-        );
-        $matches = [];
-        preg_match(
-            '#protected \\$supportedContentTypes = ([^;]+);#',
-            $this->files['Classes/Hooks/PageLayoutViewDrawItem.php'],
-            $matches
-        );
-        $this->assertCount(2, $matches);
-        $supportedContentTypes = eval('return ' . $matches[1] . ';');
-        foreach ($supportedContentTypes as $contentType => $_) {
-            $contentType = explode('_', $contentType, 2);
-            $templateKey = GeneralUtility::underscoredToUpperCamelCase($contentType[1]);
-            $templatePath = str_replace('$templateKey', $templateKey, $templateRootPath);
-            $this->assertArrayHasKey($templatePath, $this->files);
-        }
-    }
-
-    /**
-     * @test
-     */
-    public function ensureContentElementIconFromPreviewFolderInExport()
-    {
-        $this->assertArrayHasKey('Resources/Public/Icons/Content/ce_nested-content-elements.png', $this->files);
-        $this->assertStringEqualsFile(
-            __DIR__ . '/../Fixtures/Templates/Preview/ce_nested-content-elements.png',
-            $this->files['Resources/Public/Icons/Content/ce_nested-content-elements.png']
-        );
     }
 }
