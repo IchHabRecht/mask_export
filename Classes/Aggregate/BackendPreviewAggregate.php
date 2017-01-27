@@ -114,6 +114,34 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
     protected \$supportedContentTypes = {$supportedContentTypes};
 
     /**
+     * Gets all files from a specific FAL-Relation
+     *
+     * @param int \$uid The uid of the reference row i.e. the uid of the curren tt_content row (\$data['uid'])
+     * @param string \$tcaTableName The table name of the reference i.e. tt_content or pages
+     * @param string \$tcaFieldName The field name of the reference i.e. "image" in tt_content or "media" in pages
+     *
+     * @return array
+     */
+    protected function getFalFiles(\$uid, \$tcaTableName = 'tt_content', \$tcaFieldName = 'tx_mask_image')
+    {
+        /**
+         * @var \TYPO3\CMS\Core\Resource\FileRepository \$fileRepository
+         */
+        \$objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        \$fileRepository = \$objectManager->get('TYPO3\CMS\Core\Resource\FileRepository');
+
+        \$files = array();
+        foreach (\$fileRepository->findByRelation(\$tcaTableName, \$tcaFieldName, \$uid) as \$falObject) {
+            /**
+             * @var \$falObject \TYPO3\CMS\Core\Resource\FileReference
+             */
+            \$files[] = \$falObject->getProperties();
+        }
+
+        return \$files;
+    }
+
+    /**
      * @var string
      */
     protected \$rootPath = 'EXT:mask/Resources/Private/Backend/';
@@ -180,9 +208,17 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
                 continue;
             }
             \$processedRow[\$field] = [];
+            \$i = 0;
             foreach (\$config['children'] as \$child) {
                 \$processedRow[\$field][] = \$this->getProcessedData(\$child['databaseRow'], \$child['processedTca']['columns']);
+                \$files = \$this->getFalFiles(\$processedRow[\$field][\$i]['uid'], 'tt_content', 'tx_' . \$processedRow[\$field][\$i]['CType'][0]);
+                if (count(\$files) > 0) {
+                    \$processedRow[\$field][\$i]['data_tx_' . \$processedRow[\$field][\$i]['CType'][0] . '_files'] = [];
+                    \$processedRow[\$field][\$i]['data_tx_' . \$processedRow[\$field][\$i]['CType'][0] . '_files'] = \$files;
+                }
+                \$i++;
             }
+
         }
 
         return \$processedRow;
