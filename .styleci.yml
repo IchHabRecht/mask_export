@@ -11,6 +11,7 @@ enabled:
   - method_separation
   - native_function_casing
   - new_with_braces
+  - no_alias_functions
   - no_blank_lines_after_class_opening
   - no_blank_lines_after_phpdoc
   - no_blank_lines_before_namespace
@@ -23,6 +24,7 @@ enabled:
   - no_leading_namespace_whitespace
   - no_multiline_whitespace_around_double_arrow
   - no_multiline_whitespace_before_semicolons
+  - no_short_bool_cast
   - no_singleline_whitespace_before_semicolons
   - no_trailing_comma_in_list_call
   - no_trailing_comma_in_singleline_array
@@ -39,6 +41,7 @@ enabled:
   - phpdoc_order
   - phpdoc_scalar
   - phpdoc_types
+  - self_accessor
   - short_array_syntax
   - short_scalar_cast
   - single_quote
