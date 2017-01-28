@@ -28,7 +28,12 @@ namespace CPSIT\MaskExport\Tests\Functional\Controller\BackendPreview;
 require_once __DIR__ . '/../AbstractExportControllerTestCase.php';
 
 use CPSIT\MaskExport\Tests\Functional\Controller\AbstractExportControllerTestCase;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Backend\View\PageLayoutView;
+use TYPO3\CMS\Backend\View\PageLayoutViewDrawItemHookInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Lang\LanguageService;
 
 class ExportControllerTest extends AbstractExportControllerTestCase
 {
@@ -42,7 +47,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         // Get templatePath from file
         $matches = [];
         preg_match(
-            '#\\$templatePath = GeneralUtility::getFileAbsFileName\\(([^)]+)\\);#',
+            '#return GeneralUtility::getFileAbsFileName\\(([^)]+)\\);#',
             $this->files['Classes/Hooks/PageLayoutViewDrawItem.php'],
             $matches
         );
@@ -82,6 +87,82 @@ class ExportControllerTest extends AbstractExportControllerTestCase
 
             $this->assertArrayHasKey($templatePath, $this->files);
         }
+    }
+
+    /**
+     * @test
+     */
+    public function validateProcessedRowDataFromPageLayoutViewDrawItem()
+    {
+        $className = 'MASKEXAMPLEEXPORT\MaskExampleExport\\Hooks\\PageLayoutViewDrawItem';
+        $this->installExtension();
+
+        $this->assertTrue(class_exists($className));
+
+        // Load database fixtures
+        $fixturePath = ORIGINAL_ROOT . 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Database/';
+        $this->importDataSet($fixturePath . 'pages.xml');
+        $this->importDataSet($fixturePath . 'tt_content.xml');
+        $this->importDataSet($fixturePath . 'sys_file.xml');
+
+        // Load backend user and LanguageService for FormEngine
+        $this->setUpBackendUserFromFixture(1);
+        $languageService = new LanguageService();
+        $languageService->init('default');
+        $GLOBALS['LANG'] = $languageService;
+
+        // Get StandaloneView mock
+        /** @var \PHPUnit_Framework_MockObject_MockObject|StandaloneView $viewMock */
+        $viewMock = $this->getMockBuilder(StandaloneView::class)
+            ->setMethods(['render', 'setLayoutRootPaths', 'setPartialRootPaths', 'setTemplatePathAndFilename'])
+            ->getMock();
+        $viewMock->expects($this->once())->method('render');
+        GeneralUtility::addInstance(StandaloneView::class, $viewMock);
+
+        // Call preProcess function on PageLayoutViewDrawItem
+        $pageLayoutView = new PageLayoutView();
+        $drawItem = true;
+        $headerContent = '';
+        $itemContent = '';
+        $row = BackendUtility::getRecord('tt_content', 1);
+        /** @var \PHPUnit_Framework_MockObject_MockObject|PageLayoutViewDrawItemHookInterface $subject */
+        $subject = $this->getMockBuilder($className)
+            ->setMethods(['getTemplatePath'])
+            ->getMock();
+        $subject->expects($this->once())->method('getTemplatePath')->willReturn(PATH_site . 'typo3conf/ext/mask_export/Resources/Private/Backend/Templates/Export/List.html');
+        $subject->preProcess($pageLayoutView, $drawItem, $headerContent, $itemContent, $row);
+
+        // Get variable container
+        $closure = \Closure::bind(function () use ($viewMock) {
+            return $viewMock->baseRenderingContext;
+        }, null, StandaloneView::class);
+        $renderingContext = $closure();
+        if (method_exists($renderingContext, 'getVariableProvider')) {
+            $variables = $renderingContext->getVariableProvider();
+        } else {
+            $variables = $renderingContext->getTemplateVariableContainer();
+        }
+
+        $expectedArray = [
+            'tx_maskexampleexport_related_content' => [
+                0 => [
+                    'assets' => [
+                        0 => [
+                            'uid' => 1,
+                            'pid' => 1,
+                            'uid_local' => 'sys_file_1|ce_nested-content-elements.png',
+                            'uid_foreign' => 2,
+                            'tablenames' => 'tt_content',
+                            'fieldname' => 'assets',
+                            'table_local' => 'sys_file',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $processedRow = $variables->get('processedRow');
+
+        $this->assertArraySubset($expectedArray, $processedRow);
     }
 
     /**
