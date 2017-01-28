@@ -22,6 +22,37 @@
                     "3": "Additional Content",
                     "5": "Images"
                 }
+            },
+            "simple-element": {
+                "label": "Simple element",
+                "key": "simple-element",
+                "shortLabel": "Simple element",
+                "description": "This element provides some basic examples for testing purpose",
+                "icon": "fa-check-square-o",
+                "color": "#000000",
+                "columns": [
+                    "tx_mask_simplestring",
+                    "tx_mask_simpleint",
+                    "tx_mask_simpledatetime",
+                    "tx_mask_simpletext",
+                    "tx_mask_simplecheckbox",
+                    "tx_mask_simpleradio",
+                    "tx_mask_simpleselectboxsingle",
+                    "tx_mask_simpleselectboxmulti"
+                ],
+                "labels": [
+                    "Simple string",
+                    "Simple int",
+                    "Simple datetime",
+                    "Simple text",
+                    "Simple checkbox",
+                    "Simple radio",
+                    "Simple selectbox (single)",
+                    "Simple selectbox (multi)"
+                ],
+                "options": {
+                    "3": "rte"
+                }
             }
         },
         "sql": {
@@ -38,6 +69,46 @@
             "tx_mask_images": {
                 "tt_content": {
                     "tx_mask_images": "int(11) unsigned DEFAULT '0' NOT NULL"
+                }
+            },
+            "tx_mask_simplestring": {
+                "tt_content": {
+                    "tx_mask_simplestring": "tinytext"
+                }
+            },
+            "tx_mask_simpleint": {
+                "tt_content": {
+                    "tx_mask_simpleint": "tinytext"
+                }
+            },
+            "tx_mask_simpledatetime": {
+                "tt_content": {
+                    "tx_mask_simpledatetime": "datetime DEFAULT '0000-00-00 00:00:00'"
+                }
+            },
+            "tx_mask_simpletext": {
+                "tt_content": {
+                    "tx_mask_simpletext": "text"
+                }
+            },
+            "tx_mask_simplecheckbox": {
+                "tt_content": {
+                    "tx_mask_simplecheckbox": "int(11) DEFAULT '0' NOT NULL"
+                }
+            },
+            "tx_mask_simpleradio": {
+                "tt_content": {
+                    "tx_mask_simpleradio": "int(11) DEFAULT '0' NOT NULL"
+                }
+            },
+            "tx_mask_simpleselectboxsingle": {
+                "tt_content": {
+                    "tx_mask_simpleselectboxsingle": "tinytext"
+                }
+            },
+            "tx_mask_simpleselectboxmulti": {
+                "tt_content": {
+                    "tx_mask_simpleselectboxmulti": "tinytext"
                 }
             }
         },
@@ -121,6 +192,216 @@
                     ]
                 },
                 "key": "images"
+            },
+            "tx_mask_simplestring": {
+                "config": {
+                    "type": "input",
+                    "eval": "",
+                    "default": "",
+                    "placeholder": "",
+                    "size": "",
+                    "max": "",
+                    "is_in": ""
+                },
+                "exclude": "1",
+                "key": "simplestring"
+            },
+            "tx_mask_simpleint": {
+                "config": {
+                    "type": "input",
+                    "eval": "int",
+                    "default": "",
+                    "placeholder": "",
+                    "size": "",
+                    "max": "",
+                    "range": {
+                        "lower": "",
+                        "upper": ""
+                    }
+                },
+                "exclude": "1",
+                "key": "simpleint"
+            },
+            "tx_mask_simpledatetime": {
+                "config": {
+                    "type": "input",
+                    "dbType": "datetime",
+                    "size": "20",
+                    "max": "20",
+                    "eval": "datetime",
+                    "default": "",
+                    "placeholder": "",
+                    "range": {
+                        "lower": "",
+                        "upper": ""
+                    }
+                },
+                "exclude": "1",
+                "key": "simpledatetime"
+            },
+            "tx_mask_simpletext": {
+                "config": {
+                    "type": "text",
+                    "eval": "",
+                    "cols": "",
+                    "rows": "",
+                    "default": "",
+                    "placeholder": "",
+                    "max": ""
+                },
+                "exclude": "1",
+                "defaultExtras": "richtext[]:rte_transform[mode=ts_css]",
+                "key": "simpletext"
+            },
+            "tx_mask_simplecheckbox": {
+                "config": {
+                    "type": "check",
+                    "items": [
+                        [
+                            "a"
+                        ],
+                        [
+                            "b"
+                        ],
+                        [
+                            "c"
+                        ],
+                        [
+                            "d"
+                        ],
+                        [
+                            "e"
+                        ],
+                        [
+                            "f"
+                        ],
+                        [
+                            "g"
+                        ]
+                    ],
+                    "cols": "",
+                    "default": ""
+                },
+                "exclude": "1",
+                "key": "simplecheckbox"
+            },
+            "tx_mask_simpleradio": {
+                "config": {
+                    "type": "radio",
+                    "items": [
+                        [
+                            "radio 1",
+                            "1"
+                        ],
+                        [
+                            "radio 2",
+                            "2"
+                        ],
+                        [
+                            "radio 3",
+                            "3"
+                        ],
+                        [
+                            "radio 4",
+                            "4"
+                        ],
+                        [
+                            "radio 5",
+                            "5"
+                        ]
+                    ],
+                    "default": ""
+                },
+                "exclude": "1",
+                "key": "simpleradio"
+            },
+            "tx_mask_simpleselectboxsingle": {
+                "config": {
+                    "type": "select",
+                    "renderType": "selectSingle",
+                    "size": "",
+                    "items": [
+                        [
+                            "",
+                            "0"
+                        ],
+                        [
+                            "option 1",
+                            "1"
+                        ],
+                        [
+                            "option 2",
+                            "2"
+                        ],
+                        [
+                            "option 3",
+                            "3"
+                        ],
+                        [
+                            "option 4",
+                            "4"
+                        ],
+                        [
+                            "option 5",
+                            "5"
+                        ],
+                        [
+                            "option 6",
+                            "6"
+                        ],
+                        [
+                            "option 7",
+                            "7"
+                        ]
+                    ],
+                    "foreign_table": "",
+                    "foreign_table_where": "",
+                    "fileFolder": "",
+                    "fileFolder_extList": "",
+                    "fileFolder_recursions": "",
+                    "maxitems": "",
+                    "autoSizeMax": ""
+                },
+                "exclude": "1",
+                "key": "simpleselectboxsingle"
+            },
+            "tx_mask_simpleselectboxmulti": {
+                "config": {
+                    "type": "select",
+                    "renderType": "selectMultipleSideBySide",
+                    "size": "",
+                    "items": [
+                        [
+                            "multi 1",
+                            "0"
+                        ],
+                        [
+                            "multi 2",
+                            "1"
+                        ],
+                        [
+                            "multi 3",
+                            "2"
+                        ],
+                        [
+                            "multi 4",
+                            "3"
+                        ],
+                        [
+                            "multi 5",
+                            "4"
+                        ]
+                    ],
+                    "foreign_table": "",
+                    "foreign_table_where": "",
+                    "fileFolder": "",
+                    "fileFolder_extList": "",
+                    "fileFolder_recursions": "",
+                    "maxitems": "999",
+                    "autoSizeMax": ""
+                },
+                "exclude": "1",
+                "key": "simpleselectboxmulti"
             }
         }
     },
