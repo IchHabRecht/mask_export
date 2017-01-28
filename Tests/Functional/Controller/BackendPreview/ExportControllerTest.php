@@ -91,11 +91,11 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     {
         $this->assertArrayHasKey('Resources/Private/Backend/Templates/Content/Simple-element.html', $this->files);
         $this->assertContains(
-            '{processedRow.tx_maskexport_simpleselectboxsingle.0} (raw={row.tx_maskexport_simpleselectboxsingle})<br>',
+            '{processedRow.tx_maskexampleexport_simpleselectboxsingle.0} (raw={row.tx_maskexampleexport_simpleselectboxsingle})<br>',
             $this->files['Resources/Private/Backend/Templates/Content/Simple-element.html']
         );
         $this->assertContains(
-            '<f:for each="{processedRow.tx_maskexport_simpleselectboxmulti}" as="item">',
+            '<f:for each="{processedRow.tx_maskexampleexport_simpleselectboxmulti}" as="item">',
             $this->files['Resources/Private/Backend/Templates/Content/Simple-element.html']
         );
     }

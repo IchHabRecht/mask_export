@@ -26,6 +26,7 @@ namespace CPSIT\MaskExport\Tests\Functional\Controller;
  ***************************************************************/
 
 use CPSIT\MaskExport\Controller\ExportController;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Tests\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Request;
@@ -48,6 +49,11 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     ];
 
     /**
+     * @var string
+     */
+    protected $extensionName = 'mask_example_export';
+
+    /**
      * @var array
      */
     protected $files = [];
@@ -67,6 +73,10 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     {
         parent::setUp();
 
+        // The export stores new extension names in backend user settings, so we need a pseudo user object here
+        $backendUser = new BackendUserAuthentication();
+        $GLOBALS['BE_USER'] = $backendUser;
+
         $objectManager = new ObjectManager();
 
         $viewMock = $objectManager->get(TemplateView::class);
@@ -80,6 +90,7 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
         $request->setControllerExtensionName('mask_export');
         $request->setControllerName('Export');
         $request->setControllerActionName('list');
+        $request->setArgument('extensionName', $this->extensionName);
         $response = new Response();
 
         $subject = $objectManager->get(ExportController::class);
