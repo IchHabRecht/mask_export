@@ -79,7 +79,7 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements Plai
     {
         $this->appendPhpFile(
             'ext_localconf.php',
-<<<EOS
+            <<<EOS
 // Add backend preview hook
 \$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['tt_content_drawItem']['mask'] = 
     MASK\Mask\Hooks\PageLayoutViewDrawItem::class;
@@ -95,7 +95,7 @@ EOS
 
         $this->addPhpFile(
             'Classes/Hooks/PageLayoutViewDrawItem.php',
-<<<EOS
+            <<<EOS
 namespace MASK\Mask\Hooks;
 
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
@@ -149,9 +149,9 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
         \$formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
         \$formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, \$formDataGroup);
         \$formDataCompilerInput = [
+            'command' => 'edit',
             'tableName' => 'tt_content',
             'vanillaUid' => (int)\$row['uid'],
-            'command' => 'edit',
         ];
         \$result = \$formDataCompiler->compile(\$formDataCompilerInput);
         \$processedRow = \$this->getProcessedData(\$result['databaseRow'], \$result['processedTca']['columns']);
@@ -181,6 +181,16 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
             }
             \$processedRow[\$field] = [];
             foreach (\$config['children'] as \$child) {
+                if (!\$child['isInlineChildExpanded']) {
+                    \$formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
+                    \$formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, \$formDataGroup);
+                    \$formDataCompilerInput = [
+                        'command' => 'edit',
+                        'tableName' => \$child['tableName'],
+                        'vanillaUid' => \$child['vanillaUid'],
+                    ];
+                    \$child = \$formDataCompiler->compile(\$formDataCompilerInput);
+                }
                 \$processedRow[\$field][] = \$this->getProcessedData(\$child['databaseRow'], \$child['processedTca']['columns']);
             }
         }
