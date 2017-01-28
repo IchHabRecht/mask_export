@@ -46,8 +46,7 @@ class BackendFluidCodeGenerator
         $fieldConfiguration = $GLOBALS['TCA'][$table]['columns'][$field];
         $label = $fieldConfiguration['label'];
 
-        $content =
-<<<EOS
+        $content = <<<EOS
 <f:if condition="{processedRow.{$field}}">
     <strong><f:translate key="{$label}" /></strong>
 
@@ -58,16 +57,17 @@ EOS;
                 $content .= '<br>';
                 $content .= $this->getInlineFluid($field, $fieldConfiguration);
                 break;
+            case 'select':
+                $content .= $this->getSelectFluid($field, $fieldConfiguration);
+                break;
             default:
-                $content .=
-<<<EOS
+                $content .= <<<EOS
     {processedRow.{$field}} (raw={row.{$field}})<br>
 
 EOS;
         }
 
-        $content .=
-<<<EOS
+        $content .= <<<EOS
 </f:if>
 
 EOS;
@@ -95,8 +95,7 @@ EOS;
             $variableIterator = $iteratorName . '_item';
         }
 
-        $content =
-<<<EOS
+        $content = <<<EOS
 <f:for each="{{$fieldIterator}.{$field}}" as="{$variableIterator}">
     <ul>
         <li>
@@ -104,28 +103,51 @@ EOS;
 EOS;
         switch ($foreignLabelFieldConfiguration['config']['type']) {
             case 'inline':
-                $content .=
-<<<EOS
+                $content .= <<<EOS
             <f:translate key="{$foreignLabel}" /> (id={{$variableIterator}.uid})<br/>
 
 EOS;
                 $content .= $this->getInlineFluid($foreignLabelField, $foreignLabelFieldConfiguration, 'item');
                 break;
             default:
-                $content .=
-<<<EOS
+                $content .= <<<EOS
             <f:translate key="{$foreignLabel}" /> {{$variableIterator}.{$foreignLabelField}} (id={{$variableIterator}.uid})<br/>
 
 EOS;
         }
 
-        $content .=
-<<<EOS
+        $content .= <<<EOS
         </li>
     </ul>
 </f:for>
 
 EOS;
+
+        return $content;
+    }
+
+    /**
+     * @param string $field
+     * @param array $fieldConfiguration
+     * @return string
+     */
+    protected function getSelectFluid($field, array $fieldConfiguration)
+    {
+        if (empty($fieldConfiguration['config']['maxitems']) || 1 === (int)$fieldConfiguration['config']['maxitems']) {
+            $content = <<<EOS
+    {processedRow.{$field}.0} (raw={row.{$field}})<br>
+
+EOS;
+        } else {
+            $content = <<<EOS
+    <ul>
+        <f:for each="{processedRow.{$field}}" as="item">
+            <li>{item}</li>
+        </f:for>
+    </ul>
+
+EOS;
+        }
 
         return $content;
     }
