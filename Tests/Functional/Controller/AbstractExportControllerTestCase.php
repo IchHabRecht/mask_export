@@ -26,12 +26,15 @@ namespace CPSIT\MaskExport\Tests\Functional\Controller;
  ***************************************************************/
 
 use CPSIT\MaskExport\Controller\ExportController;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Tests\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Request;
 use TYPO3\CMS\Extbase\Mvc\Web\Response;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extensionmanager\Utility\InstallUtility;
 use TYPO3\CMS\Fluid\View\TemplateView;
+use TYPO3\CMS\Install\Service\SqlSchemaMigrationService;
 
 abstract class AbstractExportControllerTestCase extends FunctionalTestCase
 {
@@ -46,6 +49,18 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
             ],
         ],
     ];
+
+    /**
+     * @var array
+     */
+    protected $coreExtensionsToLoad = [
+        'fluid_styled_content',
+    ];
+
+    /**
+     * @var string
+     */
+    protected $extensionName = 'mask_example_export';
 
     /**
      * @var array
@@ -67,6 +82,10 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     {
         parent::setUp();
 
+        // The export stores new extension names in backend user settings, so we need a pseudo user object here
+        $backendUser = new BackendUserAuthentication();
+        $GLOBALS['BE_USER'] = $backendUser;
+
         $objectManager = new ObjectManager();
 
         $viewMock = $objectManager->get(TemplateView::class);
@@ -80,6 +99,7 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
         $request->setControllerExtensionName('mask_export');
         $request->setControllerName('Export');
         $request->setControllerActionName('list');
+        $request->setArgument('extensionName', $this->extensionName);
         $response = new Response();
 
         $subject = $objectManager->get(ExportController::class);
@@ -95,5 +115,36 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
             $variables = $renderingContext->getTemplateVariableContainer();
         }
         $this->files = $variables->get('files');
+    }
+
+    /**
+     * As the export extension cannot be installed over extensionmanager APi, this function loads data manually
+     */
+    protected function installExtension()
+    {
+        // Load ext_tables.sql
+        if (!empty($this->files['ext_tables.sql'])) {
+            $installToolSqlParser = new SqlSchemaMigrationService();
+            $installUtility = new InstallUtility();
+            $installUtility->injectInstallToolSqlParser($installToolSqlParser);
+            $installUtility->updateDbWithExtTablesSql($this->files['ext_tables.sql']);
+        }
+
+        // Require PHP files and take care of TCA configuration
+        $_EXTKEY = $this->extensionName;
+        $_EXTCONF = '';
+        foreach ($this->files as $file => $content) {
+            if (!preg_match('/\.php$/', $file)) {
+                continue;
+            }
+
+            if (preg_match('/Configuration\/TCA\/[^.]+\.php', $file)) {
+                $tableName = basename($file);
+                $tableTca = eval('?>' . $content);
+                $GLOBALS['TCA'][$tableName] = $tableTca;
+            } else {
+                eval('?>' . $content);
+            }
+        }
     }
 }

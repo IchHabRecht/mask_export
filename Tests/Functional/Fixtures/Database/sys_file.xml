@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <sys_file_storage>
+        <uid>1</uid>
+        <pid>0</pid>
+        <name>fileadmin/ (auto-created)</name>
+        <driver>Local</driver>
+        <configuration><![CDATA[<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3FlexForms>
+	<data>
+		<sheet index="sDEF">
+			<language index="lDEF">
+				<field index="basePath">
+					<value index="vDEF">fileadmin/</value>
+				</field>
+				<field index="pathType">
+					<value index="vDEF">relative</value>
+				</field>
+				<field index="caseSensitive">
+					<value index="vDEF">1</value>
+				</field>
+			</language>
+		</sheet>
+	</data>
+</T3FlexForms>]]></configuration>
+        <is_browsable>1</is_browsable>
+        <is_public>1</is_public>
+        <is_writable>1</is_writable>
+        <is_online>1</is_online>
+    </sys_file_storage>
+    <sys_file>
+        <uid>1</uid>
+        <pid>0</pid>
+        <storage>1</storage>
+        <type>2</type>
+        <identifier>/templates/preview/ce_nested-content-elements.png</identifier>
+        <identifier_hash>f0bd2fe446bb4d6c9508f321b082d46c71cfb198</identifier_hash>
+        <folder_hash>4c2aa8a66c5c694d8c0cf57d23512aa8300f080b</folder_hash>
+        <extension>png</extension>
+        <mime_type>image/png</mime_type>
+        <name>ce_nested-content-elements.png</name>
+        <sha1>55dbbe28788867e51fbb310ee682a1bda08131c5</sha1>
+        <size>525</size>
+    </sys_file>
+    <sys_file_reference>
+        <uid>1</uid>
+        <pid>1</pid>
+        <uid_local>1</uid_local>
+        <uid_foreign>2</uid_foreign>
+        <tablenames>tt_content</tablenames>
+        <fieldname>assets</fieldname>
+        <table_local>sys_file</table_local>
+    </sys_file_reference>
+</dataset>

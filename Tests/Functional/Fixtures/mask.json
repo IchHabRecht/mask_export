@@ -33,7 +33,6 @@
                 "columns": [
                     "tx_mask_simplestring",
                     "tx_mask_simpleint",
-                    "tx_mask_simpledatetime",
                     "tx_mask_simpletext",
                     "tx_mask_simplecheckbox",
                     "tx_mask_simpleradio",
@@ -43,7 +42,6 @@
                 "labels": [
                     "Simple string",
                     "Simple int",
-                    "Simple datetime",
                     "Simple text",
                     "Simple checkbox",
                     "Simple radio",
@@ -79,11 +77,6 @@
             "tx_mask_simpleint": {
                 "tt_content": {
                     "tx_mask_simpleint": "tinytext"
-                }
-            },
-            "tx_mask_simpledatetime": {
-                "tt_content": {
-                    "tx_mask_simpledatetime": "datetime DEFAULT '0000-00-00 00:00:00'"
                 }
             },
             "tx_mask_simpletext": {
@@ -221,23 +214,6 @@
                 },
                 "exclude": "1",
                 "key": "simpleint"
-            },
-            "tx_mask_simpledatetime": {
-                "config": {
-                    "type": "input",
-                    "dbType": "datetime",
-                    "size": "20",
-                    "max": "20",
-                    "eval": "datetime",
-                    "default": "",
-                    "placeholder": "",
-                    "range": {
-                        "lower": "",
-                        "upper": ""
-                    }
-                },
-                "exclude": "1",
-                "key": "simpledatetime"
             },
             "tx_mask_simpletext": {
                 "config": {

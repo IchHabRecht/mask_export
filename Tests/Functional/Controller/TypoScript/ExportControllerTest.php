@@ -41,7 +41,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         // Fetch all templateRootPaths configurations
         $templatePaths = [];
         preg_match_all(
-            '#templateRootPaths\\.0 = EXT:mask_export/(.+)$#m',
+            '#templateRootPaths\\.0 = EXT:mask_example_export/(.+)$#m',
             $this->files['Configuration/TypoScript/setup.ts'],
             $templatePaths,
             PREG_SET_ORDER
