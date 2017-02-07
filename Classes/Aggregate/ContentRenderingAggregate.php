@@ -248,7 +248,15 @@ EOS;
         $where = $GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_field'] . '=###uid### AND deleted=0 AND hidden=0';
         if (!empty($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_record_defaults'])) {
             foreach ($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_record_defaults'] as $key => $value) {
+                if ('CType' === $key) {
+                    continue;
+                }
                 $where .= ' AND ' . $key . '=' . $this->getDatabaseConnection()->fullQuoteStr($value, 'tt_content');
+            }
+
+            if (!empty($this->maskConfiguration[$table]['tca'][$columnName]['cTypes'])) {
+                $types = $this->maskConfiguration[$table]['tca'][$columnName]['cTypes'];
+                $where .= ' AND CType IN (' . implode(', ', $this->getDatabaseConnection()->fullQuoteArray($types, $table)) . ')';
             }
         }
 
