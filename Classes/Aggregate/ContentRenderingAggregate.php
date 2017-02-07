@@ -245,7 +245,7 @@ EOS;
      */
     protected function addDatabaseQueryProcessorForField($table, $columnName, $index)
     {
-        $where = '1=1';
+        $where = $GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_field'] . '=###uid### AND deleted=0 AND hidden=0';
         if (!empty($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_record_defaults'])) {
             foreach ($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_record_defaults'] as $key => $value) {
                 $where .= ' AND ' . $key . '=' . $this->getDatabaseConnection()->fullQuoteStr($value, 'tt_content');
@@ -263,7 +263,7 @@ EOS;
         if.isTrue.field = {$columnName}
         table = {$GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_table']}
         pidInList.field = pid
-        where = {$GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_field']}=###uid### AND deleted=0 AND hidden=0 AND {$where}
+        where = {$where}
         orderBy = {$sorting}
         markers {
             uid.field = uid
