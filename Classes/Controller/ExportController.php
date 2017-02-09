@@ -216,7 +216,7 @@ class ExportController extends ActionController
             'EXT:' . $extensionKey,
             $string
         );
-        $string = str_replace('tx_replaceWithExtKeyForRootPaths', 'tx_'.$lowercaseExtensionKey, $string);
+        $string = str_replace('tx_replaceWithExtKeyForRootPaths', 'tx_' . $lowercaseExtensionKey, $string);
 
         return $string;
     }
