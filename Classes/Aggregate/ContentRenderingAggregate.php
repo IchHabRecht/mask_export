@@ -90,7 +90,19 @@ class ContentRenderingAggregate extends AbstractOverridesAggregate implements Pl
 
         $this->addPlainTextFile(
             $this->typoScriptFilePath . 'constants.ts',
-            ''
+<<<EOS
+plugin.tx_mask {
+    view {
+        # cat=mask/file; type=string; label= Path to template root (FE)
+		templateRootPath = 
+
+		# cat=mask/file; type=string; label= Path to template partials (FE)
+		partialRootPath = 
+
+		# cat=mask/file; type=string; label= Path to template layouts (FE)
+		layoutRootPath = 
+	}
+EOS
         );
         $this->addPlainTextFile(
             $this->typoScriptFilePath . 'setup.ts',
@@ -132,11 +144,11 @@ EOS
 tt_content.mask_{$key} = FLUIDTEMPLATE
 tt_content.mask_{$key} {
     layoutRootPaths.0 = {$layoutsPath}
-    layoutRootPaths.10 = {\$plugin.tx_replaceWithExtKeyForRootPaths.view.layoutRootPath}
+    layoutRootPaths.1 = {\$plugin.tx_mask.view.layoutRootPath}
     partialRootPaths.0 = {$partialPath}
-    partialRootPaths.10 = {\$plugin.tx_replaceWithExtKeyForRootPaths.view.partialRootPath}
+    partialRootPaths.1 = {\$plugin.tx_mask.view.partialRootPath}
     templateRootPaths.0 = {$templatesPath}
-    templateRootPaths.10 = {\$plugin.tx_replaceWithExtKeyForRootPaths.view.templateRootPath}
+    templateRootPaths.1 = {\$plugin.tx_mask.view.templateRootPath}
     templateName = {$templateName}
 
 EOS
