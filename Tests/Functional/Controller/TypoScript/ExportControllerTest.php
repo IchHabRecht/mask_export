@@ -67,4 +67,26 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             $this->assertArrayHasKey($templatePath, $this->files);
         }
     }
+
+    /**
+     * @test
+     */
+    public function ensureConstantsAreInitializedInTypoScript()
+    {
+        $this->assertArrayHasKey('Configuration/TypoScript/constants.ts', $this->files);
+        $this->assertArrayHasKey('Configuration/TypoScript/setup.ts', $this->files);
+
+        $constants = [];
+        preg_match_all(
+            '#{\$([^}]+)}#',
+            $this->files['Configuration/TypoScript/setup.ts'],
+            $constants
+        );
+
+        $this->assertNotEmpty($constants);
+
+        foreach (array_unique($constants[1]) as $constant) {
+            $this->assertContains($constant, $this->files['Configuration/TypoScript/constants.ts']);
+        }
+    }
 }
