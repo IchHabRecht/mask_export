@@ -132,8 +132,11 @@ EOS
 tt_content.mask_{$key} = FLUIDTEMPLATE
 tt_content.mask_{$key} {
     layoutRootPaths.0 = {$layoutsPath}
+    layoutRootPaths.10 = {\$plugin.tx_replaceWithExtKeyForRootPaths.view.layoutRootPath}
     partialRootPaths.0 = {$partialPath}
+    partialRootPaths.10 = {\$plugin.tx_replaceWithExtKeyForRootPaths.view.partialRootPath}
     templateRootPaths.0 = {$templatesPath}
+    templateRootPaths.10 = {\$plugin.tx_replaceWithExtKeyForRootPaths.view.templateRootPath}
     templateName = {$templateName}
 
 EOS
