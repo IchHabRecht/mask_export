@@ -90,7 +90,17 @@ class ContentRenderingAggregate extends AbstractOverridesAggregate implements Pl
 
         $this->addPlainTextFile(
             $this->typoScriptFilePath . 'constants.ts',
-            ''
+            <<<EOS
+# cat=mask/file; type=string; label=Path to template root (FE)
+plugin.tx_mask.view.templateRootPath =
+
+# cat=mask/file; type=string; label=Path to template partials (FE)
+plugin.tx_mask.view.partialRootPath =
+
+# cat=mask/file; type=string; label=Path to template layouts (FE)
+plugin.tx_mask.view.layoutRootPath =
+
+EOS
         );
         $this->addPlainTextFile(
             $this->typoScriptFilePath . 'setup.ts',
@@ -98,7 +108,7 @@ class ContentRenderingAggregate extends AbstractOverridesAggregate implements Pl
         );
         $this->appendPhpFile(
             $this->tcaOverridesFilePath . $this->table . '.php',
-<<<EOS
+            <<<EOS
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
     'mask',
     '{$this->typoScriptFilePath}',
@@ -128,12 +138,15 @@ EOS
         $templateName = GeneralUtility::underscoredToUpperCamelCase($key);
         $this->appendPlainTextFile(
             $this->typoScriptFilePath . 'setup.ts',
-<<<EOS
+            <<<EOS
 tt_content.mask_{$key} = FLUIDTEMPLATE
 tt_content.mask_{$key} {
     layoutRootPaths.0 = {$layoutsPath}
+    layoutRootPaths.1 = {\$plugin.tx_mask.view.layoutRootPath}
     partialRootPaths.0 = {$partialPath}
+    partialRootPaths.1 = {\$plugin.tx_mask.view.partialRootPath}
     templateRootPaths.0 = {$templatesPath}
+    templateRootPaths.1 = {\$plugin.tx_mask.view.templateRootPath}
     templateName = {$templateName}
 
 EOS
@@ -146,7 +159,7 @@ EOS
 
         $this->appendPlainTextFile(
             $this->typoScriptFilePath . 'setup.ts',
-<<<EOS
+            <<<EOS
 }
 
 EOS
@@ -186,8 +199,7 @@ EOS
                             array_keys($GLOBALS['TCA'][$foreignTable]['columns'])
                         );
                         if (!empty($inlineDataProcession)) {
-                            $dataProcessing .=
-<<<EOS
+                            $dataProcessing .= <<<EOS
 dataProcessing.{$index} {
     {$inlineDataProcession}
 }
@@ -211,8 +223,7 @@ EOS;
      */
     protected function addFileProcessorForField($table, $columnName, $index)
     {
-        return
-<<<EOS
+        return <<<EOS
     dataProcessing.{$index} = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor
     dataProcessing.{$index} {
         if.isTrue.field = {$columnName}
@@ -246,8 +257,7 @@ EOS;
             $sorting = $GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_sortby'];
         }
 
-        return
-<<<EOS
+        return <<<EOS
     dataProcessing.{$index} = TYPO3\CMS\Frontend\DataProcessing\DatabaseQueryProcessor
     dataProcessing.{$index} {
         if.isTrue.field = {$columnName}
