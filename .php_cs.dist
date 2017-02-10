@@ -6,6 +6,7 @@ This file is part of the TYPO3 extension mask_export.
 EOF;
 
 return PhpCsFixer\Config::create()
+    ->setRiskyAllowed(true)
     ->setRules([
         '@PSR2' => true,
         'array_syntax' => [
