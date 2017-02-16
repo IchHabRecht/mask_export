@@ -35,6 +35,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.0",
+        "nimut/testing-framework": "^0.2",
         "phpunit/phpunit": "^4.8"
     },
     "suggest": {
@@ -52,9 +53,6 @@
         }
     },
     "config": {
-        "preferred-install": {
-            "typo3/cms": "source"
-        },
         "vendor-dir": ".Build/vendor",
         "bin-dir": ".Build/bin"
     },
