@@ -150,7 +150,6 @@ class ExportControllerTest extends AbstractExportControllerTestCase
                         0 => [
                             'uid' => 1,
                             'pid' => 1,
-                            'uid_local' => 'sys_file_1|ce_nested-content-elements.png',
                             'uid_foreign' => 2,
                             'tablenames' => 'tt_content',
                             'fieldname' => 'assets',
@@ -163,6 +162,23 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         $processedRow = $variables->get('processedRow');
 
         $this->assertArraySubset($expectedArray, $processedRow);
+
+        if (is_array($processedRow['tx_maskexampleexport_related_content'][0]['assets'][0]['uid_local'])) {
+            $this->assertArraySubset(
+                [
+                    0 => [
+                        'table' => 'sys_file',
+                        'uid' => 1,
+                    ],
+                ],
+                $processedRow['tx_maskexampleexport_related_content'][0]['assets'][0]['uid_local']
+            );
+        } else {
+            $this->assertSame(
+                'sys_file_1|ce_nested-content-elements.png',
+                $processedRow['tx_maskexampleexport_related_content'][0]['assets'][0]['uid_local']
+            );
+        }
     }
 
     /**
