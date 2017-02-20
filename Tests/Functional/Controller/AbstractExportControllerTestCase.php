@@ -26,8 +26,8 @@ namespace CPSIT\MaskExport\Tests\Functional\Controller;
  ***************************************************************/
 
 use CPSIT\MaskExport\Controller\ExportController;
+use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Tests\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Request;
 use TYPO3\CMS\Extbase\Mvc\Web\Response;
