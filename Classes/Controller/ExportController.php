@@ -232,6 +232,7 @@ class ExportController extends ActionController
             } elseif (strpos($a, '/') === false || substr_count($a, '/') < substr_count($b, '/')) {
                 return -1;
             }
+
             return 1;
         });
 
