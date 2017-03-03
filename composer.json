@@ -34,11 +34,11 @@
         "typo3-ter/mask": "^2.0.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.0",
         "nimut/testing-framework": "1.x-dev",
         "phpunit/phpunit": "^4.8"
     },
     "suggest": {
+        "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues",
         "phpstan/phpstan": "Use PHPStan for static PHP analysis"
     },
     "autoload": {
