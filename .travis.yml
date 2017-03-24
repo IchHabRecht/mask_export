@@ -6,23 +6,23 @@ matrix:
     - php: 7.1
       env: TYPO3="dev-master as 8.2.0" PHPUNIT_TESTS=yes
     - php: 7.1
-      env: TYPO3="dev-TYPO3_8-5 as 8.2.0" PHPUNIT_TESTS=yes PHP_LINT=yes
+      env: TYPO3="8.6.1 as 8.2.0" PHPUNIT_TESTS=yes PHP_LINT=yes
     - php: 7.1
-      env: TYPO3=^7.6.0 PHPUNIT_TESTS=yes
+      env: TYPO3=^7.6 PHPUNIT_TESTS=yes
     - php: 7.0
       env: TYPO3="dev-master as 8.2.0" PHPUNIT_TESTS=yes
     - php: 7.0
-      env: TYPO3="dev-TYPO3_8-5 as 8.2.0" PHPUNIT_TESTS=yes PHP_LINT=yes
+      env: TYPO3="8.6.1 as 8.2.0" PHPUNIT_TESTS=yes PHP_LINT=yes
     - php: 7.0
-      env: TYPO3="dev-TYPO3_8-5 as 8.2.0" CODE_ANALYSIS=yes
+      env: TYPO3="8.6.1 as 8.2.0" CODE_ANALYSIS=yes
     - php: 7.0
-      env: TYPO3=^7.6.0 PHPUNIT_TESTS=yes
+      env: TYPO3=^7.6 PHPUNIT_TESTS=yes
     - php: 7.0
-      env: TYPO3=^7.6.0 CODE_ANALYSIS=yes
+      env: TYPO3=^7.6 CODE_ANALYSIS=yes
     - php: 5.6
-      env: TYPO3=^7.6.0 PHPUNIT_TESTS=yes PHP_LINT=yes
+      env: TYPO3=^7.6 PHPUNIT_TESTS=yes PHP_LINT=yes
     - php: 5.5
-      env: TYPO3=^7.6.0 PHPUNIT_TESTS=yes PHP_LINT=yes
+      env: TYPO3=^7.6 PHPUNIT_TESTS=yes PHP_LINT=yes
   allow_failures:
     - env: TYPO3="dev-master as 8.2.0" PHPUNIT_TESTS=yes
 
