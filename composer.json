@@ -25,13 +25,16 @@
         {
             "type": "composer",
             "url": "https://composer.typo3.org/"
+        }, {
+            "type": "vcs",
+            "url": "https://github.com/Gernott/mask.git"
         }
     ],
     "require": {
         "typo3/cms-core": ">=7.6 <8.7",
         "typo3/cms-extbase": ">=7.6 <8.7",
         "typo3/cms-fluid": ">=7.6 <8.7",
-        "typo3-ter/mask": "^2.0"
+        "mask/mask": "^2.0"
     },
     "require-dev": {
         "nimut/testing-framework": "1.x-dev",

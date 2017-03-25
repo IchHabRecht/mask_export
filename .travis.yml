@@ -6,13 +6,21 @@ matrix:
     - php: 7.1
       env: TYPO3="dev-master as 8.2.0" PHPUNIT_TESTS=yes
     - php: 7.1
+      env: TYPO3="dev-master as 8.6.1" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
+    - php: 7.1
       env: TYPO3="8.6.1 as 8.2.0" PHPUNIT_TESTS=yes PHP_LINT=yes
+    - php: 7.1
+      env: TYPO3="^8.0" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
     - php: 7.1
       env: TYPO3=^7.6 PHPUNIT_TESTS=yes
     - php: 7.0
       env: TYPO3="dev-master as 8.2.0" PHPUNIT_TESTS=yes
     - php: 7.0
+      env: TYPO3="dev-master as 8.6.1" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
+    - php: 7.0
       env: TYPO3="8.6.1 as 8.2.0" PHPUNIT_TESTS=yes PHP_LINT=yes
+    - php: 7.0
+      env: TYPO3="^8.0" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
     - php: 7.0
       env: TYPO3="8.6.1 as 8.2.0" CODE_ANALYSIS=yes
     - php: 7.0
@@ -25,6 +33,8 @@ matrix:
       env: TYPO3=^7.6 PHPUNIT_TESTS=yes PHP_LINT=yes
   allow_failures:
     - env: TYPO3="dev-master as 8.2.0" PHPUNIT_TESTS=yes
+    - env: TYPO3="dev-master as 8.6.1" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
+    - env: TYPO3="^8.0" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
 
 addons:
   apt:
@@ -41,6 +51,7 @@ before_install:
   - if php -i | grep -q xdebug; then phpenv config-rm xdebug.ini; fi
 
 before_script:
+  - if [ "$MASK" != "" ]; then composer require mask/mask="$MASK" --no-update; fi
   - composer require typo3/cms="$TYPO3"
   - git checkout composer.json
   - mkdir -p .Build/Web/typo3conf/ext/
