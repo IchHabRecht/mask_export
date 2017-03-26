@@ -43,4 +43,17 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             $this->files['Resources/Public/Icons/Content/ce_nested-content-elements.png']
         );
     }
+
+    /**
+     * @test
+     */
+    public function extensionIconIsUsedAsDefaultContentElementIcon()
+    {
+        $this->assertArrayHasKey('Resources/Public/Icons/Content/ce_default-extension-icon.png', $this->files);
+
+        $this->assertStringEqualsFile(
+            __DIR__ . '/../../../../ext_icon.png',
+            $this->files['Resources/Public/Icons/Content/ce_default-extension-icon.png']
+        );
+    }
 }
