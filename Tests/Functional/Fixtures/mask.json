@@ -1,6 +1,20 @@
 {
     "tt_content": {
         "elements": {
+            "default-extension-icon": {
+                "label": "Default Extension Icon",
+                "key": "default-extension-icon",
+                "shortLabel": "Icon",
+                "description": "Content Element to ensure the ext_icon.png is used as default content element icon",
+                "icon": "",
+                "color": "#000000",
+                "columns": [
+                    "header"
+                ],
+                "labels": [
+                    ""
+                ]
+            },
             "nested-content-elements": {
                 "label": "Nested content elements",
                 "key": "nested-content-elements",

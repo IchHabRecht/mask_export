@@ -96,6 +96,7 @@ EOS
 \$GLOBALS['TCA']['{$this->table}']['columns']['CType']['config']['items'][] = array(
     'LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:{$this->table}.CType.{$type}',
     '{$type}',
+    'tx_{$type}',
 );
 
 EOS

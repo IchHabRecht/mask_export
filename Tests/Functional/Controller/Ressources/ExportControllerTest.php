@@ -28,6 +28,8 @@ namespace CPSIT\MaskExport\Tests\Functional\Controller\Ressources;
 require_once __DIR__ . '/../AbstractExportControllerTestCase.php';
 
 use CPSIT\MaskExport\Tests\Functional\Controller\AbstractExportControllerTestCase;
+use TYPO3\CMS\Core\Imaging\IconRegistry;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ExportControllerTest extends AbstractExportControllerTestCase
 {
@@ -42,5 +44,35 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             __DIR__ . '/../../Fixtures/Templates/Preview/ce_nested-content-elements.png',
             $this->files['Resources/Public/Icons/Content/ce_nested-content-elements.png']
         );
+    }
+
+    /**
+     * @test
+     */
+    public function extensionIconIsUsedAsDefaultContentElementIcon()
+    {
+        $this->assertArrayHasKey('Resources/Public/Icons/Content/ce_default-extension-icon.png', $this->files);
+
+        $this->assertStringEqualsFile(
+            __DIR__ . '/../../../../ext_icon.png',
+            $this->files['Resources/Public/Icons/Content/ce_default-extension-icon.png']
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function contentElementsHaveRegisteredIconIdentifier()
+    {
+        $maskConfiguration = json_decode(__DIR__ . '/../../Fixtures/mask.json');
+        $this->installExtension();
+
+        $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
+
+        foreach ($maskConfiguration['tt_content']['elements'] as $key => $_) {
+            $iconIdentifier = 'tx_maskexampleexport' . $key;
+
+            $this->assertTrue($iconRegistry->isRegistered($iconIdentifier));
+        }
     }
 }
