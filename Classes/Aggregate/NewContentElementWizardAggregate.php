@@ -104,7 +104,7 @@ EOS
     protected function processElement(array $element)
     {
         $key = $element['key'];
-        $iconIdentifier = !empty($this->icons[$key]) ? $this->icons[$key] : static::$defaultIconIdentifier;
+        $iconIdentifier = 'tx_mask_' . $key;
 
         $this->addLabel(
             $this->languageFilePath . $this->languageFileIdentifier,
