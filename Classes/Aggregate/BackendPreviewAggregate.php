@@ -98,6 +98,7 @@ EOS
             <<<EOS
 namespace MASK\Mask\Hooks;
 
+use TYPO3\CMS\Backend\Form\Exception;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
 use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
 use TYPO3\CMS\Backend\View\PageLayoutView;
@@ -153,17 +154,27 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
             'tableName' => 'tt_content',
             'vanillaUid' => (int)\$row['uid'],
         ];
-        \$result = \$formDataCompiler->compile(\$formDataCompilerInput);
-        \$processedRow = \$this->getProcessedData(\$result['databaseRow'], \$result['processedTca']['columns']);
+        try {
+            \$result = \$formDataCompiler->compile(\$formDataCompilerInput);
+            \$processedRow = \$this->getProcessedData(\$result['databaseRow'], \$result['processedTca']['columns']);
+    
+            \$view->assignMultiple(
+                [
+                    'row' => \$row,
+                    'processedRow' => \$processedRow,
+                ]
+            );
+    
+            \$itemContent = \$view->render();
+        } catch (Exception \$exception) {
+            \$message = \$GLOBALS['BE_USER']->errorMsg;
+            if (empty(\$message)) {
+                \$message = \$exception->getMessage() . ' ' . \$exception->getCode();
+            }
 
-        \$view->assignMultiple(
-            [
-                'row' => \$row,
-                'processedRow' => \$processedRow,
-            ]
-        );
-
-        \$itemContent = \$view->render();
+            \$itemContent = \$message;
+        }
+        
         \$drawItem = false;
     }
 
