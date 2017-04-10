@@ -80,7 +80,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
 
         // Get templateName from content type and check for file
         $supportedContentTypes = eval('return ' . $matches[1] . ';');
-        foreach ($supportedContentTypes as $contentType => $_) {
+        foreach ($supportedContentTypes as $contentType) {
             $contentType = explode('_', $contentType, 2);
             $templateKey = GeneralUtility::underscoredToUpperCamelCase($contentType[1]);
             $templatePath = str_replace('$templateKey', $templateKey, $templateRootPath);

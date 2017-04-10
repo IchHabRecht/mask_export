@@ -87,10 +87,12 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements Plai
 EOS
         );
 
-        $contentTypes = [];
-        foreach ($this->maskConfiguration[$this->table]['elements'] as $key => $element) {
-            $contentTypes['mask_' . $key] = $element['columns'];
-        }
+        $contentTypes = array_map(
+            function ($key) {
+                return 'mask_' . $key;
+            },
+            array_keys($this->maskConfiguration[$this->table]['elements'])
+        );
         $supportedContentTypes = var_export($contentTypes, true);
 
         $this->addPhpFile(
@@ -130,7 +132,7 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
      */
     public function preProcess(PageLayoutView &\$parentObject, &\$drawItem, &\$headerContent, &\$itemContent, array &\$row)
     {
-        if (!isset(\$this->supportedContentTypes[\$row['CType']])) {
+        if (!in_array(\$row['CType'], \$this->supportedContentTypes, true)) {
             return;
         }
 
