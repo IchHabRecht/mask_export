@@ -247,20 +247,27 @@ EOS
     protected function addFluidTemplates(array $elements)
     {
         foreach ($elements as $key => $element) {
-            if (empty($element['columns'])) {
-                continue;
-            }
-
             $templateKey = GeneralUtility::underscoredToUpperCamelCase($key);
-            foreach ($element['columns'] as $field) {
-                $field = isset($GLOBALS['TCA'][$this->table]['columns'][$field]) ? $field : 'tx_mask_' . $field;
-                if (!isset($GLOBALS['TCA'][$this->table]['columns'][$field])) {
-                    continue;
-                }
-                $this->appendPlainTextFile(
-                    $this->templatesFilePath . 'Content/' . $templateKey . '.html',
-                    $this->fluidCodeGenerator->generateFluid($this->table, $field)
+            $templatePath = $this->templatesFilePath . 'Content/' . $templateKey . '.html';
+
+            if (empty($element['columns'])) {
+                $this->addPlainTextFile(
+                    $templatePath,
+                    <<<EOS
+<strong>{$key}</strong>
+EOS
                 );
+            } else {
+                foreach ($element['columns'] as $field) {
+                    $field = isset($GLOBALS['TCA'][$this->table]['columns'][$field]) ? $field : 'tx_mask_' . $field;
+                    if (!isset($GLOBALS['TCA'][$this->table]['columns'][$field])) {
+                        continue;
+                    }
+                    $this->appendPlainTextFile(
+                        $templatePath,
+                        $this->fluidCodeGenerator->generateFluid($this->table, $field)
+                    );
+                }
             }
         }
     }

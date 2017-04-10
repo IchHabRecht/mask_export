@@ -294,12 +294,10 @@ EOS;
         $templatePath = $this->resourcePath . $this->templatePath . $templateSubFolder . '/';
         $templateName = GeneralUtility::underscoredToUpperCamelCase($key);
         $html = $this->htmlCodeGenerator->generateHtml($key);
-        if (!empty($html)) {
-            $this->addPlainTextFile(
-                $templatePath . $templateName . '.html',
-                $html
-            );
-        }
+        $this->addPlainTextFile(
+            $templatePath . $templateName . '.html',
+            $html
+        );
     }
 
     /**
