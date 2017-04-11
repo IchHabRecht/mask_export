@@ -152,9 +152,11 @@ tt_content.mask_{$key} {
 EOS
         );
 
-        $dataProcessing = $this->addDataProcessing('tt_content', $element['columns']);
-        if (!empty($dataProcessing)) {
-            $this->appendPlainTextFile($this->typoScriptFilePath . 'setup.ts', $dataProcessing);
+        if (!empty($element['columns'])) {
+            $dataProcessing = $this->addDataProcessing('tt_content', $element['columns']);
+            if (!empty($dataProcessing)) {
+                $this->appendPlainTextFile($this->typoScriptFilePath . 'setup.ts', $dataProcessing);
+            }
         }
 
         $this->appendPlainTextFile(
@@ -292,12 +294,10 @@ EOS;
         $templatePath = $this->resourcePath . $this->templatePath . $templateSubFolder . '/';
         $templateName = GeneralUtility::underscoredToUpperCamelCase($key);
         $html = $this->htmlCodeGenerator->generateHtml($key);
-        if (!empty($html)) {
-            $this->addPlainTextFile(
-                $templatePath . $templateName . '.html',
-                $html
-            );
-        }
+        $this->addPlainTextFile(
+            $templatePath . $templateName . '.html',
+            $html
+        );
     }
 
     /**

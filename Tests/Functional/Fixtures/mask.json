@@ -15,6 +15,14 @@
                     ""
                 ]
             },
+            "empty-content-element": {
+                "label": "Empty Content Element",
+                "key": "empty-content-element",
+                "shortLabel": "Empty",
+                "description": "Content Element that has no column definitions",
+                "icon": "fa-remove",
+                "color": "#000000"
+            },
             "nested-content-elements": {
                 "label": "Nested content elements",
                 "key": "nested-content-elements",

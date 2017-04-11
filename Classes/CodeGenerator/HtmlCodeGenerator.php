@@ -47,10 +47,14 @@ class HtmlCodeGenerator extends AbstractCodeGenerator
     {
         $storage = $this->storageRepository->loadElement('tt_content', $key);
         $html = '';
-        if ($storage['tca']) {
+        if (!empty($storage['tca'])) {
             foreach ($storage['tca'] as $fieldKey => $fieldConfig) {
                 $html .= $this->generateFieldHtml($fieldKey, $key);
             }
+        } else {
+            $html = <<<EOS
+{$key}<br />
+EOS;
         }
 
         return $html;
