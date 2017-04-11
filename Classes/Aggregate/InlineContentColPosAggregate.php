@@ -81,8 +81,8 @@ class TcaColPosItem implements FormDataProviderInterface
      */
     public function addData(array \$result)
     {
-        if (empty(\$result['inlineParentConfig']['foreign_record_defaults']['colPos']) ||
-            '999' !== \$result['inlineParentConfig']['foreign_record_defaults']['colPos']
+        if (!empty(\$result['databaseRow']['colPos']) 
+            || '999' !== \$result['processedTca']['columns']['colPos']['config']['default']
         ) {
             return \$result;
         }
