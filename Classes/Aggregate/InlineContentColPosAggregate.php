@@ -45,7 +45,8 @@ class InlineContentColPosAggregate extends AbstractAggregate implements Language
      */
     protected function process()
     {
-        if (!$this->inlineContentIsAvailable()) {
+        $inlineFields = $this->getAvailableInlineFields();
+        if (empty($inlineFields)) {
             return;
         }
 
@@ -54,6 +55,7 @@ class InlineContentColPosAggregate extends AbstractAggregate implements Language
             'tt_content.colPos.nestedContentColPos',
             'Nested content (mask)'
         );
+
         $this->appendPhpFile(
             'ext_localconf.php',
 <<<EOS
@@ -65,6 +67,10 @@ class InlineContentColPosAggregate extends AbstractAggregate implements Language
 
 EOS
         );
+
+        sort($inlineFields);
+        $supportedInlineFields = var_export($inlineFields, true);
+
         $this->addPhpFile(
             'Classes/Form/FormDataProvider/TcaColPosItem.php',
 <<<EOS
@@ -75,6 +81,11 @@ use TYPO3\CMS\Lang\LanguageService;
 
 class TcaColPosItem implements FormDataProviderInterface
 {
+    /**
+     * @var array
+     */
+    protected \$supportedInlineFields = {$supportedInlineFields};
+
     /**
      * @param array \$result
      * @return array
@@ -106,10 +117,11 @@ EOS
     }
 
     /**
-     * @return bool
+     * @return array
      */
-    protected function inlineContentIsAvailable()
+    protected function getAvailableInlineFields()
     {
+        $inlineFields = [];
         foreach ($this->maskConfiguration as $table => $configuration) {
             if (empty($configuration['tca'])) {
                 continue;
@@ -118,11 +130,11 @@ EOS
                 if ('inline' === $fieldConfiguration['config']['type']
                     && 'tt_content' === $fieldConfiguration['config']['foreign_table']
                 ) {
-                    return true;
+                    $inlineFields[] = $field;
                 }
             }
         }
 
-        return false;
+        return $inlineFields;
     }
 }
