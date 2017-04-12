@@ -8,9 +8,9 @@ matrix:
     - php: 7.1
       env: TYPO3="dev-master as 8.6.1" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
     - php: 7.1
-      env: TYPO3="8.6.1 as 8.2.0" PHPUNIT_TESTS=yes PHP_LINT=yes
+      env: TYPO3="8.7.0 as 8.2.0" PHPUNIT_TESTS=yes PHP_LINT=yes
     - php: 7.1
-      env: TYPO3="^8.0" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
+      env: TYPO3="8.7.0 as 8.6.1" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
     - php: 7.1
       env: TYPO3=^7.6 PHPUNIT_TESTS=yes
     - php: 7.0
@@ -18,11 +18,11 @@ matrix:
     - php: 7.0
       env: TYPO3="dev-master as 8.6.1" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
     - php: 7.0
-      env: TYPO3="8.6.1 as 8.2.0" PHPUNIT_TESTS=yes PHP_LINT=yes
+      env: TYPO3="8.7.0 as 8.2.0" PHPUNIT_TESTS=yes PHP_LINT=yes
     - php: 7.0
-      env: TYPO3="^8.0" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
+      env: TYPO3="8.7.0 as 8.6.1" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
     - php: 7.0
-      env: TYPO3="8.6.1 as 8.2.0" CODE_ANALYSIS=yes
+      env: TYPO3="8.7.0 as 8.2.0" CODE_ANALYSIS=yes
     - php: 7.0
       env: TYPO3=^7.6 PHPUNIT_TESTS=yes
     - php: 7.0
