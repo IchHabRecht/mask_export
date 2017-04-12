@@ -93,6 +93,7 @@ EOS
             },
             array_keys($this->maskConfiguration[$this->table]['elements'])
         );
+        sort($contentTypes);
         $supportedContentTypes = var_export($contentTypes, true);
 
         $this->addPhpFile(
