@@ -93,7 +93,8 @@ class TcaColPosItem implements FormDataProviderInterface
     public function addData(array \$result)
     {
         if (!empty(\$result['databaseRow']['colPos']) 
-            || '999' !== \$result['processedTca']['columns']['colPos']['config']['default']
+            || empty(\$result['processedTca']['columns']['colPos']['config']['items'])
+            || '999' !== \$result['processedTca']['columns']['colPos']['config']['items'][0][1]
         ) {
             return \$result;
         }
