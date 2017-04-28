@@ -229,13 +229,21 @@ class ExportController extends ActionController
     protected function sortFiles(array $files)
     {
         uksort($files, function ($a, $b) {
-            if (substr_count($a, '/') === substr_count($b, '/')) {
-                return strcasecmp($a, $b);
-            } elseif (strpos($a, '/') === false || substr_count($a, '/') < substr_count($b, '/')) {
+            if (substr_count($a, '/') === 0 && substr_count($b, '/') > 0) {
                 return -1;
+            } elseif (substr_count($a, '/') > 0 && substr_count($b, '/') === 0) {
+                return 1;
             }
 
-            return 1;
+            if (strpos($b, dirname($a)) === 0 || strpos($a, dirname($b)) === 0) {
+                if (substr_count($a, '/') > substr_count($b, '/')) {
+                    return 1;
+                } elseif (substr_count($a, '/') < substr_count($b, '/')) {
+                    return -1;
+                }
+            }
+
+            return strcasecmp($a, $b);
         });
 
         return $files;
