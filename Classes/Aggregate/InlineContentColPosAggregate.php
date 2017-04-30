@@ -68,9 +68,6 @@ class InlineContentColPosAggregate extends AbstractAggregate implements Language
 EOS
         );
 
-        sort($inlineFields);
-        $supportedInlineFields = var_export($inlineFields, true);
-
         $this->addPhpFile(
             'Classes/Form/FormDataProvider/TcaColPosItem.php',
 <<<EOS
@@ -82,18 +79,14 @@ use TYPO3\CMS\Lang\LanguageService;
 class TcaColPosItem implements FormDataProviderInterface
 {
     /**
-     * @var array
-     */
-    protected \$supportedInlineFields = {$supportedInlineFields};
-
-    /**
      * @param array \$result
      * @return array
      */
     public function addData(array \$result)
     {
         if (!empty(\$result['databaseRow']['colPos']) 
-            || '999' !== \$result['processedTca']['columns']['colPos']['config']['default']
+            || empty(\$result['processedTca']['columns']['colPos']['config']['items'])
+            || '999' !== \$result['processedTca']['columns']['colPos']['config']['items'][0][1]
         ) {
             return \$result;
         }
