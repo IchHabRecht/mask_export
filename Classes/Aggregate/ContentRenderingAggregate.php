@@ -248,18 +248,32 @@ EOS;
     protected function addDatabaseQueryProcessorForField($table, $columnName, $index)
     {
         $where = $GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_field'] . '=###uid### AND deleted=0 AND hidden=0';
+        $overrideColumns = [];
         if (!empty($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_record_defaults'])) {
-            foreach ($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_record_defaults'] as $key => $value) {
-                if ('CType' === $key) {
-                    continue;
-                }
-                $where .= ' AND ' . $key . '=' . $this->getDatabaseConnection()->fullQuoteStr($value, 'tt_content');
+            $overrideColumns = $GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_record_defaults'];
+        } elseif (!empty($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['overrideChildTca']['columns'])) {
+            $overrideColumns = array_map(
+                function ($value) {
+                    return $value['config']['default'];
+                },
+                array_filter(
+                    $GLOBALS['TCA'][$table]['columns'][$columnName]['config']['overrideChildTca']['columns'],
+                    function ($item) {
+                        return isset($item['config']['default']);
+                    }
+                )
+            );
+        }
+        foreach ($overrideColumns as $key => $value) {
+            if ('CType' === $key) {
+                continue;
             }
+            $where .= ' AND ' . $key . '=' . $this->getDatabaseConnection()->fullQuoteStr($value, 'tt_content');
+        }
 
-            if (!empty($this->maskConfiguration[$table]['tca'][$columnName]['cTypes'])) {
-                $types = $this->maskConfiguration[$table]['tca'][$columnName]['cTypes'];
-                $where .= ' AND CType IN (' . implode(', ', $this->getDatabaseConnection()->fullQuoteArray($types, $table)) . ')';
-            }
+        if (!empty($this->maskConfiguration[$table]['tca'][$columnName]['cTypes'])) {
+            $types = $this->maskConfiguration[$table]['tca'][$columnName]['cTypes'];
+            $where .= ' AND CType IN (' . implode(', ', $this->getDatabaseConnection()->fullQuoteArray($types, $table)) . ')';
         }
 
         $sorting = 'uid';
