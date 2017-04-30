@@ -89,4 +89,20 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             $this->assertContains($constant, $this->files['Configuration/TypoScript/constants.ts']);
         }
     }
+
+    /**
+     * @test
+     */
+    public function ensureDataProcessingWhereClauseIsBuiltCompletely()
+    {
+        $this->assertArrayHasKey('Configuration/TypoScript/setup.ts', $this->files);
+        $this->assertContains(
+            'where = tx_maskexampleexport_related_content_parent=###uid### AND deleted=0 AND hidden=0 AND colPos=\'999\'',
+            $this->files['Configuration/TypoScript/setup.ts']
+        );
+        $this->assertContains(
+            'where = tx_maskexampleexport_morecontent_parent=###uid### AND deleted=0 AND hidden=0 AND colPos=\'999\'',
+            $this->files['Configuration/TypoScript/setup.ts']
+        );
+    }
 }
