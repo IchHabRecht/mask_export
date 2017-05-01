@@ -16,4 +16,19 @@
         <assets>1</assets>
         <tx_maskexampleexport_related_content_parent>1</tx_maskexampleexport_related_content_parent>
     </tt_content>
+    <tt_content>
+        <uid>3</uid>
+        <pid>1</pid>
+        <header>Mask nested content element</header>
+        <CType>mask_nested-content-elements</CType>
+        <tx_mask_related_content>1</tx_mask_related_content>
+    </tt_content>
+    <tt_content>
+        <uid>4</uid>
+        <pid>1</pid>
+        <header>Mask first related content</header>
+        <CType>textmedia</CType>
+        <colPos>999</colPos>
+        <tx_mask_related_content_parent>1</tx_mask_related_content_parent>
+    </tt_content>
 </dataset>
