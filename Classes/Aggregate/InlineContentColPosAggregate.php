@@ -68,6 +68,12 @@ class InlineContentColPosAggregate extends AbstractAggregate implements Language
 EOS
         );
 
+        sort($inlineFields);
+        array_walk($inlineFields, function (&$value) {
+            $value .= '_parent';
+        });
+        $supportedInlineParentFields = var_export($inlineFields, true);
+
         $this->addPhpFile(
             'Classes/Form/FormDataProvider/TcaColPosItem.php',
 <<<EOS
@@ -79,14 +85,22 @@ use TYPO3\CMS\Lang\LanguageService;
 class TcaColPosItem implements FormDataProviderInterface
 {
     /**
+     * @var array
+     */
+    protected \$supportedInlineParentFields = {$supportedInlineParentFields};
+
+    /**
      * @param array \$result
      * @return array
      */
     public function addData(array \$result)
     {
-        if (!empty(\$result['databaseRow']['colPos']) 
-            || empty(\$result['processedTca']['columns']['colPos']['config']['items'])
-            || '999' !== \$result['processedTca']['columns']['colPos']['config']['items'][0][1]
+        if (empty(\$result['processedTca']['columns']['colPos']['config']['items'])
+            || 999 !== (int)\$result['processedTca']['columns']['colPos']['config']['items'][0][1]
+            || ((empty(\$result['inlineParentUid'])
+                || !in_array(\$result['inlineParentConfig']['foreign_field'], \$this->supportedInlineParentFields, true))
+                && empty(array_filter(array_intersect_key(\$result['databaseRow'], array_flip(\$this->supportedInlineParentFields))))
+            )
         ) {
             return \$result;
         }
