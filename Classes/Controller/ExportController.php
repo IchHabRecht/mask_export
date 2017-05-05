@@ -31,6 +31,7 @@ use CPSIT\MaskExport\Aggregate\ContentElementIconAggregate;
 use CPSIT\MaskExport\Aggregate\ContentRenderingAggregate;
 use CPSIT\MaskExport\Aggregate\ExtensionConfigurationAggregate;
 use CPSIT\MaskExport\Aggregate\InlineContentColPosAggregate;
+use CPSIT\MaskExport\Aggregate\InlineContentCTypeAggregate;
 use CPSIT\MaskExport\Aggregate\NewContentElementWizardAggregate;
 use CPSIT\MaskExport\Aggregate\TcaAggregate;
 use CPSIT\MaskExport\Aggregate\TtContentOverridesAggregate;
@@ -56,6 +57,7 @@ class ExportController extends ActionController
         ContentRenderingAggregate::class,
         NewContentElementWizardAggregate::class,
         InlineContentColPosAggregate::class,
+        InlineContentCTypeAggregate::class,
         BackendPreviewAggregate::class,
     ];
 
