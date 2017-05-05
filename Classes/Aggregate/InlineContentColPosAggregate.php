@@ -41,7 +41,7 @@ class InlineContentColPosAggregate extends AbstractInlineContentAggregate implem
     protected $languageFilePath = 'Resources/Private/Language/';
 
     /**
-     * Adds content elements to the newContentElementWizard
+     * Adds dataProvider for inline content colPos name
      */
     protected function process()
     {
@@ -98,9 +98,8 @@ class TcaColPosItem implements FormDataProviderInterface
     public function addData(array \$result)
     {
         if ('tt_content' !== \$result['tableName']
-            || (!empty(\$result['databaseRow']['colPos'])
-                && 999 !== (int)\$result['databaseRow']['colPos']
-            )
+            || empty(\$result['databaseRow']['colPos'])
+            || 999 !== (int)\$result['databaseRow']['colPos']
             || ((empty(\$result['inlineParentUid'])
                     || !in_array(\$result['inlineParentConfig']['foreign_field'], \$this->supportedInlineParentFields, true))
                 && empty(array_filter(array_intersect_key(\$result['databaseRow'], array_flip(\$this->supportedInlineParentFields))))
