@@ -25,7 +25,7 @@ namespace CPSIT\MaskExport\Aggregate;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-class InlineContentColPosAggregate extends AbstractAggregate implements LanguageAwareInterface, PhpAwareInterface
+class InlineContentColPosAggregate extends AbstractInlineContentAggregate implements LanguageAwareInterface, PhpAwareInterface
 {
     use LanguageAwareTrait;
     use PhpAwareTrait;
@@ -127,27 +127,5 @@ class TcaColPosItem implements FormDataProviderInterface
 
 EOS
         );
-    }
-
-    /**
-     * @return array
-     */
-    protected function getAvailableInlineFields()
-    {
-        $inlineFields = [];
-        foreach ($this->maskConfiguration as $table => $configuration) {
-            if (empty($configuration['tca'])) {
-                continue;
-            }
-            foreach ($configuration['tca'] as $field => $fieldConfiguration) {
-                if ('inline' === $fieldConfiguration['config']['type']
-                    && 'tt_content' === $fieldConfiguration['config']['foreign_table']
-                ) {
-                    $inlineFields[] = $field;
-                }
-            }
-        }
-
-        return $inlineFields;
     }
 }
