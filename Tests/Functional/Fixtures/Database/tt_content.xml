@@ -31,4 +31,10 @@
         <colPos>999</colPos>
         <tx_mask_related_content_parent>1</tx_mask_related_content_parent>
     </tt_content>
+    <tt_content>
+        <uid>5</uid>
+        <pid>1</pid>
+        <header>Text &amp; Madia</header>
+        <CType>textmedia</CType>
+    </tt_content>
 </dataset>

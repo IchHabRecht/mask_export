@@ -374,4 +374,273 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             $this->assertNotSame('Nested content (mask_example_export)', $result['processedTca']['columns']['colPos']['config']['items'][0][0]);
         }
     }
+
+    /**
+     * @return array
+     */
+    public function tcaCTypeItemDataProviderRemovesRestrictedCTypesForSupportedRecordsDataProvider()
+    {
+        return [
+            'Add nested inline record' => [
+                [
+                    'command' => 'new',
+                    'tableName' => 'tt_content',
+                    'vanillaUid' => 1,
+                    'isInlineChild' => true,
+                    'inlineFirstPid' => '1',
+                    'inlineParentUid' => '1',
+                    'inlineParentTableName' => 'tt_content',
+                    'inlineParentFieldName' => 'tx_maskexampleexport_related_content',
+                    'inlineParentConfig' => [
+                        'type' => 'inline',
+                        'foreign_table' => 'tt_content',
+                        'foreign_sortby' => 'sorting',
+                        'appearance' => [
+                            'collapseAll' => '1',
+                            'levelLinksPosition' => 'top',
+                            'showSynchronizationLink' => '1',
+                            'showPossibleLocalizationRecords' => true,
+                            'showAllLocalizationLink' => '1',
+                            'useSortable' => '1',
+                            'enabledControls' => [
+                                'info' => true,
+                                'new' => true,
+                                'dragdrop' => '1',
+                                'sort' => true,
+                                'hide' => true,
+                                'delete' => true,
+                                'localize' => true,
+                            ],
+                            'showRemovedLocalizationRecords' => false,
+                        ],
+                        'behaviour' => [
+                            'localizationMode' => 'none',
+                        ],
+                        'foreign_field' => 'tx_maskexampleexport_related_content_parent',
+                        'foreign_record_defaults' => [
+                            'colPos' => '999',
+                        ],
+                        'overrideChildTca' => [
+                            'columns' => [
+                                'colPos' => [
+                                    'config' => [
+                                        'default' => '999',
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'minitems' => 0,
+                        'maxitems' => 99999,
+                        'inline' => [
+                            'parentSysLanguageUid' => 0,
+                            'first' => 2,
+                            'last' => 2,
+                        ],
+                    ],
+                    'inlineTopMostParentUid' => '1',
+                    'inlineTopMostParentTableName' => 'tt_content',
+                    'inlineTopMostParentFieldName' => 'tx_maskexampleexport_related_content',
+                ],
+                true,
+            ],
+            'Edit nested record' => [
+                [
+                    'command' => 'edit',
+                    'tableName' => 'tt_content',
+                    'vanillaUid' => 2,
+                    'isInlineChild' => true,
+                    'inlineFirstPid' => '1',
+                    'inlineParentConfig' => [
+                        'type' => 'inline',
+                        'foreign_table' => 'tt_content',
+                        'foreign_sortby' => 'sorting',
+                        'appearance' => [
+                            'collapseAll' => '1',
+                            'levelLinksPosition' => 'top',
+                            'showSynchronizationLink' => '1',
+                            'showPossibleLocalizationRecords' => true,
+                            'showAllLocalizationLink' => '1',
+                            'useSortable' => '1',
+                            'enabledControls' => [
+                                'info' => true,
+                                'new' => true,
+                                'dragdrop' => '1',
+                                'sort' => true,
+                                'hide' => true,
+                                'delete' => true,
+                                'localize' => true,
+                            ],
+                            'showRemovedLocalizationRecords' => false,
+                        ],
+                        'behaviour' => [
+                            'localizationMode' => 'none',
+                        ],
+                        'foreign_field' => 'tx_maskexampleexport_related_content_parent',
+                        'foreign_record_defaults' => [
+                            'colPos' => '999',
+                        ],
+                        'overrideChildTca' => [
+                            'columns' => [
+                                'colPos' => [
+                                    'config' => [
+                                        'default' => '999',
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'minitems' => 0,
+                        'maxitems' => 99999,
+                        'inline' => [
+                            'parentSysLanguageUid' => 0,
+                            'first' => 2,
+                            'last' => 2,
+                        ],
+                        'renderFieldsOnly' => true,
+                    ],
+                    'isInlineAjaxOpeningContext' => true,
+                    'inlineParentUid' => 1,
+                    'inlineParentTableName' => 'tt_content',
+                    'inlineParentFieldName' => 'tx_maskexampleexport_related_content',
+                    'inlineTopMostParentUid' => '1',
+                    'inlineTopMostParentTableName' => 'tt_content',
+                    'inlineTopMostParentFieldName' => 'tx_maskexampleexport_related_content',
+                ],
+                true,
+            ],
+            'Open nested record directly' => [
+                [
+                    'command' => 'edit',
+                    'tableName' => 'tt_content',
+                    'vanillaUid' => 2,
+                ],
+                true,
+            ],
+            'Open parent record' => [
+                [
+                    'command' => 'edit',
+                    'tableName' => 'tt_content',
+                    'vanillaUid' => 1,
+                ],
+                false,
+            ],
+            'Add new tt_content record' => [
+                [
+                    'command' => 'new',
+                    'tableName' => 'tt_content',
+                    'vanillaUid' => 1,
+                ],
+                false,
+            ],
+            'Add nested inline record in mask element' => [
+                [
+                    'command' => 'new',
+                    'tableName' => 'tt_content',
+                    'vanillaUid' => 1,
+                    'isInlineChild' => true,
+                    'inlineFirstPid' => '1',
+                    'inlineParentUid' => '3',
+                    'inlineParentTableName' => 'tt_content',
+                    'inlineParentFieldName' => 'tx_mask_related_content',
+                    'inlineParentConfig' => [
+                        'type' => 'inline',
+                        'foreign_table' => 'tt_content',
+                        'foreign_sortby' => 'sorting',
+                        'appearance' => [
+                            'collapseAll' => '1',
+                            'levelLinksPosition' => 'top',
+                            'showSynchronizationLink' => '1',
+                            'showPossibleLocalizationRecords' => true,
+                            'showAllLocalizationLink' => '1',
+                            'useSortable' => '1',
+                            'enabledControls' => [
+                                'info' => true,
+                                'new' => true,
+                                'dragdrop' => '1',
+                                'sort' => true,
+                                'hide' => true,
+                                'delete' => true,
+                                'localize' => true,
+                            ],
+                            'showRemovedLocalizationRecords' => false,
+                        ],
+                        'behaviour' => [
+                            'localizationMode' => 'none',
+                        ],
+                        'foreign_field' => 'tx_mask_related_content_parent',
+                        'foreign_record_defaults' => [
+                            'colPos' => '999',
+                        ],
+                        'overrideChildTca' => [
+                            'columns' => [
+                                'colPos' => [
+                                    'config' => [
+                                        'default' => '999',
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'minitems' => 0,
+                        'maxitems' => 99999,
+                        'inline' => [
+                            'parentSysLanguageUid' => 0,
+                            'first' => 4,
+                            'last' => 4,
+                        ],
+                    ],
+                    'inlineTopMostParentUid' => '3',
+                    'inlineTopMostParentTableName' => 'tt_content',
+                    'inlineTopMostParentFieldName' => 'tx_mask_related_content',
+                ],
+                false,
+            ],
+            'New page content' => [
+                [
+                    'command' => 'new',
+                    'tableName' => 'tt_content',
+                    'vanillaUid' => 1,
+                ],
+                false,
+            ],
+            'Edit page content' => [
+                [
+                    'command' => 'edit',
+                    'tableName' => 'tt_content',
+                    'vanillaUid' => 5,
+                ],
+                false,
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider tcaCTypeItemDataProviderRemovesRestrictedCTypesForSupportedRecordsDataProvider
+     * @param array $formDataCompilerInput
+     * @param bool $expectation
+     */
+    public function tcaCTypeItemDataProviderRemovesRestrictedCTypesForSupportedRecords(array $formDataCompilerInput, $expectation)
+    {
+        $this->installExtension();
+
+        // Load database fixtures
+        $fixturePath = ORIGINAL_ROOT . 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Database/';
+        $this->importDataSet($fixturePath . 'pages.xml');
+        $this->importDataSet($fixturePath . 'tt_content.xml');
+        $this->importDataSet($fixturePath . 'sys_file.xml');
+
+        $this->setUpBackendUserFromFixture(1);
+        $languageService = new LanguageService();
+        $languageService->init('default');
+        $GLOBALS['LANG'] = $languageService;
+
+        $formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
+        $formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, $formDataGroup);
+        $result = $formDataCompiler->compile($formDataCompilerInput);
+
+        if ($expectation) {
+            $this->assertCount(3, $result['processedTca']['columns']['CType']['config']['items']);
+        } else {
+            $this->assertGreaterThan(3, count($result['processedTca']['columns']['CType']['config']['items']));
+        }
+    }
 }
