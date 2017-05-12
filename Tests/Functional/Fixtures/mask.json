@@ -161,7 +161,11 @@
                     }
                 },
                 "exclude": "1",
-                "cTypes": "",
+                "cTypes": [
+                    "header",
+                    "textmedia",
+                    "bullets"
+                ],
                 "key": "related_content"
             },
             "tx_mask_additionalcontent": {

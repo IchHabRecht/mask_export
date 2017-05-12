@@ -25,7 +25,7 @@ namespace CPSIT\MaskExport\Aggregate;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-class InlineContentColPosAggregate extends AbstractAggregate implements LanguageAwareInterface, PhpAwareInterface
+class InlineContentColPosAggregate extends AbstractInlineContentAggregate implements LanguageAwareInterface, PhpAwareInterface
 {
     use LanguageAwareTrait;
     use PhpAwareTrait;
@@ -41,7 +41,7 @@ class InlineContentColPosAggregate extends AbstractAggregate implements Language
     protected $languageFilePath = 'Resources/Private/Language/';
 
     /**
-     * Adds content elements to the newContentElementWizard
+     * Adds dataProvider for inline content colPos name
      */
     protected function process()
     {
@@ -98,9 +98,8 @@ class TcaColPosItem implements FormDataProviderInterface
     public function addData(array \$result)
     {
         if ('tt_content' !== \$result['tableName']
-            || (!empty(\$result['databaseRow']['colPos'])
-                && 999 !== (int)\$result['databaseRow']['colPos']
-            )
+            || empty(\$result['databaseRow']['colPos'])
+            || 999 !== (int)\$result['databaseRow']['colPos']
             || ((empty(\$result['inlineParentUid'])
                     || !in_array(\$result['inlineParentConfig']['foreign_field'], \$this->supportedInlineParentFields, true))
                 && empty(array_filter(array_intersect_key(\$result['databaseRow'], array_flip(\$this->supportedInlineParentFields))))
@@ -127,27 +126,5 @@ class TcaColPosItem implements FormDataProviderInterface
 
 EOS
         );
-    }
-
-    /**
-     * @return array
-     */
-    protected function getAvailableInlineFields()
-    {
-        $inlineFields = [];
-        foreach ($this->maskConfiguration as $table => $configuration) {
-            if (empty($configuration['tca'])) {
-                continue;
-            }
-            foreach ($configuration['tca'] as $field => $fieldConfiguration) {
-                if ('inline' === $fieldConfiguration['config']['type']
-                    && 'tt_content' === $fieldConfiguration['config']['foreign_table']
-                ) {
-                    $inlineFields[] = $field;
-                }
-            }
-        }
-
-        return $inlineFields;
     }
 }
