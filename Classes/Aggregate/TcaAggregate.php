@@ -139,10 +139,10 @@ EOS
             $sqlDefinitions[$tableConfiguration['ctrl']['enablecolumns']['disabled']] = 'tinyint(4) unsigned DEFAULT \'0\' NOT NULL';
         }
         if (!empty($tableConfiguration['ctrl']['enablecolumns']['starttime'])) {
-            $sqlDefinitions[$tableConfiguration['ctrl']['enablecolumns']['starttime']] = 'tinyint(4) unsigned DEFAULT \'0\' NOT NULL';
+            $sqlDefinitions[$tableConfiguration['ctrl']['enablecolumns']['starttime']] = 'int(11) unsigned DEFAULT \'0\' NOT NULL';
         }
         if (!empty($tableConfiguration['ctrl']['enablecolumns']['endtime'])) {
-            $sqlDefinitions[$tableConfiguration['ctrl']['enablecolumns']['endtime']] = 'tinyint(4) unsigned DEFAULT \'0\' NOT NULL';
+            $sqlDefinitions[$tableConfiguration['ctrl']['enablecolumns']['endtime']] = 'int(11) unsigned DEFAULT \'0\' NOT NULL';
         }
         if (!empty($tableConfiguration['ctrl']['languageField'])) {
             $sqlDefinitions[$tableConfiguration['ctrl']['languageField']] = 'int(11) DEFAULT \'0\' NOT NULL';
