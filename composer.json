@@ -34,7 +34,7 @@
         "typo3/cms-core": ">=7.6 <8.8",
         "typo3/cms-extbase": ">=7.6 <8.8",
         "typo3/cms-fluid": ">=7.6 <8.8",
-        "mask/mask": "^2.0"
+        "mask/mask": "^2.0||^3.0"
     },
     "require-dev": {
         "nimut/testing-framework": "1.x-dev",
