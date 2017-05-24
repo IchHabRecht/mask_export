@@ -1,3 +1,7 @@
+2017-05-24         [RELEASE] Release of mask_export 0.9.1 (Nicole Cordes)
+2017-05-23 45d18c3 [BUGFIX] Use correct SQL for timestamp fields in new tables (Nicole Cordes)
+2017-05-17 98499d9 [TASK] Raise compatibility to Mask 3.0.0 (Nicole Cordes)
+
 2017-05-12         [RELEASE] Release of mask_export 0.9.0 (Nicole Cordes)
 2017-05-05 f3ca5ca [TASK] Add functional tests for TcaCTypeItem data provider (Nicole Cordes)
 2017-05-05 3d9ade7 [FEATURE] Add own dataProvider for CType restriction for inline content (Nicole Cordes)
