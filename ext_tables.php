@@ -4,5 +4,6 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions']['Mask']['modules
     'actions' => [
         'list',
         'download',
+        'write',
     ],
 ];

@@ -40,9 +40,12 @@ use CPSIT\MaskExport\FileCollection\LanguageFileCollection;
 use CPSIT\MaskExport\FileCollection\PhpFileCollection;
 use CPSIT\MaskExport\FileCollection\PlainTextFileCollection;
 use CPSIT\MaskExport\FileCollection\SqlFileCollection;
+use Symfony\Component\Finder\Finder;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extensionmanager\Domain\Model\Extension;
 
 class ExportController extends ActionController
 {
@@ -136,6 +139,55 @@ class ExportController extends ActionController
         readfile($zipFile);
         unlink($zipFile);
         exit;
+    }
+
+    /**
+     * @param string $extensionName
+     */
+    public function writeAction($extensionName)
+    {
+        $paths = Extension::returnInstallPaths();
+        if (empty($paths['Local']) || !file_exists($paths['Local'])) {
+            throw new \RuntimeException('Local extension install path is missing', 1500061028);
+        }
+
+        $extensionPath = $paths['Local'] . $extensionName;
+
+        if (file_exists($extensionPath)) {
+            $finder = new Finder();
+            $finder
+                ->directories()
+                ->ignoreDotFiles(true)
+                ->ignoreVCS(true)
+                ->depth(0)
+                ->in($extensionPath);
+
+            foreach ($finder as $directory) {
+                $directoryPath = $directory->getRealPath();
+
+                if (file_exists($directoryPath)) {
+                    GeneralUtility::rmdir($directoryPath, true);
+                }
+            }
+        }
+
+        $files = $this->getFiles($extensionName);
+
+        foreach ($files as $file => $content) {
+            $absoluteFile = $extensionPath . '/' . $file;
+            if (!file_exists(dirname($absoluteFile))) {
+                GeneralUtility::mkdir_deep(dirname($absoluteFile));
+            }
+            GeneralUtility::writeFile($absoluteFile, $content, true);
+        }
+
+        $this->addFlashMessage(
+            '',
+            'Extension files ' . $extensionName . ' were written successfully',
+            AbstractMessage::OK
+        );
+
+        $this->redirect('list');
     }
 
     /**

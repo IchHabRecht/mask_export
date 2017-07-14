@@ -17,8 +17,9 @@
                                     <f:form.textfield value="" name="extensionName" placeholder="{extensionName}" title="Extension Name" id="meta_label" class="form-control" />
                                 </div>
                                 <div class="form-control-wrap">
-                                    <f:form.submit name="submit" value="Save" class="btn btn-success col-sm-4" />
-                                    <f:link.action action="download" arguments="{extensionName: '{extensionName}'}" class="btn btn-default col-sm-4" style="margin-left: 9px;">Download</f:link.action>
+                                    <f:form.submit name="submit" value="Save" class="btn btn-success col-sm-3" />
+                                    <f:link.action action="write" arguments="{extensionName: '{extensionName}'}" class="btn btn-default col-sm-3 t3js-modal-trigger" additionalAttributes="{data-severity: 'warning', data-title: 'Write extension to file system?', data-content: 'Are you sure you want to write the new extension files to your local file system? This action might overwrite extisting files.', data-button-ok-text: 'Overwrite'}" style="margin-left: 9px;">Write</f:link.action>
+                                    <f:link.action action="download" arguments="{extensionName: '{extensionName}'}" class="btn btn-default col-sm-3" style="margin-left: 9px;">Download</f:link.action>
                                 </div>
                             </div>
                         </div>
