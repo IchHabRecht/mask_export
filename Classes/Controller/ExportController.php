@@ -40,9 +40,14 @@ use CPSIT\MaskExport\FileCollection\LanguageFileCollection;
 use CPSIT\MaskExport\FileCollection\PhpFileCollection;
 use CPSIT\MaskExport\FileCollection\PlainTextFileCollection;
 use CPSIT\MaskExport\FileCollection\SqlFileCollection;
+use Symfony\Component\Finder\Finder;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extensionmanager\Domain\Model\Extension;
+use TYPO3\CMS\Extensionmanager\Service\ExtensionManagementService;
 
 class ExportController extends ActionController
 {
@@ -140,6 +145,44 @@ class ExportController extends ActionController
 
     /**
      * @param string $extensionName
+     */
+    public function installAction($extensionName)
+    {
+        $paths = Extension::returnInstallPaths();
+        if (empty($paths['Local']) || !file_exists($paths['Local'])) {
+            throw new \RuntimeException('Local extension install path is missing', 1500061028);
+        }
+
+        $extensionPath = $paths['Local'] . $extensionName;
+
+        $files = $this->getFiles($extensionName);
+        $this->writeExtensionFilesToPath($files, $extensionPath);
+
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $managementService = $objectManager->get(ExtensionManagementService::class);
+        $managementService->reloadPackageInformation($extensionName);
+        $extension = $managementService->getExtension($extensionName);
+        $installInformation = $managementService->installExtension($extension);
+
+        if (is_array($installInformation)) {
+            $this->addFlashMessage(
+                '',
+                'Extension ' . $extensionName . ' installed successfully',
+                AbstractMessage::OK
+            );
+        } else {
+            $this->addFlashMessage(
+                'An error occurred during installation of ' . $extensionName,
+                'Error',
+                AbstractMessage::ERROR
+            );
+        }
+
+        $this->redirect('list');
+    }
+
+    /**
+     * @param string $extensionName
      * @return array
      */
     protected function getFiles($extensionName)
@@ -162,6 +205,39 @@ class ExportController extends ActionController
         $files = $this->sortFiles($files);
 
         return $files;
+    }
+
+    /**
+     * @param array $files
+     * @param string $extensionPath
+     */
+    protected function writeExtensionFilesToPath(array $files, $extensionPath)
+    {
+        if (file_exists($extensionPath)) {
+            $finder = new Finder();
+            $finder
+                ->directories()
+                ->ignoreDotFiles(true)
+                ->ignoreVCS(true)
+                ->depth(0)
+                ->in($extensionPath);
+
+            foreach ($finder as $directory) {
+                $directoryPath = $directory->getRealPath();
+
+                if (file_exists($directoryPath)) {
+                    GeneralUtility::rmdir($directoryPath, true);
+                }
+            }
+        }
+
+        foreach ($files as $file => $content) {
+            $absoluteFile = $extensionPath . '/' . $file;
+            if (!file_exists(dirname($absoluteFile))) {
+                GeneralUtility::mkdir_deep(dirname($absoluteFile));
+            }
+            GeneralUtility::writeFile($absoluteFile, $content, true);
+        }
     }
 
     /**
