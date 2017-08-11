@@ -76,7 +76,7 @@ EOS;
         switch ($fieldHelper->getFormType($fieldKey, $elementKey, $table)) {
             case 'Check':
                 $html .= <<<EOS
-<f:if condition"{{$datafield}.{$fieldKey}}">
+<f:if condition="{{$datafield}.{$fieldKey}}">
     <f:then>
         On<br />
     </f:then>
