@@ -37,7 +37,7 @@
         "mask/mask": "^2.0||^3.0"
     },
     "require-dev": {
-        "nimut/testing-framework": "1.x-dev",
+        "nimut/testing-framework": "2.x-dev",
         "phpunit/phpunit": "^4.8"
     },
     "suggest": {
