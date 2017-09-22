@@ -142,11 +142,11 @@ EOS
 tt_content.mask_{$key} = FLUIDTEMPLATE
 tt_content.mask_{$key} {
     layoutRootPaths.0 = {$layoutsPath}
-    layoutRootPaths.1 = {\$plugin.tx_mask.view.layoutRootPath}
+    layoutRootPaths.10 = {\$plugin.tx_mask.view.layoutRootPath}
     partialRootPaths.0 = {$partialPath}
-    partialRootPaths.1 = {\$plugin.tx_mask.view.partialRootPath}
+    partialRootPaths.10 = {\$plugin.tx_mask.view.partialRootPath}
     templateRootPaths.0 = {$templatesPath}
-    templateRootPaths.1 = {\$plugin.tx_mask.view.templateRootPath}
+    templateRootPaths.10 = {\$plugin.tx_mask.view.templateRootPath}
     templateName = {$templateName}
 
 EOS
