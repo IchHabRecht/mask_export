@@ -110,10 +110,16 @@ EOS;
                 $content .= $this->getInlineFluid($foreignLabelField, $foreignLabelFieldConfiguration, 'item');
                 break;
             default:
-                $content .= <<<EOS
+                if ($foreignLabelFieldConfiguration['config']['type'] === 'group'
+                    && $foreignLabelFieldConfiguration['config']['allowed'] === 'sys_file'
+                ) {
+                    $content .= $this->getSysFileFluid();
+                } else {
+                    $content .= <<<EOS
             <f:translate key="{$foreignLabel}" /> {{$variableIterator}.{$foreignLabelField}} (id={{$variableIterator}.uid})<br/>
 
 EOS;
+                }
         }
 
         $content .= <<<EOS
@@ -145,6 +151,30 @@ EOS;
             <li>{item}</li>
         </f:for>
     </ul>
+
+EOS;
+        }
+
+        return $content;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getSysFileFluid()
+    {
+        if (version_compare(TYPO3_version, '8.6.0', '>=')) {
+            $content = <<<EOS
+    <ul>
+        <f:for each="{item.uid_local}" as="file">
+            <li><f:translate key="LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.uid_local" /> {file.table}|{file.uid}|{file.title} (id={item.uid})</li>
+        </f:for>
+    </ul>
+
+EOS;
+        } else {
+            $content = <<<EOS
+    <f:translate key="LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.uid_local" /> {item.uid_local} (id={item.uid})
 
 EOS;
         }
