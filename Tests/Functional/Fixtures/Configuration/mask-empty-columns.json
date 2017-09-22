@@ -1,0 +1,34 @@
+{
+    "tt_content": {
+        "elements": {
+            "intro_element": {
+                "label": "Seite Intro Element",
+                "key": "intro_element",
+                "shortLabel": "Seite Intro Element",
+                "description": "",
+                "icon": "",
+                "color": "#000000",
+                "columns": [
+                    "header",
+                    "bodytext",
+                    "tx_mask_tabsimages",
+                    "image"
+                ],
+                "labels": [
+                    "",
+                    "",
+                    "LLL:EXT:frontend\/Resources\/Private\/Language\/locallang_ttc.xlf:tabs.images",
+                    ""
+                ]
+            }
+        },
+        "tca": {
+            "tx_mask_tabsimages": {
+                "config": {
+                    "type": "tab"
+                },
+                "key": "tabsimages"
+            }
+        }
+    }
+}
