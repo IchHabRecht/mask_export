@@ -77,10 +77,10 @@ class TtContentOverridesAggregate extends AbstractOverridesAggregate
         $this->appendPhpFile(
             $this->tcaOverridesFilePath . $this->table . '.php',
 <<<EOS
-\$GLOBALS['TCA']['{$this->table}']['columns']['CType']['config']['items'][] = array(
+\$GLOBALS['TCA']['{$this->table}']['columns']['CType']['config']['items'][] = [
     'LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:{$this->table}.CType.div._mask_',
     '--div--',
-);
+];
 
 EOS
         );
@@ -93,11 +93,11 @@ EOS
             $this->appendPhpFile(
                 $this->tcaOverridesFilePath . $this->table . '.php',
 <<<EOS
-\$GLOBALS['TCA']['{$this->table}']['columns']['CType']['config']['items'][] = array(
+\$GLOBALS['TCA']['{$this->table}']['columns']['CType']['config']['items'][] = [
     'LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:{$this->table}.CType.{$type}',
     '{$type}',
     'tx_{$type}',
-);
+];
 
 EOS
             );

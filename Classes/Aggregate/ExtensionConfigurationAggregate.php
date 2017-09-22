@@ -26,6 +26,8 @@ namespace CPSIT\MaskExport\Aggregate;
  ***************************************************************/
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extensionmanager\Utility\EmConfUtility;
 
 class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAwareInterface, PlainTextFileAwareInterface
 {
@@ -46,29 +48,31 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
      */
     protected function addExtEmconf()
     {
-        $typo3Constraint = sprintf('%s.0-%s.99', TYPO3_branch, TYPO3_branch);
+        $emConfUtility = GeneralUtility::makeInstance(EmConfUtility::class);
+        $extensionData = [
+            'extKey' => 'mask',
+            'EM_CONF' => [
+                'title' => 'mask',
+                'description' => '',
+                'category' => 'fe',
+                'author' => '',
+                'author_email' => '',
+                'author_company' => '',
+                'state' => 'stable',
+                'version' => '0.1.0',
+                'constraints' => [
+                    'depends' => [
+                        'typo3' => sprintf('%s.0-%s.99', TYPO3_branch, TYPO3_branch),
+                    ],
+                    'conflicts' => [],
+                    'suggests' => [],
+                ],
+            ],
+        ];
+
         $this->addPhpFile(
             'ext_emconf.php',
-<<<EOS
-\$EM_CONF[\$_EXTKEY] = array(
-    'title' => 'mask',
-    'description' => '',
-    'category' => 'fe',
-    'author' => '',
-    'author_email' => '',
-    'author_company' => '',
-    'state' => 'stable',
-    'version' => '0.1.0',
-    'constraints' => array(
-        'depends' => array(
-            'typo3' => '{$typo3Constraint}',
-        ),
-        'conflicts' => array(),
-        'suggests' => array(),
-    ),
-);
-
-EOS
+            substr($emConfUtility->constructEmConf($extensionData), 6)
         );
     }
 
