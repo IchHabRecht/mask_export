@@ -118,16 +118,20 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     }
 
     /**
-     * @param string $configuration
+     * @param array $additionalConfiguration
      */
-    protected function setUpWithConfiguration($configuration = 'mask-default.json')
+    protected function setUpWithExtensionConfiguration(array $additionalConfiguration)
     {
-        $this->configurationToUseInTestInstance['EXT']['extConf']['mask'] = serialize(
-            [
-                'json' => 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Configuration/' . $configuration,
-                'preview' => 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Templates/Preview/',
-            ]
-        );
+        $configuration = [];
+        foreach ($this->configurationToUseInTestInstance['EXT']['extConf'] as $key => $value) {
+            $configuration[$key] = unserialize($value);
+        }
+
+        $configuration = array_replace_recursive($configuration, $additionalConfiguration);
+
+        foreach ($configuration as $key => $value) {
+            $this->configurationToUseInTestInstance['EXT']['extConf'][$key] = serialize($value);
+        }
 
         self::setUp();
     }
