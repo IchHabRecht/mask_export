@@ -309,6 +309,11 @@ class ExportController extends ActionController
             'EXT:' . $extensionKey,
             $string
         );
+        $string = preg_replace(
+            '/\${(m)ask}/i',
+            '\\1ask',
+            $string
+        );
 
         return $string;
     }

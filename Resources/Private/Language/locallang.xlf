@@ -3,6 +3,9 @@
 	<file source-language="en" datatype="plaintext" original="messages" date="2016-07-10T19:42:00Z" product-name="mask_export">
 		<header/>
 		<body>
+			<trans-unit id="config.maskConfiguration">
+				<source>Include Mask configuration: If enabled the export contains the Mask configuration file (.json) it is based on.</source>
+			</trans-unit>
 			<trans-unit id="config.backendPreview">
 				<source>Add backend preview templates: If enabled the export contains some PHP and Fluid files to show a record preview in the page layout.</source>
 			</trans-unit>
