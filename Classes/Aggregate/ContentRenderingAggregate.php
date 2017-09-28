@@ -64,11 +64,6 @@ class ContentRenderingAggregate extends AbstractOverridesAggregate implements Pl
     protected $partialPath = 'Partials/';
 
     /**
-     * @var string
-     */
-    protected $typoScriptFilePath = 'Configuration/TypoScript/';
-
-    /**
      * @param array $maskConfiguration
      * @param HtmlCodeGenerator $htmlCodeGenerator
      */
