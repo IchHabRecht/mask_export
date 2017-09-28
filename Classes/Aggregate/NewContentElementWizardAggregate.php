@@ -39,17 +39,7 @@ class NewContentElementWizardAggregate extends AbstractAggregate implements Lang
     /**
      * @var string
      */
-    protected $languageFilePath = 'Resources/Private/Language/';
-
-    /**
-     * @var string
-     */
     protected $pageTSConfigFileIdentifier = 'NewContentElementWizard.ts';
-
-    /**
-     * @var string
-     */
-    protected $pageTSConfigFilePath = 'Configuration/PageTSconfig/';
 
     /**
      * Adds content elements to the newContentElementWizard

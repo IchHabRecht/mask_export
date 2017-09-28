@@ -42,6 +42,21 @@ abstract class AbstractAggregate
     ];
 
     /**
+     * @var string
+     */
+    protected $languageFilePath = 'Resources/Private/Language/';
+
+    /**
+     * @var string
+     */
+    protected $pageTSConfigFilePath = 'Configuration/PageTSconfig/';
+
+    /**
+     * @var string
+     */
+    protected $typoScriptFilePath = 'Configuration/TypoScript/';
+
+    /**
      * @param array $maskConfiguration
      */
     public function __construct(array $maskConfiguration)

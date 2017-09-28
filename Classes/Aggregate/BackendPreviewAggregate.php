@@ -40,6 +40,11 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements Plai
     /**
      * @var string
      */
+    protected $pageTSConfigFileIdentifier = 'BackendPreview.ts';
+
+    /**
+     * @var string
+     */
     protected $templatesFilePath = 'Resources/Private/Backend/Templates/';
 
     /**
@@ -67,9 +72,38 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements Plai
             return;
         }
 
+        $this->addPageTsConfiguration();
         $this->addDrawItemHook();
         $this->replaceTableLabels();
         $this->addFluidTemplates($this->maskConfiguration[$this->table]['elements']);
+    }
+
+    protected function addPageTsConfiguration()
+    {
+        $contentTypes = array_keys($this->maskConfiguration[$this->table]['elements']);
+        sort($contentTypes);
+
+        $pageTSConfig = [];
+        foreach ($contentTypes as $type) {
+            $templateKey = GeneralUtility::underscoredToUpperCamelCase($type);
+            $pageTSConfig[] = 'mod.web_layout.tt_content.preview.mask_' . $type
+                . ' = EXT:mask/' . $this->templatesFilePath . 'Content/' . $templateKey . '.html';
+        }
+
+        $this->appendPlainTextFile(
+            $this->pageTSConfigFilePath . $this->pageTSConfigFileIdentifier,
+            implode("\n", $pageTSConfig) . "\n"
+        );
+
+        $this->appendPhpFile(
+            'ext_localconf.php',
+            <<<EOS
+\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::addPageTSConfig(
+    '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:mask/{$this->pageTSConfigFilePath}{$this->pageTSConfigFileIdentifier}">'
+);
+
+EOS
+        );
     }
 
     /**
@@ -118,11 +152,6 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
     protected \$supportedContentTypes = {$supportedContentTypes};
 
     /**
-     * @var string
-     */
-    protected \$rootPath = 'EXT:mask/Resources/Private/Backend/';
-
-    /**
      * Preprocesses the preview rendering of a content element.
      *
      * @param PageLayoutView \$parentObject
@@ -137,18 +166,8 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
             return;
         }
 
-        \$contentType = explode('_', \$row['CType'], 2);
-        \$templateKey = GeneralUtility::underscoredToUpperCamelCase(\$contentType[1]);
-        \$templatePath = \$this->getTemplatePath(\$templateKey);
-        if (!file_exists(\$templatePath)) {
-            return;
-        }
-
         \$objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         \$view = \$objectManager->get(StandaloneView::class);
-        \$view->setTemplatePathAndFilename(\$templatePath);
-        \$view->setLayoutRootPaths([\$this->rootPath . 'Layouts/']);
-        \$view->setPartialRootPaths([\$this->rootPath . 'Partials/']);
         
         \$formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
         \$formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, \$formDataGroup);
@@ -159,8 +178,15 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
         ];
         try {
             \$result = \$formDataCompiler->compile(\$formDataCompilerInput);
+            
+            \$templatePath = \$this->getTemplatePath(\$result['pageTsConfig'], \$row['CType']);
+            if (!file_exists(\$templatePath)) {
+                return;
+            }
+        
             \$processedRow = \$this->getProcessedData(\$result['databaseRow'], \$result['processedTca']['columns']);
     
+            \$view->setTemplatePathAndFilename(\$templatePath);
             \$view->assignMultiple(
                 [
                     'row' => \$row,
@@ -184,12 +210,17 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
     /**
      * This function is needed for testing purpose
      *
-     * @param string \$templateKey
+     * @param array \$pageTsConfig
+     * @param string \$contentType
      * @return string
      */
-    protected function getTemplatePath(\$templateKey)
+    protected function getTemplatePath(array \$pageTsConfig, \$contentType)
     {
-        return GeneralUtility::getFileAbsFileName(\$this->rootPath . 'Templates/Content/' . \$templateKey . '.html');
+        if (empty(\$pageTsConfig['mod.']['web_layout.']['tt_content.']['preview.'][\$contentType])) {
+            return '';
+        }
+
+        return GeneralUtility::getFileAbsFileName(\$pageTsConfig['mod.']['web_layout.']['tt_content.']['preview.'][\$contentType]);
     }
 
     /**

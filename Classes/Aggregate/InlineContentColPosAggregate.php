@@ -36,11 +36,6 @@ class InlineContentColPosAggregate extends AbstractInlineContentAggregate implem
     protected $languageFileIdentifier = 'locallang_db.xlf';
 
     /**
-     * @var string
-     */
-    protected $languageFilePath = 'Resources/Private/Language/';
-
-    /**
      * Adds dataProvider for inline content colPos name
      */
     protected function process()
