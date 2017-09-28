@@ -42,31 +42,19 @@ class ExportControllerTest extends AbstractExportControllerTestCase
      */
     public function checkFluidTemplatePathInBackendPreview()
     {
-        $this->assertArrayHasKey('Classes/Hooks/PageLayoutViewDrawItem.php', $this->files);
+        $this->assertArrayHasKey('Configuration/PageTSconfig/BackendPreview.ts', $this->files);
 
-        // Get templatePath from file
-        $matches = [];
-        preg_match(
-            '#return GeneralUtility::getFileAbsFileName\\(([^)]+)\\);#',
-            $this->files['Classes/Hooks/PageLayoutViewDrawItem.php'],
-            $matches
+        //mod.web_layout.tt_content.preview.kvbmaskexport_collapsible_content_element = EXT:kvb_sitepackage/Resources/Private/_Kvb/Extensions/kvb_maskexport/Backend/Templates/Content/CollapsibleContentElement.html
+        // Get templatePaths from file
+        $templatePaths = [];
+        preg_match_all(
+            '#mod\.web_layout\.tt_content\.preview\.([^ ]+) = [^:]+:[^/]+/(.*)#',
+            $this->files['Configuration/PageTSconfig/BackendPreview.ts'],
+            $templatePaths,
+            PREG_SET_ORDER
         );
 
-        $this->assertCount(2, $matches);
-
-        $templateRootPath = str_replace(
-            [
-                '\'',
-                ' . ',
-                '$this->rootPath',
-            ],
-            [
-                '',
-                '',
-                'Resources/Private/Backend/',
-            ],
-            $matches[1]
-        );
+        $this->assertNotEmpty($templatePaths);
 
         // Fetch supported content types from file
         $matches = [];
@@ -78,14 +66,14 @@ class ExportControllerTest extends AbstractExportControllerTestCase
 
         $this->assertCount(2, $matches);
 
-        // Get templateName from content type and check for file
         $supportedContentTypes = eval('return ' . $matches[1] . ';');
-        foreach ($supportedContentTypes as $contentType) {
-            $contentType = explode('_', $contentType, 2);
-            $templateKey = GeneralUtility::underscoredToUpperCamelCase($contentType[1]);
-            $templatePath = str_replace('$templateKey', $templateKey, $templateRootPath);
 
-            $this->assertArrayHasKey($templatePath, $this->files);
+        $this->assertSame(count($templatePaths), count($supportedContentTypes));
+
+        foreach ($templatePaths as $contentType) {
+            $this->assertCount(3, $contentType);
+            $this->assertContains($contentType[1], $supportedContentTypes);
+            $this->assertArrayHasKey($contentType[2], $this->files);
         }
     }
 
