@@ -54,4 +54,13 @@ abstract class AbstractAggregate
      * Evaluates the configuration and stores necessary Interface information
      */
     abstract protected function process();
+
+    /**
+     * @param string $string
+     * @return string
+     */
+    protected function escapeMaskExtensionKey($string)
+    {
+        return preg_replace('/(m)ask/i', '${\\1ask}', $string);
+    }
 }

@@ -45,7 +45,7 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
         'EXT' => [
             'extConf' => [
                 'mask' => 'a:2:{s:4:"json";s:83:"typo3conf/ext/mask_export/Tests/Functional/Fixtures/Configuration/mask-default.json";s:7:"preview";s:70:"typo3conf/ext/mask_export/Tests/Functional/Fixtures/Templates/Preview/";}',
-                'mask_export' => 'a:2:{s:14:"backendPreview";s:1:"1";s:19:"contentElementIcons";s:1:"1";}',
+                'mask_export' => 'a:3:{s:17:"maskConfiguration";s:1:"1";s:14:"backendPreview";s:1:"1";s:19:"contentElementIcons";s:1:"1";}',
             ],
         ],
     ];
@@ -118,16 +118,20 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     }
 
     /**
-     * @param string $configuration
+     * @param array $additionalConfiguration
      */
-    protected function setUpWithConfiguration($configuration = 'mask-default.json')
+    protected function setUpWithExtensionConfiguration(array $additionalConfiguration)
     {
-        $this->configurationToUseInTestInstance['EXT']['extConf']['mask'] = serialize(
-            [
-                'json' => 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Configuration/' . $configuration,
-                'preview' => 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Templates/Preview/',
-            ]
-        );
+        $configuration = [];
+        foreach ($this->configurationToUseInTestInstance['EXT']['extConf'] as $key => $value) {
+            $configuration[$key] = unserialize($value);
+        }
+
+        $configuration = array_replace_recursive($configuration, $additionalConfiguration);
+
+        foreach ($configuration as $key => $value) {
+            $this->configurationToUseInTestInstance['EXT']['extConf'][$key] = serialize($value);
+        }
 
         self::setUp();
     }

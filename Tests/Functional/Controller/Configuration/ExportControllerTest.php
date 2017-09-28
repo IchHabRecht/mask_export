@@ -38,7 +38,6 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     {
         $this->assertArrayHasKey('ext_emconf.php', $this->files);
 
-        $expectedVersionConstraint = '';
         switch (TYPO3_branch) {
             case '7.6':
                 $expectedVersionConstraint = '7.6.0-7.6.99';
@@ -56,6 +55,19 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         $this->assertContains(
             '\'typo3\' => \'' . $expectedVersionConstraint . '\',',
             $this->files['ext_emconf.php']
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function ensureMaskConfigurationIsNotChanged()
+    {
+        $this->assertArrayHasKey('Configuration/Mask/mask.json', $this->files);
+
+        $this->assertStringEqualsFile(
+            __DIR__ . '/../../Fixtures/Configuration/mask-default.json',
+            $this->files['Configuration/Mask/mask.json']
         );
     }
 }

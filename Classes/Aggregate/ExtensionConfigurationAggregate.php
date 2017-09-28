@@ -39,8 +39,13 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
      */
     protected function process()
     {
+        $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask_export']);
         $this->addExtEmconf();
         $this->addExtIcon();
+
+        if (!empty($extensionConfiguration['maskConfiguration'])) {
+            $this->addMaskConfiguration();
+        }
     }
 
     /**
@@ -84,6 +89,27 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
         $this->addPlainTextFile(
             'ext_icon.png',
             file_get_contents(ExtensionManagementUtility::extPath('mask_export') . 'ext_icon.png')
+        );
+    }
+
+    /**
+     * Adds mask.josn configuration file
+     */
+    protected function addMaskConfiguration()
+    {
+        $maskConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask']);
+        if (empty($maskConfiguration['json'])) {
+            return;
+        }
+
+        $jsonFile = PATH_site . $maskConfiguration['json'];
+        if (!file_exists($jsonFile)) {
+            return;
+        }
+
+        $this->addPlainTextFile(
+            $this->escapeMaskExtensionKey('Configuration/Mask/mask.json'),
+            $this->escapeMaskExtensionKey(file_get_contents($jsonFile))
         );
     }
 }
