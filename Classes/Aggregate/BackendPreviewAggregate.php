@@ -270,6 +270,7 @@ EOS
             }
 
             $GLOBALS['TCA'][$table]['columns'] = $this->replaceFieldLabels($GLOBALS['TCA'][$table]['columns'], $table);
+            $GLOBALS['TCA'][$table]['columns'] = $this->replaceItemsLabels($GLOBALS['TCA'][$table]['columns'], $table);
         }
     }
 

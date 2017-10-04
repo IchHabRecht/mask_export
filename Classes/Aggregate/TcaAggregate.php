@@ -96,6 +96,7 @@ EOS
 
         if (!empty($tableConfiguration['columns'])) {
             $tableConfiguration['columns'] = $this->replaceFieldLabels($tableConfiguration['columns'], $this->table);
+            $tableConfiguration['columns'] = $this->replaceItemsLabels($tableConfiguration['columns'], $this->table);
         }
 
         return $tableConfiguration;

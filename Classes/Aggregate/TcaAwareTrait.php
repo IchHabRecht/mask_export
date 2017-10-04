@@ -152,4 +152,36 @@ trait TcaAwareTrait
 
         return $fields;
     }
+
+    /**
+     * @param array $fields
+     * @param string $table
+     * @return array
+     */
+    protected function replaceItemsLabels(array $fields, $table)
+    {
+        foreach ($fields as $field => &$configuration) {
+            if (empty($configuration['config']['items'])) {
+                continue;
+            }
+            foreach ($configuration['config']['items'] as $key => &$item) {
+                if (empty($item[0])) {
+                    continue;
+                }
+                if (0 === strpos($item[0], 'LLL:')) {
+                    continue;
+                }
+
+                $this->addLabel(
+                    $this->languageFilePath . $this->languageFileIdentifier,
+                    $table . '.' . $field . '.I.' . $key,
+                    $item[0]
+                );
+                $item[0] = 'LLL:EXT:mask/'
+                    . $this->languageFilePath . $this->languageFileIdentifier . ':' . $table . '.' . $field . '.I.' . $key;
+            }
+        }
+
+        return $fields;
+    }
 }

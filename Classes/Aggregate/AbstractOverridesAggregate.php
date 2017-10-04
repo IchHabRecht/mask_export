@@ -53,6 +53,7 @@ abstract class AbstractOverridesAggregate extends AbstractAggregate implements L
 
         ksort($newTableFields);
         $newTableFields = $this->replaceFieldLabels($newTableFields, $this->table);
+        $newTableFields = $this->replaceItemsLabels($newTableFields, $this->table);
         $this->addFieldsSqlDefinitions($newTableFields);
         $tempColumns = var_export($newTableFields, true);
         $this->appendPhpFile(
