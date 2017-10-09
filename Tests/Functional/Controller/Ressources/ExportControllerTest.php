@@ -75,4 +75,32 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             $this->assertTrue($iconRegistry->isRegistered($iconIdentifier));
         }
     }
+
+    /**
+     * @test
+     */
+    public function itemsLabelsAreMovedToLocallangFile()
+    {
+        $this->assertArrayHasKey('Configuration/TCA/Overrides/tt_content.php', $this->files);
+        $this->assertArrayHasKey('Resources/Private/Language/locallang_db.xlf', $this->files);
+
+        $labels = [];
+        preg_match_all(
+            '#\d+\s*=>\s*array\s*\(\s*\d+\s*=>\s*\'LLL:EXT:([^\']+.I.[^\']+)\',\s*\),#',
+            $this->files['Configuration/TCA/Overrides/tt_content.php'],
+            $labels,
+            PREG_SET_ORDER
+        );
+
+        $this->assertNotEmpty($labels);
+
+        foreach ($labels as $label) {
+            $id = array_pop(explode(':', $label[1]));
+
+            $this->assertContains(
+                '<trans-unit id="' . $id . '" xml:space="preserve">',
+                $this->files['Resources/Private/Language/locallang_db.xlf']
+            );
+        }
+    }
 }

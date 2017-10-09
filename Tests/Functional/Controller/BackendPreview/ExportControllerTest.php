@@ -44,7 +44,6 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     {
         $this->assertArrayHasKey('Configuration/PageTSconfig/BackendPreview.ts', $this->files);
 
-        //mod.web_layout.tt_content.preview.kvbmaskexport_collapsible_content_element = EXT:kvb_sitepackage/Resources/Private/_Kvb/Extensions/kvb_maskexport/Backend/Templates/Content/CollapsibleContentElement.html
         // Get templatePaths from file
         $templatePaths = [];
         preg_match_all(
