@@ -10,9 +10,7 @@
         "Wizard"
     ],
     "homepage": "https://github.com/CPS-IT/TYPO3-mask_export",
-    "license": [
-        "GPL-2.0+"
-    ],
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "Nicole Cordes | CPS-IT GmbH",
