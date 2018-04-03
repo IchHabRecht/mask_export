@@ -71,7 +71,7 @@ class ExportController extends ActionController
     /**
      * @var string
      */
-    protected $defaultExtensionName = 'mask_export';
+    protected $defaultExtensionName = 'my_mask_export';
 
     /**
      * @var array
