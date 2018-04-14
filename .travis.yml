@@ -6,37 +6,46 @@ matrix:
   fast_finish: true
   include:
     - php: 7.1
-      env: TYPO3="dev-master as 8.7.0" PHPUNIT_TESTS=yes
+      env: TYPO3="8.x-dev as 8.7.0" PHPUNIT_TESTS=yes
     - php: 7.1
-      env: TYPO3="dev-master as 8.7.0" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
+      env: TYPO3="8.x-dev as 8.7.0" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
     - php: 7.1
-      env: TYPO3="^8.7" PHPUNIT_TESTS=yes PHP_LINT=yes
+      env: TYPO3=^8.7 PHPUNIT_TESTS=yes PHP_LINT=yes
     - php: 7.1
-      env: TYPO3="^8.7" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
+      env: TYPO3=^8.7 MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
     - php: 7.1
       env: TYPO3=^7.6 PHPUNIT_TESTS=yes
+    - php: 7.1
+      env: TYPO3="7.x-dev as 7.6.0" PHPUNIT_TESTS=yes
     - php: 7.0
-      env: TYPO3="dev-master as 8.7.0" PHPUNIT_TESTS=yes
+      env: TYPO3="8.x-dev as 8.7.0" PHPUNIT_TESTS=yes
     - php: 7.0
-      env: TYPO3="dev-master as 8.7.0" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
+      env: TYPO3="8.x-dev as 8.7.0" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
     - php: 7.0
-      env: TYPO3="^8.7" PHPUNIT_TESTS=yes PHP_LINT=yes
+      env: TYPO3=^8.7 PHPUNIT_TESTS=yes PHP_LINT=yes
     - php: 7.0
-      env: TYPO3="^8.7" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
+      env: TYPO3=^8.7 MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
     - php: 7.0
-      env: TYPO3="^8.7" CODE_ANALYSIS=yes
+      env: TYPO3=^8.7 CODE_ANALYSIS=yes
     - php: 7.0
       env: TYPO3=^7.6 PHPUNIT_TESTS=yes
+    - php: 7.0
+      env: TYPO3="7.x-dev as 7.6.0" PHPUNIT_TESTS=yes
     - php: 7.0
       env: TYPO3=^7.6 CODE_ANALYSIS=yes
     - php: 5.6
       env: TYPO3=^7.6 PHPUNIT_TESTS=yes PHP_LINT=yes
+    - php: 5.6
+      env: TYPO3="7.x-dev as 7.6.0" PHPUNIT_TESTS=yes
     - php: 5.5
       env: TYPO3=^7.6 PHPUNIT_TESTS=yes PHP_LINT=yes
+    - php: 5.5
+      env: TYPO3="7.x-dev as 7.6.0" PHPUNIT_TESTS=yes
   allow_failures:
-    - env: TYPO3="dev-master as 8.7.0" PHPUNIT_TESTS=yes
-    - env: TYPO3="dev-master as 8.7.0" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
-    - env: TYPO3="^8.7" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
+    - env: TYPO3=^8.7 MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
+    - env: TYPO3="8.x-dev as 8.7.0" PHPUNIT_TESTS=yes
+    - env: TYPO3="8.x-dev as 8.7.0" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
+    - env: TYPO3="7.x-dev as 7.6.0" PHPUNIT_TESTS=yes
 
 addons:
   apt:
@@ -53,6 +62,11 @@ before_install:
   - if php -i | grep -q xdebug; then phpenv config-rm xdebug.ini; fi
 
 before_script:
+  - >
+    if [[ "$TYPO3" = *"dev"* ]]; then
+      composer config minimum-stability dev;
+      composer config prefer-stable true;
+    fi
   - if [ "$MASK" != "" ]; then composer require mask/mask="$MASK" --no-update; fi
   - composer require typo3/cms="$TYPO3"
   - git checkout composer.json
