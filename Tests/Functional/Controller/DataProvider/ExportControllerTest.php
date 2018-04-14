@@ -351,7 +351,9 @@ class ExportControllerTest extends AbstractExportControllerTestCase
 
         $this->setUpBackendUserFromFixture(1);
         /** @var \PHPUnit_Framework_MockObject_MockObject|LanguageService $languageService */
-        $languageService = $this->getMock(LanguageService::class, ['sL']);
+        $languageService = $this->getMockBuilder(LanguageService::class)
+            ->setMethods(['sL'])
+            ->getMock();
         $languageService->init('default');
         $languageService->expects($this->any())
             ->method('sL')

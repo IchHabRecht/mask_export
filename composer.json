@@ -26,8 +26,7 @@
     },
     "require-dev": {
         "typo3/cms-fluid-styled-content": "^7.6 || ^8.7",
-        "nimut/testing-framework": "2.x-dev",
-        "phpunit/phpunit": "^4.8"
+        "nimut/testing-framework": "2.x-dev || 3.x-dev"
     },
     "suggest": {
         "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues",
