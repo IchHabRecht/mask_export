@@ -64,13 +64,15 @@ class ExportControllerTest extends AbstractExportControllerTestCase
      */
     public function contentElementsHaveRegisteredIconIdentifier()
     {
-        $maskConfiguration = json_decode(__DIR__ . '/../../Fixtures/mask.json');
+        $maskConfiguration = json_decode(file_get_contents(__DIR__ . '/../../Fixtures/Configuration/mask-default.json'), true);
+        $this->assertNotEmpty($maskConfiguration['tt_content']['elements']);
+
         $this->installExtension();
 
         $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
 
         foreach ($maskConfiguration['tt_content']['elements'] as $key => $_) {
-            $iconIdentifier = 'tx_maskexampleexport' . $key;
+            $iconIdentifier = 'tx_maskexampleexport_' . $key;
 
             $this->assertTrue($iconRegistry->isRegistered($iconIdentifier));
         }
