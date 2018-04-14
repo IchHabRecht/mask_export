@@ -25,6 +25,7 @@
         "mask/mask": "^2.0 || ^3.0"
     },
     "require-dev": {
+        "typo3/cms-fluid-styled-content": "^7.6 || ^8.7",
         "nimut/testing-framework": "2.x-dev",
         "phpunit/phpunit": "^4.8"
     },
