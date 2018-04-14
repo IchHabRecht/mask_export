@@ -2,63 +2,6 @@ language: php
 
 dist: precise
 
-matrix:
-  fast_finish: true
-  include:
-    - php: 7.2
-      env: TYPO3="8.x-dev as 8.7.0" PHPUNIT_TESTS=yes
-    - php: 7.2
-      env: TYPO3="8.x-dev as 8.7.0" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
-    - php: 7.2
-      env: TYPO3=^8.7 PHPUNIT_TESTS=yes PHP_LINT=yes
-    - php: 7.2
-      env: TYPO3=^8.7 MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
-    - php: 7.2
-      env: TYPO3=^7.6 PHPUNIT_TESTS=yes
-    - php: 7.2
-      env: TYPO3="7.x-dev as 7.6.0" PHPUNIT_TESTS=yes
-    - php: 7.1
-      env: TYPO3="8.x-dev as 8.7.0" PHPUNIT_TESTS=yes
-    - php: 7.1
-      env: TYPO3="8.x-dev as 8.7.0" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
-    - php: 7.1
-      env: TYPO3=^8.7 PHPUNIT_TESTS=yes PHP_LINT=yes
-    - php: 7.1
-      env: TYPO3=^8.7 MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
-    - php: 7.1
-      env: TYPO3=^7.6 PHPUNIT_TESTS=yes
-    - php: 7.1
-      env: TYPO3="7.x-dev as 7.6.0" PHPUNIT_TESTS=yes
-    - php: 7.0
-      env: TYPO3="8.x-dev as 8.7.0" PHPUNIT_TESTS=yes
-    - php: 7.0
-      env: TYPO3="8.x-dev as 8.7.0" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
-    - php: 7.0
-      env: TYPO3=^8.7 PHPUNIT_TESTS=yes PHP_LINT=yes
-    - php: 7.0
-      env: TYPO3=^8.7 MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
-    - php: 7.0
-      env: TYPO3=^8.7 CODE_ANALYSIS=yes
-    - php: 7.0
-      env: TYPO3=^7.6 PHPUNIT_TESTS=yes
-    - php: 7.0
-      env: TYPO3="7.x-dev as 7.6.0" PHPUNIT_TESTS=yes
-    - php: 7.0
-      env: TYPO3=^7.6 CODE_ANALYSIS=yes
-    - php: 5.6
-      env: TYPO3=^7.6 PHPUNIT_TESTS=yes PHP_LINT=yes
-    - php: 5.6
-      env: TYPO3="7.x-dev as 7.6.0" PHPUNIT_TESTS=yes
-    - php: 5.5
-      env: TYPO3=^7.6 PHPUNIT_TESTS=yes PHP_LINT=yes
-    - php: 5.5
-      env: TYPO3="7.x-dev as 7.6.0" PHPUNIT_TESTS=yes
-  allow_failures:
-    - env: TYPO3=^8.7 MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
-    - env: TYPO3="8.x-dev as 8.7.0" PHPUNIT_TESTS=yes
-    - env: TYPO3="8.x-dev as 8.7.0" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
-    - env: TYPO3="7.x-dev as 7.6.0" PHPUNIT_TESTS=yes
-
 addons:
   apt:
     packages:
@@ -67,13 +10,14 @@ addons:
 cache:
   directories:
     - $HOME/.composer/cache
+    - $HOME/.sonar/cache
 
 sudo: false
 
 before_install:
   - if php -i | grep -q xdebug; then phpenv config-rm xdebug.ini; fi
 
-before_script:
+install:
   - >
     if [[ "$TYPO3" = *"dev"* ]]; then
       composer config minimum-stability dev;
@@ -81,37 +25,117 @@ before_script:
     fi
   - if [ "$MASK" != "" ]; then composer require mask/mask="$MASK" --no-update; fi
   - composer require typo3/cms="$TYPO3"
-  - git checkout composer.json
   - mkdir -p .Build/Web/typo3conf/ext/
   - if [ ! -L .Build/Web/typo3conf/ext/mask_export ]; then ln -snvf ../../../../. .Build/Web/typo3conf/ext/mask_export; fi
-  - export TYPO3_PATH_WEB=$PWD/.Build/Web
+  - export TYPO3_PATH_ROOT=$PWD/.Build/Web
+  - export typo3DatabaseName=typo3
+  - export typo3DatabaseHost=localhost
+  - export typo3DatabaseUsername=root
+  - export typo3DatabasePassword=
 
 script:
   - >
-    if [ "$PHPUNIT_TESTS" == "yes" ]; then
-      echo;
-      echo "Running functional tests";
-      echo;
-      echo;
-      export typo3DatabaseName="typo3";
-      export typo3DatabaseHost="localhost";
-      export typo3DatabaseUsername="root";
-      export typo3DatabasePassword="";
-      find 'Tests/Functional' -wholename '*Test.php' | parallel --gnu 'echo; echo "Running functional test suite {}"; .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml {}';
-    fi
+    echo;
+    echo "Running functional tests";
+    echo;
+    echo;
+    find 'Tests/Functional' -wholename '*Test.php' | parallel --gnu 'echo; echo "Running functional test suite {}"; .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml {}';
 
   - >
-    if [ "$PHP_LINT" == "yes" ]; then
-      echo;
-      echo "Running php lint";
-      echo;
-      echo;
-      find . -name \*.php ! -path "./.Build/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;;
-    fi
+    echo;
+    echo "Running php lint";
+    echo;
+    echo;
+    find . -name \*.php ! -path "./.Build/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;;
 
-  - >
-    if [ "$CODE_ANALYSIS" == "yes" ]; then
-      composer require typo3/cms="$TYPO3" phpstan/phpstan="^0.6";
-      git checkout composer.json;
-      .Build/bin/phpstan analyse --level 5 ext_tables.php Classes Tests;
-    fi
+jobs:
+  fast_finish: true
+  allow_failures:
+    - env: TYPO3=^8.7 MASK="dev-master as 3.0.0"
+    - env: TYPO3="8.x-dev as 8.7.0"
+    - env: TYPO3="8.x-dev as 8.7.0" MASK="dev-master as 3.0.0"
+    - env: TYPO3="7.x-dev as 7.6.0"
+  include:
+    - stage: test
+      php: 7.2
+      env: TYPO3="8.x-dev as 8.7.0"
+    - stage: test
+      php: 7.2
+      env: TYPO3="8.x-dev as 8.7.0" MASK="dev-master as 3.0.0"
+    - stage: test
+      php: 7.2
+      env: TYPO3=^8.7
+    - stage: test
+      php: 7.2
+      env: TYPO3=^8.7 MASK="dev-master as 3.0.0"
+    - stage: test
+      php: 7.2
+      env: TYPO3=^7.6
+    - stage: test
+      php: 7.2
+      env: TYPO3="7.x-dev as 7.6.0"
+    - stage: test
+      php: 7.1
+      env: TYPO3="8.x-dev as 8.7.0"
+    - stage: test
+      php: 7.1
+      env: TYPO3="8.x-dev as 8.7.0" MASK="dev-master as 3.0.0"
+    - stage: test
+      php: 7.1
+      env: TYPO3=^8.7
+    - stage: test
+      php: 7.1
+      env: TYPO3=^8.7 MASK="dev-master as 3.0.0"
+    - stage: test
+      php: 7.1
+      env: TYPO3=^7.6
+    - stage: test
+      php: 7.1
+      env: TYPO3="7.x-dev as 7.6.0"
+    - stage: test
+      php: 7.0
+      env: TYPO3="8.x-dev as 8.7.0"
+    - stage: test
+      php: 7.0
+      env: TYPO3="8.x-dev as 8.7.0" MASK="dev-master as 3.0.0"
+    - stage: test
+      php: 7.0
+      env: TYPO3=^8.7
+    - stage: test
+      php: 7.0
+      env: TYPO3=^8.7 MASK="dev-master as 3.0.0"
+    - stage: test
+      php: 7.0
+      env: TYPO3=^8.7
+    - stage: test
+      php: 7.0
+      env: TYPO3=^7.6
+    - stage: test
+      php: 7.0
+      env: TYPO3="7.x-dev as 7.6.0"
+    - stage: test
+      php: 7.0
+      env: TYPO3=^7.6
+    - stage: test
+      php: 5.6
+      env: TYPO3=^7.6
+    - stage: test
+      php: 5.6
+      env: TYPO3="7.x-dev as 7.6.0"
+    - stage: test
+      php: 5.5
+      env: TYPO3=^7.6
+    - stage: test
+      php: 5.5
+      env: TYPO3="7.x-dev as 7.6.0"
+
+    - &code
+      stage: code analysis
+      php: 7.1
+      env: TYPO3="8.x-dev as 8.7.0"
+      install:
+        - composer require typo3/cms="$TYPO3" phpstan/phpstan="^0.9"
+      script:
+        - .Build/bin/phpstan analyse --level 5 ext_tables.php Classes Tests
+    - <<: *code
+      env: TYPO3="7.x-dev as 7.6.0"
