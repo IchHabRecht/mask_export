@@ -1,18 +1,24 @@
 language: php
 
-dist: precise
-
 addons:
   apt:
     packages:
       - parallel
+  sonarcloud:
+    organization: "ichhabrecht-github"
+    branches:
+      - master
+      - pre-merge
 
 cache:
   directories:
     - $HOME/.composer/cache
     - $HOME/.sonar/cache
 
-sudo: false
+jdk:
+  - oraclejdk8
+
+sudo: required
 
 before_install:
   - if php -i | grep -q xdebug; then phpenv config-rm xdebug.ini; fi
@@ -39,7 +45,7 @@ script:
     echo "Running functional tests";
     echo;
     echo;
-    find 'Tests/Functional' -wholename '*Test.php' | parallel --gnu 'echo; echo "Running functional test suite {}"; .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml {}';
+    find 'Tests/Functional' -wholename '*Test.php' | parallel --gnu 'echo; echo "Running functional test suite {}"; .Build/bin/phpunit --bootstrap .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTestsBootstrap.php {}';
 
   - >
     echo;
@@ -129,13 +135,53 @@ jobs:
       php: 5.5
       env: TYPO3="7.x-dev as 7.6.0"
 
-    - &code
-      stage: code analysis
-      php: 7.1
-      env: TYPO3="8.x-dev as 8.7.0"
+    - stage: sonarqube scanner
+      if: type = push AND branch IN (master, pre-merge)
+      php: 7.2
+      before_install: skip
       install:
-        - composer require typo3/cms="$TYPO3" phpstan/phpstan="^0.9"
+        - mkdir -p .Build/Web/typo3conf/ext/ .Build/log/coverage/ .Build/log/tests/
+        - if [ ! -L .Build/Web/typo3conf/ext/mask_export ]; then ln -snvf ../../../../. .Build/Web/typo3conf/ext/mask_export; fi
+        - export TYPO3_PATH_ROOT=$PWD/.Build/Web
+        - export typo3DatabaseName=typo3
+        - export typo3DatabaseHost=localhost
+        - export typo3DatabaseUsername=root
+        - export typo3DatabasePassword=
+      before_script:
       script:
-        - .Build/bin/phpstan analyse --level 5 ext_tables.php Classes Tests
-    - <<: *code
-      env: TYPO3="7.x-dev as 7.6.0"
+        - >
+          for TYPO3 in "^7.6" "^8.7"; do
+            echo;
+            echo "Running TYPO3 version $TYPO3";
+            echo;
+            echo;
+            git clean -xdff -e .Build/log/ -e .Build/Web/typo3conf/ext/mask_export;
+            composer require typo3/cms="$TYPO3";
+            VERSION=${TYPO3//[!0-9]/};
+
+            echo;
+            echo "Running functional tests";
+            echo;
+            echo;
+            .Build/bin/phpunit --bootstrap .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTestsBootstrap.php --log-junit .Build/log/tests/functional$VERSION.xml --coverage-php .Build/log/coverage/functional$VERSION.cov Tests/Functional/;
+          done
+
+        - >
+          echo;
+          echo "Merging log and coverage files";
+          echo;
+          echo;
+          composer require --update-with-all-dependencies nimut/phpunit-merger=^0.1;
+          .Build/bin/phpunit-merger coverage .Build/log/coverage/ .Build/log/coverage.xml;
+          .Build/bin/phpunit-merger log .Build/log/tests/ .Build/log/tests.xml;
+
+        - git fetch --unshallow || true
+
+        - >
+          echo;
+          echo "Running SonarQube Scanner";
+          echo;
+          echo;
+          if [ -n "$SONAR_TOKEN" ]; then
+            sonar-scanner;
+          fi

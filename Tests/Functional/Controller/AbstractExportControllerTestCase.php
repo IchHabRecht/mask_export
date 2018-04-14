@@ -39,6 +39,11 @@ use TYPO3\CMS\Install\Service\SqlSchemaMigrationService;
 abstract class AbstractExportControllerTestCase extends FunctionalTestCase
 {
     /**
+     * @var bool
+     */
+    protected $runTestInSeparateProcess = true;
+
+    /**
      * @var array
      */
     protected $configurationToUseInTestInstance = [
