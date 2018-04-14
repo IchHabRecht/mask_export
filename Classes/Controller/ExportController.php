@@ -262,8 +262,10 @@ class ExportController extends ActionController
     {
         $newFiles = [];
         foreach ($files as $file => $fileContent) {
-            $newFiles[$this->replaceExtensionKey($extensionKey, $file)] = $this->replaceExtensionKey($extensionKey,
-                $fileContent);
+            $newFiles[$this->replaceExtensionKey($extensionKey, $file)] = $this->replaceExtensionKey(
+                $extensionKey,
+                $fileContent
+            );
         }
 
         return $newFiles;

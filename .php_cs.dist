@@ -1,8 +1,17 @@
 <?php
 $header = <<<'EOF'
-This file is part of the TYPO3 extension mask_export.
-
-(c) Nicole Cordes <typo3@cordes.co>
+/*
+ * This file is part of the TYPO3 extension mask_export.
+ *
+ * (c) Nicole Cordes <typo3@cordes.co>
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
+ */
 EOF;
 
 return PhpCsFixer\Config::create()
@@ -62,17 +71,19 @@ return PhpCsFixer\Config::create()
         'no_whitespace_before_comma_in_array' => true,
         'no_whitespace_in_blank_line' => true,
         'normalize_index_brace' => true,
+        'object_operator_without_whitespace' => true,
         'ordered_imports' => true,
         'phpdoc_add_missing_param_annotation' => true,
         'phpdoc_annotation_without_dot' => true,
         'phpdoc_indent' => true,
+        'phpdoc_no_access' => true,
         'phpdoc_no_package' => true,
         'phpdoc_order' => true,
         'phpdoc_scalar' => true,
         'phpdoc_single_line_var_spacing' => true,
+        'phpdoc_trim' => true,
         'phpdoc_types' => true,
         'phpdoc_var_without_name' => true,
-        'self_accessor' => true,
         'short_scalar_cast' => true,
         'single_quote' => true,
         'standardize_not_equals' => true,

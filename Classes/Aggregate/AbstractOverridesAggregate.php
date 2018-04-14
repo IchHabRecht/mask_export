@@ -45,8 +45,10 @@ abstract class AbstractOverridesAggregate extends AbstractAggregate implements L
             return;
         }
 
-        $newTableFields = array_intersect_key($tableConfiguration['columns'],
-            $this->maskConfiguration[$this->table]['tca']);
+        $newTableFields = array_intersect_key(
+            $tableConfiguration['columns'],
+            $this->maskConfiguration[$this->table]['tca']
+        );
         if (empty($newTableFields)) {
             return;
         }
