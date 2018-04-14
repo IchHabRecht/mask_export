@@ -1,5 +1,5 @@
 <?php
-namespace CPSIT\MaskExport\FileCollection;
+namespace IchHabRecht\MaskExport\FileCollection;
 
 /***************************************************************
  *  Copyright notice

@@ -1,5 +1,5 @@
 <?php
-namespace CPSIT\MaskExport\Aggregate;
+namespace IchHabRecht\MaskExport\Aggregate;
 
 /***************************************************************
  *  Copyright notice

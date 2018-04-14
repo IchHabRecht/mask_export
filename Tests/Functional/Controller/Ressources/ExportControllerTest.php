@@ -1,5 +1,5 @@
 <?php
-namespace CPSIT\MaskExport\Tests\Functional\Controller\Ressources;
+namespace IchHabRecht\MaskExport\Tests\Functional\Controller\Ressources;
 
 /***************************************************************
  *  Copyright notice
@@ -27,7 +27,7 @@ namespace CPSIT\MaskExport\Tests\Functional\Controller\Ressources;
 
 require_once __DIR__ . '/../AbstractExportControllerTestCase.php';
 
-use CPSIT\MaskExport\Tests\Functional\Controller\AbstractExportControllerTestCase;
+use IchHabRecht\MaskExport\Tests\Functional\Controller\AbstractExportControllerTestCase;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 

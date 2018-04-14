@@ -2,7 +2,7 @@ config {
     tx_extbase {
         objects {
             MASK\Mask\Controller\ExportController {
-                className = CPSIT\MaskExport\Controller\ExportController
+                className = IchHabRecht\MaskExport\Controller\ExportController
             }
         }
     }

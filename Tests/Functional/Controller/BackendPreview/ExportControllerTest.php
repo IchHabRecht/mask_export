@@ -1,5 +1,5 @@
 <?php
-namespace CPSIT\MaskExport\Tests\Functional\Controller\BackendPreview;
+namespace IchHabRecht\MaskExport\Tests\Functional\Controller\BackendPreview;
 
 /***************************************************************
  *  Copyright notice
@@ -27,7 +27,7 @@ namespace CPSIT\MaskExport\Tests\Functional\Controller\BackendPreview;
 
 require_once __DIR__ . '/../AbstractExportControllerTestCase.php';
 
-use CPSIT\MaskExport\Tests\Functional\Controller\AbstractExportControllerTestCase;
+use IchHabRecht\MaskExport\Tests\Functional\Controller\AbstractExportControllerTestCase;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\PageLayoutView;
 use TYPO3\CMS\Backend\View\PageLayoutViewDrawItemHookInterface;

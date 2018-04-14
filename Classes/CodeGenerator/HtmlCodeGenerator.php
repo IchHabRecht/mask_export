@@ -1,5 +1,5 @@
 <?php
-namespace CPSIT\MaskExport\CodeGenerator;
+namespace IchHabRecht\MaskExport\CodeGenerator;
 
 /***************************************************************
  *  Copyright notice

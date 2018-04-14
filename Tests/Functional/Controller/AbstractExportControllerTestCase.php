@@ -1,5 +1,5 @@
 <?php
-namespace CPSIT\MaskExport\Tests\Functional\Controller;
+namespace IchHabRecht\MaskExport\Tests\Functional\Controller;
 
 /***************************************************************
  *  Copyright notice
@@ -25,7 +25,7 @@ namespace CPSIT\MaskExport\Tests\Functional\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use CPSIT\MaskExport\Controller\ExportController;
+use IchHabRecht\MaskExport\Controller\ExportController;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -95,7 +95,7 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
         GeneralUtility::addInstance(TemplateView::class, $viewMock);
 
         $request = new Request();
-        $request->setControllerVendorName('CPSIT');
+        $request->setControllerVendorName('IchHabRecht');
         $request->setControllerExtensionName('mask_export');
         $request->setControllerName('Export');
         $request->setControllerActionName('list');

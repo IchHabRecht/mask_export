@@ -1,5 +1,5 @@
 <?php
-namespace CPSIT\MaskExport\Aggregate;
+namespace IchHabRecht\MaskExport\Aggregate;
 
 /***************************************************************
  *  Copyright notice
@@ -25,7 +25,7 @@ namespace CPSIT\MaskExport\Aggregate;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use CPSIT\MaskExport\CodeGenerator\BackendFluidCodeGenerator;
+use IchHabRecht\MaskExport\CodeGenerator\BackendFluidCodeGenerator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class BackendPreviewAggregate extends AbstractOverridesAggregate implements PlainTextFileAwareInterface

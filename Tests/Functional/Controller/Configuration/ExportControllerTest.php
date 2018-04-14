@@ -1,5 +1,5 @@
 <?php
-namespace CPSIT\MaskExport\Tests\Functional\Controller\Configuration;
+namespace IchHabRecht\MaskExport\Tests\Functional\Controller\Configuration;
 
 /***************************************************************
  *  Copyright notice
@@ -27,7 +27,7 @@ namespace CPSIT\MaskExport\Tests\Functional\Controller\Configuration;
 
 require_once __DIR__ . '/../AbstractExportControllerTestCase.php';
 
-use CPSIT\MaskExport\Tests\Functional\Controller\AbstractExportControllerTestCase;
+use IchHabRecht\MaskExport\Tests\Functional\Controller\AbstractExportControllerTestCase;
 
 class ExportControllerTest extends AbstractExportControllerTestCase
 {

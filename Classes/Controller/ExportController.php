@@ -1,5 +1,5 @@
 <?php
-namespace CPSIT\MaskExport\Controller;
+namespace IchHabRecht\MaskExport\Controller;
 
 /***************************************************************
  *  Copyright notice
@@ -25,21 +25,21 @@ namespace CPSIT\MaskExport\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use CPSIT\MaskExport\Aggregate\AggregateCollection;
-use CPSIT\MaskExport\Aggregate\BackendPreviewAggregate;
-use CPSIT\MaskExport\Aggregate\ContentElementIconAggregate;
-use CPSIT\MaskExport\Aggregate\ContentRenderingAggregate;
-use CPSIT\MaskExport\Aggregate\ExtensionConfigurationAggregate;
-use CPSIT\MaskExport\Aggregate\InlineContentColPosAggregate;
-use CPSIT\MaskExport\Aggregate\InlineContentCTypeAggregate;
-use CPSIT\MaskExport\Aggregate\NewContentElementWizardAggregate;
-use CPSIT\MaskExport\Aggregate\TcaAggregate;
-use CPSIT\MaskExport\Aggregate\TtContentOverridesAggregate;
-use CPSIT\MaskExport\FileCollection\FileCollection;
-use CPSIT\MaskExport\FileCollection\LanguageFileCollection;
-use CPSIT\MaskExport\FileCollection\PhpFileCollection;
-use CPSIT\MaskExport\FileCollection\PlainTextFileCollection;
-use CPSIT\MaskExport\FileCollection\SqlFileCollection;
+use IchHabRecht\MaskExport\Aggregate\AggregateCollection;
+use IchHabRecht\MaskExport\Aggregate\BackendPreviewAggregate;
+use IchHabRecht\MaskExport\Aggregate\ContentElementIconAggregate;
+use IchHabRecht\MaskExport\Aggregate\ContentRenderingAggregate;
+use IchHabRecht\MaskExport\Aggregate\ExtensionConfigurationAggregate;
+use IchHabRecht\MaskExport\Aggregate\InlineContentColPosAggregate;
+use IchHabRecht\MaskExport\Aggregate\InlineContentCTypeAggregate;
+use IchHabRecht\MaskExport\Aggregate\NewContentElementWizardAggregate;
+use IchHabRecht\MaskExport\Aggregate\TcaAggregate;
+use IchHabRecht\MaskExport\Aggregate\TtContentOverridesAggregate;
+use IchHabRecht\MaskExport\FileCollection\FileCollection;
+use IchHabRecht\MaskExport\FileCollection\LanguageFileCollection;
+use IchHabRecht\MaskExport\FileCollection\PhpFileCollection;
+use IchHabRecht\MaskExport\FileCollection\PlainTextFileCollection;
+use IchHabRecht\MaskExport\FileCollection\SqlFileCollection;
 use Symfony\Component\Finder\Finder;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Core\Bootstrap;

@@ -1,5 +1,5 @@
 <?php
-namespace CPSIT\MaskExport\Tests\Functional\Controller\DataProvider;
+namespace IchHabRecht\MaskExport\Tests\Functional\Controller\DataProvider;
 
 /***************************************************************
  *  Copyright notice
@@ -27,7 +27,7 @@ namespace CPSIT\MaskExport\Tests\Functional\Controller\DataProvider;
 
 require_once __DIR__ . '/../AbstractExportControllerTestCase.php';
 
-use CPSIT\MaskExport\Tests\Functional\Controller\AbstractExportControllerTestCase;
+use IchHabRecht\MaskExport\Tests\Functional\Controller\AbstractExportControllerTestCase;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
 use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

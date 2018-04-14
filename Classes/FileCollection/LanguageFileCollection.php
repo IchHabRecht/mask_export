@@ -1,5 +1,5 @@
 <?php
-namespace CPSIT\MaskExport\FileCollection;
+namespace IchHabRecht\MaskExport\FileCollection;
 
 /***************************************************************
  *  Copyright notice
@@ -25,7 +25,7 @@ namespace CPSIT\MaskExport\FileCollection;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use CPSIT\MaskExport\Aggregate\LanguageAwareInterface;
+use IchHabRecht\MaskExport\Aggregate\LanguageAwareInterface;
 
 class LanguageFileCollection extends AbstractFileCollection
 {
