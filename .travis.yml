@@ -5,6 +5,18 @@ dist: precise
 matrix:
   fast_finish: true
   include:
+    - php: 7.2
+      env: TYPO3="8.x-dev as 8.7.0" PHPUNIT_TESTS=yes
+    - php: 7.2
+      env: TYPO3="8.x-dev as 8.7.0" MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
+    - php: 7.2
+      env: TYPO3=^8.7 PHPUNIT_TESTS=yes PHP_LINT=yes
+    - php: 7.2
+      env: TYPO3=^8.7 MASK="dev-master as 3.0.0" PHPUNIT_TESTS=yes
+    - php: 7.2
+      env: TYPO3=^7.6 PHPUNIT_TESTS=yes
+    - php: 7.2
+      env: TYPO3="7.x-dev as 7.6.0" PHPUNIT_TESTS=yes
     - php: 7.1
       env: TYPO3="8.x-dev as 8.7.0" PHPUNIT_TESTS=yes
     - php: 7.1
