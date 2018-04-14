@@ -75,7 +75,7 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements Plai
         $this->addPageTsConfiguration();
         $this->addDrawItemHook();
         $this->replaceTableLabels();
-        $this->addFluidTemplates($this->maskConfiguration[$this->table]['elements']);
+        $this->addFluidTemplates();
     }
 
     protected function addPageTsConfiguration()
@@ -274,12 +274,9 @@ EOS
         }
     }
 
-    /**
-     * @param array $elements
-     */
-    protected function addFluidTemplates(array $elements)
+    protected function addFluidTemplates()
     {
-        foreach ($elements as $key => $element) {
+        foreach ($this->maskConfiguration[$this->table]['elements'] as $key => $element) {
             $templateKey = GeneralUtility::underscoredToUpperCamelCase($key);
             $templatePath = $this->templatesFilePath . 'Content/' . $templateKey . '.html';
 
