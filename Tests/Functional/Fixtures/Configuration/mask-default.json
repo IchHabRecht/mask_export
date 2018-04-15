@@ -73,6 +73,21 @@
                 "options": {
                     "3": "rte"
                 }
+            },
+            "hidden-element": {
+                "label": "Hidden element",
+                "key": "hidden-element",
+                "shortLabel": "Hidden",
+                "description": "This element is hidden in mask configuration",
+                "icon": "fa-ban",
+                "color": "#ff0000",
+                "columns": [
+                    "header"
+                ],
+                "labels": [
+                    ""
+                ],
+                "hidden": 1
             }
         },
         "sql": {

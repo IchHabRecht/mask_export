@@ -71,7 +71,11 @@ class ExportControllerTest extends AbstractExportControllerTestCase
 
         $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
 
-        foreach ($maskConfiguration['tt_content']['elements'] as $key => $_) {
+        foreach ($maskConfiguration['tt_content']['elements'] as $key => $element) {
+            if (!empty($element['hidden'])) {
+                continue;
+            }
+
             $iconIdentifier = 'tx_maskexampleexport_' . $key;
 
             $this->assertTrue($iconRegistry->isRegistered($iconIdentifier));
