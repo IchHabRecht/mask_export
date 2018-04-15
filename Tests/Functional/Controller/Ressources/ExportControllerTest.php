@@ -27,11 +27,24 @@ class ExportControllerTest extends AbstractExportControllerTestCase
      */
     public function ensureContentElementIconFromPreviewFolderInExport()
     {
-        $this->assertArrayHasKey('Resources/Public/Icons/Content/ce_nested-content-elements.png', $this->files);
+        $this->assertArrayHasKey('Resources/Public/Icons/Content/simple-element.png', $this->files);
+
+        $this->assertStringEqualsFile(
+            __DIR__ . '/../../Fixtures/Templates/Preview/simple-element.png',
+            $this->files['Resources/Public/Icons/Content/simple-element.png']
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function ensureContentElementIconFromFallbackPathInExport()
+    {
+        $this->assertArrayHasKey('Resources/Public/Icons/Content/nested-content-elements.png', $this->files);
 
         $this->assertStringEqualsFile(
             __DIR__ . '/../../Fixtures/Templates/Preview/ce_nested-content-elements.png',
-            $this->files['Resources/Public/Icons/Content/ce_nested-content-elements.png']
+            $this->files['Resources/Public/Icons/Content/nested-content-elements.png']
         );
     }
 
@@ -40,11 +53,11 @@ class ExportControllerTest extends AbstractExportControllerTestCase
      */
     public function extensionIconIsUsedAsDefaultContentElementIcon()
     {
-        $this->assertArrayHasKey('Resources/Public/Icons/Content/ce_default-extension-icon.png', $this->files);
+        $this->assertArrayHasKey('Resources/Public/Icons/Content/default-extension-icon.png', $this->files);
 
         $this->assertStringEqualsFile(
             __DIR__ . '/../../../../ext_icon.png',
-            $this->files['Resources/Public/Icons/Content/ce_default-extension-icon.png']
+            $this->files['Resources/Public/Icons/Content/default-extension-icon.png']
         );
     }
 

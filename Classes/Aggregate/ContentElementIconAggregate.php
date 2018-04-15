@@ -50,13 +50,17 @@ class ContentElementIconAggregate extends AbstractAggregate implements PhpAwareI
         foreach ($elements as $element) {
             $key = $element['key'];
             $iconIdentifier = 'tx_mask_' . $key;
-            $icon = 'ce_' . $key . '.png';
-            if (file_exists($maskIconFolder . $icon)
-                || empty($element['icon'])
-            ) {
-                $iconFileName = file_exists($maskIconFolder . $icon) ? $maskIconFolder . $icon
-                    : ExtensionManagementUtility::extPath('mask_export') . 'ext_icon.png';
-                $iconPath = $this->iconResourceFilePath . $icon;
+
+            $iconFile = '';
+            foreach (['ce_' . $key . '.png', $key . '.png'] as $icon) {
+                if (file_exists($maskIconFolder . $icon)) {
+                    $iconFile = $maskIconFolder . $icon;
+                }
+            }
+
+            if (!empty($iconFile) || empty($element['icon'])) {
+                $iconFileName = $iconFile ?: ExtensionManagementUtility::extPath('mask_export') . 'ext_icon.png';
+                $iconPath = $this->iconResourceFilePath . $key . '.png';
                 $this->addPlainTextFile(
                     $iconPath,
                     file_get_contents($iconFileName)
