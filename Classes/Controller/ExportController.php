@@ -200,7 +200,7 @@ class ExportController extends ActionController
      */
     protected function getFiles($extensionName)
     {
-        $maskConfiguration = $this->storageRepository->load();
+        $maskConfiguration = (array)$this->storageRepository->load();
 
         $aggregateCollection = GeneralUtility::makeInstance(
             AggregateCollection::class,
