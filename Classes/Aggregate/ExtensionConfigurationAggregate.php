@@ -102,14 +102,15 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
             return;
         }
 
+        $content = '';
         $jsonFile = PATH_site . $maskConfiguration['json'];
-        if (!file_exists($jsonFile)) {
-            return;
+        if (file_exists($jsonFile)) {
+            $content = file_get_contents($jsonFile);
         }
 
         $this->addPlainTextFile(
             $this->escapeMaskExtensionKey('Configuration/Mask/mask.json'),
-            $this->escapeMaskExtensionKey(file_get_contents($jsonFile))
+            $this->escapeMaskExtensionKey($content)
         );
     }
 }
