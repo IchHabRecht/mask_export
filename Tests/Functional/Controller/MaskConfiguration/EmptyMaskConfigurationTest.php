@@ -1,5 +1,5 @@
 <?php
-namespace IchHabRecht\MaskExport\Tests\Functional\Controller\Content;
+namespace IchHabRecht\MaskExport\Tests\Functional\Controller\MaskConfiguration;
 
 /***************************************************************
  *  Copyright notice
@@ -29,7 +29,7 @@ require_once __DIR__ . '/../AbstractExportControllerTestCase.php';
 
 use IchHabRecht\MaskExport\Tests\Functional\Controller\AbstractExportControllerTestCase;
 
-class ExportControllerTest extends AbstractExportControllerTestCase
+class EmptyMaskConfigurationTest extends AbstractExportControllerTestCase
 {
     protected function setUp()
     {
@@ -41,20 +41,18 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function tempColumnsCodeNotGeneratedIfNoColumnsAvailable()
+    public function basicExtensionFilesExistsWithoutMaskConfiguration()
     {
         $this->setUpWithExtensionConfiguration(
             [
                 'mask' => [
-                    'json' => 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Configuration/mask-empty-columns.json',
+                    'json' => 'typo3conf/mask.json',
                 ],
             ]
         );
 
-        $this->assertArrayHasKey('Configuration/TCA/Overrides/tt_content.php', $this->files);
-        $this->assertNotContains(
-            'ExtensionManagementUtility::addTCAcolumns',
-            $this->files['Configuration/TCA/Overrides/tt_content.php']
-        );
+        $this->assertArrayHasKey('ext_emconf.php', $this->files);
+        $this->assertArrayHasKey('ext_icon.png', $this->files);
+        $this->assertArrayHasKey('Configuration/Mask/mask.json', $this->files);
     }
 }
