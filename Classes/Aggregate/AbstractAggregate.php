@@ -62,6 +62,7 @@ abstract class AbstractAggregate
     public function __construct(array $maskConfiguration)
     {
         $this->maskConfiguration = $maskConfiguration;
+        $this->removeHiddenContentElements();
         $this->process();
     }
 
@@ -69,6 +70,23 @@ abstract class AbstractAggregate
      * Evaluates the configuration and stores necessary Interface information
      */
     abstract protected function process();
+
+    /**
+     * Remove hidden content elements from configuration
+     */
+    protected function removeHiddenContentElements()
+    {
+        if (empty($this->maskConfiguration['tt_content']['elements'])) {
+            return;
+        }
+
+        $this->maskConfiguration['tt_content']['elements'] = array_filter(
+            $this->maskConfiguration['tt_content']['elements'],
+            function (array $element) {
+                return empty($element['hidden']);
+            }
+        );
+    }
 
     /**
      * @param string $string
