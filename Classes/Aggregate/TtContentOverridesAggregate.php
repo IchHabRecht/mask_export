@@ -73,6 +73,7 @@ class TtContentOverridesAggregate extends AbstractOverridesAggregate
 
 EOS
         );
+        $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask_export']);
         foreach ($newTypeFields as $type => $_) {
             $this->addLabel(
                 $this->languageFilePath . $this->languageFileIdentifier,
@@ -90,6 +91,16 @@ EOS
 
 EOS
             );
+
+            if (!empty($extensionConfiguration['contentElementIcons'])) {
+                $this->appendPhpFile(
+                    $this->tcaOverridesFilePath . $this->table . '.php',
+<<<EOS
+\$GLOBALS['TCA']['{$this->table}']['ctrl']['typeicon_classes']['{$type}'] = 'tx_{$type}';
+
+EOS
+                );
+            }
         }
 
         $tempTypes = var_export($newTypeFields, true);
