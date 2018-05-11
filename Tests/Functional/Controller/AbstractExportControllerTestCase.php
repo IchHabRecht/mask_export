@@ -78,6 +78,7 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
 
         // The export stores new extension names in backend user settings, so we need a pseudo user object here
         $backendUser = new BackendUserAuthentication();
+        $backendUser->uc['mask_export']['extensionName'] = $this->extensionName;
         $GLOBALS['BE_USER'] = $backendUser;
 
         $objectManager = new ObjectManager();
@@ -93,7 +94,6 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
         $request->setControllerExtensionName('mask_export');
         $request->setControllerName('Export');
         $request->setControllerActionName('list');
-        $request->setArgument('extensionName', $this->extensionName);
         $response = new Response();
 
         $subject = $objectManager->get(ExportController::class);
