@@ -6,7 +6,7 @@
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="DTM-mask-1">
             <div class="form-section">
-                <f:form action="list">
+                <f:form action="save">
                     <div class="row">
                         <div class="form-group col-sm-4">
                             <label for="meta_label" class="t3js-formengine-label">
@@ -18,15 +18,16 @@
                                 </div>
                                 <div class="form-control-wrap">
                                     <f:form.submit name="submit" value="Save" class="btn btn-success col-sm-3" />
+                                    <f:form.hidden name="submit" value="" />
                                     <f:if condition="{composerMode}}">
                                         <f:then>
-                                            <f:link.action action="install" arguments="{extensionName: '{extensionName}'}" class="btn btn-default col-sm-3 t3js-modal-trigger" additionalAttributes="{data-severity: 'warning', data-title: 'Write extension to file system?', data-content: 'Are you sure you want to write the new extension files to your local file system? This action might overwrite extisting files.', data-button-ok-text: 'Overwrite'}" style="margin-left: 9px;">Write</f:link.action>
+                                            <f:form.submit name="submit" value="Write" class="btn btn-default col-sm-3 t3js-modal-trigger" additionalAttributes="{data-href: 'javascript:$(\'form input[type=submit].t3js-modal-trigger\').prev().val(\'install\');$(\'form\').trigger(\'submit\')', data-severity: 'warning', data-title: 'Write extension to file system?', data-content: 'Are you sure you want to write the new extension files to your local file system? This action might overwrite extisting files.', data-button-ok-text: 'Overwrite'}" style="margin-left: 9px;" />
                                         </f:then>
                                         <f:else>
-                                            <f:link.action action="install" arguments="{extensionName: '{extensionName}'}" class="btn btn-default col-sm-3 t3js-modal-trigger" additionalAttributes="{data-severity: 'warning', data-title: 'Write and install the extension?', data-content: 'Are you sure you want to write the new extension files to your local file system and install it afterwards? This action might overwrite extisting files.', data-button-ok-text: 'Overwrite'}" style="margin-left: 9px;">Install</f:link.action>
+                                            <f:form.submit value="Install" class="btn btn-default col-sm-3 t3js-modal-trigger" additionalAttributes="{data-href: 'javascript:$(\'form input[type=submit].t3js-modal-trigger\').prev().val(\'install\');$(\'form\').trigger(\'submit\')', data-severity: 'warning', data-title: 'Write and install the extension?', data-content: 'Are you sure you want to write the new extension files to your local file system and install it afterwards? This action might overwrite extisting files.', data-button-ok-text: 'Overwrite'}" style="margin-left: 9px;" />
                                         </f:else>
                                     </f:if>
-                                    <f:link.action action="download" arguments="{extensionName: '{extensionName}'}" class="btn btn-default col-sm-3" style="margin-left: 9px;">Download</f:link.action>
+                                    <f:form.submit name="submit" value="Download" class="btn btn-default col-sm-3" style="margin-left: 9px;" />
                                 </div>
                             </div>
                         </div>

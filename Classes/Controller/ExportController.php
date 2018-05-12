@@ -29,6 +29,7 @@ use IchHabRecht\MaskExport\FileCollection\LanguageFileCollection;
 use IchHabRecht\MaskExport\FileCollection\PhpFileCollection;
 use IchHabRecht\MaskExport\FileCollection\PlainTextFileCollection;
 use IchHabRecht\MaskExport\FileCollection\SqlFileCollection;
+use MASK\Mask\Domain\Repository\StorageRepository;
 use Symfony\Component\Finder\Finder;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Core\Bootstrap;
@@ -75,23 +76,21 @@ class ExportController extends ActionController
     /**
      * StorageRepository
      *
-     * @var \MASK\Mask\Domain\Repository\StorageRepository
-     * @inject
+     * @var StorageRepository
      */
     protected $storageRepository;
 
-    /**
-     * action list
-     *
-     * @param string $extensionName
-     */
-    public function listAction($extensionName = '')
+    public function __construct(StorageRepository $storageRepository)
+    {
+        parent::__construct();
+
+        $this->storageRepository = $storageRepository;
+    }
+
+    public function listAction()
     {
         $backendUser = $this->getBackendUser();
-        if (!empty($extensionName)) {
-            $backendUser->uc['mask_export']['extensionName'] = $extensionName;
-            $backendUser->writeUC();
-        } elseif (!empty($backendUser->uc['mask_export']['extensionName'])) {
+        if (!empty($backendUser->uc['mask_export']['extensionName'])) {
             $extensionName = $backendUser->uc['mask_export']['extensionName'];
         } else {
             $extensionName = $this->defaultExtensionName;
@@ -106,6 +105,27 @@ class ExportController extends ActionController
                 'files' => $files,
             ]
         );
+    }
+
+    /**
+     * @param string $extensionName
+     */
+    public function saveAction($extensionName = '')
+    {
+        if (!empty($extensionName)) {
+            $backendUser = $this->getBackendUser();
+            $backendUser->uc['mask_export']['extensionName'] = $extensionName;
+            $backendUser->writeUC();
+        }
+
+        if ($this->request->hasArgument('submit')) {
+            $action = strtolower($this->request->getArgument('submit'));
+            if (in_array($action, ['download', 'install'])) {
+                $this->redirect($action, null, null, ['extensionName' => $extensionName]);
+            }
+        }
+
+        $this->redirect('list');
     }
 
     /**
