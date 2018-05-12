@@ -16,9 +16,8 @@ namespace IchHabRecht\MaskExport\Aggregate;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
-class ContentElementIconAggregate extends AbstractAggregate implements PhpAwareInterface, PlainTextFileAwareInterface
+class ContentElementIconAggregate extends TtContentOverridesAggregate implements PlainTextFileAwareInterface
 {
-    use PhpAwareTrait;
     use PlainTextFileAwareTrait;
 
     /**
@@ -90,6 +89,14 @@ EOS;
 
 EOS;
             }
+
+            $this->appendPhpFile(
+                $this->tcaOverridesFilePath . $this->table . '.php',
+                <<<EOS
+\$GLOBALS['TCA']['{$this->table}']['ctrl']['typeicon_classes']['mask_{$key}'] = '{$iconIdentifier}';
+
+EOS
+            );
         }
 
         if (!empty($iconRegistryConfiguration)) {

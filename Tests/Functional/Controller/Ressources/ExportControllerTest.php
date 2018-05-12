@@ -71,6 +71,9 @@ class ExportControllerTest extends AbstractExportControllerTestCase
 
         $this->installExtension();
 
+        $typeIconConfiguration = $GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'];
+        $this->assertNotEmpty($typeIconConfiguration);
+
         $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
 
         foreach ($maskConfiguration['tt_content']['elements'] as $key => $element) {
@@ -81,6 +84,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             $iconIdentifier = 'tx_maskexampleexport_' . $key;
 
             $this->assertTrue($iconRegistry->isRegistered($iconIdentifier));
+            $this->assertSame($iconIdentifier, $typeIconConfiguration['maskexampleexport_' . $key]);
         }
     }
 
