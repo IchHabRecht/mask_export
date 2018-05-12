@@ -50,6 +50,57 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
+    public function ensureExtensionNameIsReplacedInComposerJson()
+    {
+        $this->assertArrayHasKey('composer.json', $this->files);
+
+        switch (TYPO3_branch) {
+            case '7.6':
+                $expectedVersionConstraint = '^7.6';
+                break;
+            case '8.7':
+                $expectedVersionConstraint = '^8.7';
+                break;
+            case '9.0':
+                $expectedVersionConstraint = '^9.0';
+                break;
+            default:
+                throw new \UnexpectedValueException('Missing test configuration in ensureTypo3DependencyInExtEmConf', 1526087286);
+        }
+
+        $this->assertContains(
+            '"name": "mask-example-export/mask-example-export",',
+            $this->files['composer.json']
+        );
+
+        $this->assertContains(
+            '"typo3/cms-core": "' . $expectedVersionConstraint . '",',
+            $this->files['composer.json']
+        );
+
+        $this->assertContains(
+            '"mask_example_export": "self.version",',
+            $this->files['composer.json']
+        );
+        $this->assertContains(
+            '"typo3-ter/mask-example-export": "self.version"',
+            $this->files['composer.json']
+        );
+
+        $this->assertContains(
+            '"MASKEXAMPLEEXPORT\\\\MaskExampleExport\\\\": "Classes/"',
+            $this->files['composer.json']
+        );
+
+        $this->assertContains(
+            '"extension-key": "mask_example_export"',
+            $this->files['composer.json']
+        );
+    }
+
+    /**
+     * @test
+     */
     public function ensureMaskConfigurationIsNotChanged()
     {
         $this->assertArrayHasKey('Configuration/Mask/mask.json', $this->files);

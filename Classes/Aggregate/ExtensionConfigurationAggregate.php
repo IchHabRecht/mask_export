@@ -30,6 +30,7 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
     {
         $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask_export']);
         $this->addExtEmconf();
+        $this->addComposerJson();
         $this->addExtIcon();
 
         if (!empty($extensionConfiguration['maskConfiguration'])) {
@@ -67,6 +68,44 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
         $this->addPhpFile(
             'ext_emconf.php',
             substr($emConfUtility->constructEmConf($extensionData), 6)
+        );
+    }
+
+    /**
+     * Adds composer.json file
+     */
+    protected function addComposerJson()
+    {
+        $composerData = [
+            'name' => 'mask/mask',
+            'type' => 'typo3-cms-extension',
+            'license' => 'GPL-2.0-or-later',
+            'require' => [
+                'typo3/cms-backend' => '^' . TYPO3_branch,
+                'typo3/cms-core' => '^' . TYPO3_branch,
+                'typo3/cms-extbase' => '^' . TYPO3_branch,
+                'typo3/cms-fluid' => '^' . TYPO3_branch,
+                'typo3/cms-frontend' => '^' . TYPO3_branch,
+            ],
+            'replace' => [
+                'mask' => 'self.version',
+                'typo3-ter/mask' => 'self.version',
+            ],
+            'autoload' => [
+                'psr-4' => [
+                    'MASK\\Mask\\' => 'Classes/',
+                ],
+            ],
+            'extra' => [
+                'typo3/cms' => [
+                    'extension-key' => 'mask',
+                ],
+            ],
+        ];
+
+        $this->addPlainTextFile(
+            'composer.json',
+            json_encode($composerData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT)
         );
     }
 
