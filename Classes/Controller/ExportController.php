@@ -89,12 +89,7 @@ class ExportController extends ActionController
 
     public function listAction()
     {
-        $backendUser = $this->getBackendUser();
-        if (!empty($backendUser->uc['mask_export']['extensionName'])) {
-            $extensionName = $backendUser->uc['mask_export']['extensionName'];
-        } else {
-            $extensionName = $this->defaultExtensionName;
-        }
+        $extensionName = $this->getExtensionName();
 
         $files = $this->getFiles($extensionName);
 
@@ -121,6 +116,7 @@ class ExportController extends ActionController
         if ($this->request->hasArgument('submit')) {
             $action = strtolower($this->request->getArgument('submit'));
             if (in_array($action, ['download', 'install'])) {
+                $extensionName = $extensionName ?: $this->getExtensionName();
                 $this->redirect($action, null, null, ['extensionName' => $extensionName]);
             }
         }
@@ -201,6 +197,19 @@ class ExportController extends ActionController
         }
 
         $this->redirect('list');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getExtensionName()
+    {
+        $backendUser = $this->getBackendUser();
+        if (!empty($backendUser->uc['mask_export']['extensionName'])) {
+            return $backendUser->uc['mask_export']['extensionName'];
+        }
+
+        return $this->defaultExtensionName;
     }
 
     /**
