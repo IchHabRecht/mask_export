@@ -54,6 +54,11 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     /**
      * @var string
      */
+    protected $vendorName = 'IchHabRecht';
+
+    /**
+     * @var string
+     */
     protected $extensionName = 'mask_example_export';
 
     /**
@@ -78,6 +83,7 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
 
         // The export stores new extension names in backend user settings, so we need a pseudo user object here
         $backendUser = new BackendUserAuthentication();
+        $backendUser->uc['mask_export']['vendorName'] = $this->vendorName;
         $backendUser->uc['mask_export']['extensionName'] = $this->extensionName;
         $GLOBALS['BE_USER'] = $backendUser;
 
