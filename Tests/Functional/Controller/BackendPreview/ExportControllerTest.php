@@ -70,7 +70,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
      */
     public function validateProcessedRowDataFromPageLayoutViewDrawItem()
     {
-        $className = 'MASKEXAMPLEEXPORT\MaskExampleExport\\Hooks\\PageLayoutViewDrawItem';
+        $className = 'MASKEXAMPLEEXPORT\\MaskExampleExport\\Hooks\\PageLayoutViewDrawItem';
         $this->installExtension();
 
         $this->assertTrue(class_exists($className));

@@ -330,6 +330,16 @@ class ExportController extends ActionController
             $string
         );
         $string = preg_replace(
+            '/(")mask(\/)/',
+            '"' . str_replace('_', '-', $extensionKey) . '/',
+            $string
+        );
+        $string = preg_replace(
+            '/(\/)mask(")/',
+            '/' . str_replace('_', '-', $extensionKey) . '"',
+            $string
+        );
+        $string = preg_replace(
             '/\${(m)ask}/i',
             '\\1ask',
             $string
