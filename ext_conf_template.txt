@@ -1,2 +1,0 @@
-# cat=Experimental; type=boolean; label=LLL:EXT:mask_export/Resources/Private/Language/locallang.xlf:config.contentElementIcons
-contentElementIcons =

@@ -34,11 +34,6 @@ class ContentElementIconAggregate extends TtContentOverridesAggregate implements
             return;
         }
 
-        $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask_export']);
-        if (empty($extensionConfiguration['contentElementIcons'])) {
-            return;
-        }
-
         $maskConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask']);
         $maskIconFolder = PATH_site . $maskConfiguration['preview'];
 
