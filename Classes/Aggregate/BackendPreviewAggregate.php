@@ -52,11 +52,6 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements Plai
      */
     protected function process()
     {
-        $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask_export']);
-        if (empty($extensionConfiguration['backendPreview'])) {
-            return;
-        }
-
         if (empty($this->maskConfiguration[$this->table]['elements'])) {
             return;
         }
