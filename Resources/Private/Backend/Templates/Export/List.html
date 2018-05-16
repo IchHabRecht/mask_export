@@ -9,13 +9,29 @@
                 <f:form action="save">
                     <div class="row">
                         <div class="form-group col-sm-4">
-                            <label for="meta_label" class="t3js-formengine-label">
+                            <label for="extensionName" class="t3js-formengine-label">
                                 Extension name
                             </label>
                             <div class="t3js-formengine-field-item">
                                 <div class="form-control-wrap">
-                                    <f:form.textfield value="" name="extensionName" placeholder="{extensionName}" title="Extension Name" id="meta_label" class="form-control" />
+                                    <f:form.textfield value="" name="extensionName" placeholder="{extensionName}" id="extensionName" title="Extension Name" class="form-control" />
                                 </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-sm-4">
+                            <label for="vendorName" class="t3js-formengine-label">
+                                Vendor name
+                            </label>
+                            <div class="t3js-formengine-field-item">
+                                <div class="form-control-wrap">
+                                    <f:form.textfield value="" name="vendorName" placeholder="{vendorName}" id="vendorName" title="Vendor Name" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-sm-4">
+                            <div class="t3js-formengine-field-item">
                                 <div class="form-control-wrap">
                                     <f:form.submit name="submit" value="Save" class="btn btn-success col-sm-3" />
                                     <f:form.hidden name="submit" value="" />

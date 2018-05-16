@@ -90,12 +90,14 @@ class ExportController extends ActionController
     public function listAction()
     {
         $extensionName = $this->getExtensionName();
+        $vendorName = $this->getVendorName();
 
-        $files = $this->getFiles($extensionName);
+        $files = $this->getFiles($vendorName, $extensionName);
 
         $this->view->assignMultiple(
             [
                 'composerMode' => Bootstrap::usesComposerClassLoading(),
+                'vendorName' => $vendorName,
                 'extensionName' => $extensionName,
                 'files' => $files,
             ]
@@ -103,21 +105,23 @@ class ExportController extends ActionController
     }
 
     /**
+     * @param string $vendorName
      * @param string $extensionName
      */
-    public function saveAction($extensionName = '')
+    public function saveAction($vendorName = '', $extensionName = '')
     {
-        if (!empty($extensionName)) {
-            $backendUser = $this->getBackendUser();
-            $backendUser->uc['mask_export']['extensionName'] = $extensionName;
-            $backendUser->writeUC();
-        }
+        $vendorName = $vendorName ?: $this->getVendorName();
+        $extensionName = $extensionName ?: $this->getExtensionName();
+
+        $backendUser = $this->getBackendUser();
+        $backendUser->uc['mask_export']['vendorName'] = $vendorName;
+        $backendUser->uc['mask_export']['extensionName'] = $extensionName;
+        $backendUser->writeUC();
 
         if ($this->request->hasArgument('submit')) {
             $action = strtolower($this->request->getArgument('submit'));
             if (in_array($action, ['download', 'install'])) {
-                $extensionName = $extensionName ?: $this->getExtensionName();
-                $this->redirect($action, null, null, ['extensionName' => $extensionName]);
+                $this->redirect($action, null, null, ['vendorName' => $vendorName, 'extensionName' => $extensionName]);
             }
         }
 
@@ -125,11 +129,12 @@ class ExportController extends ActionController
     }
 
     /**
+     * @param string $vendorName
      * @param string $extensionName
      */
-    public function downloadAction($extensionName)
+    public function downloadAction($vendorName, $extensionName)
     {
-        $files = $this->getFiles($extensionName);
+        $files = $this->getFiles($vendorName, $extensionName);
 
         $zipFile = tempnam(sys_get_temp_dir(), 'zip');
 
@@ -152,9 +157,10 @@ class ExportController extends ActionController
     }
 
     /**
+     * @param string $vendorName
      * @param string $extensionName
      */
-    public function installAction($extensionName)
+    public function installAction($vendorName, $extensionName)
     {
         $paths = Extension::returnInstallPaths();
         if (empty($paths['Local']) || !file_exists($paths['Local'])) {
@@ -162,7 +168,7 @@ class ExportController extends ActionController
         }
 
         $extensionPath = $paths['Local'] . $extensionName;
-        $files = $this->getFiles($extensionName);
+        $files = $this->getFiles($vendorName, $extensionName);
         $this->writeExtensionFilesToPath($files, $extensionPath);
 
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
@@ -213,10 +219,24 @@ class ExportController extends ActionController
     }
 
     /**
+     * @return string
+     */
+    protected function getVendorName()
+    {
+        $backendUser = $this->getBackendUser();
+        if (!empty($backendUser->uc['mask_export']['vendorName'])) {
+            return $backendUser->uc['mask_export']['vendorName'];
+        }
+
+        return str_replace('_', '-', $this->defaultExtensionName);
+    }
+
+    /**
+     * @param string $vendorName
      * @param string $extensionName
      * @return array
      */
-    protected function getFiles($extensionName)
+    protected function getFiles($vendorName, $extensionName)
     {
         $maskConfiguration = (array)$this->storageRepository->load();
 
@@ -232,7 +252,7 @@ class ExportController extends ActionController
             $aggregateCollection
         )->getFiles();
 
-        $files = $this->replaceExtensionInformation($extensionName, $files);
+        $files = $this->replaceExtensionInformation($vendorName, $extensionName, $files);
         $files = $this->sortFiles($files);
 
         return $files;
@@ -272,15 +292,17 @@ class ExportController extends ActionController
     }
 
     /**
+     * @param string $vendorName
      * @param string $extensionKey
      * @param array $files
      * @return array
      */
-    protected function replaceExtensionInformation($extensionKey, array $files)
+    protected function replaceExtensionInformation($vendorName, $extensionKey, array $files)
     {
         $newFiles = [];
         foreach ($files as $file => $fileContent) {
-            $newFiles[$this->replaceExtensionKey($extensionKey, $file)] = $this->replaceExtensionKey(
+            $newFiles[$this->replaceExtensionKey($vendorName, $extensionKey, $file)] = $this->replaceExtensionKey(
+                $vendorName,
                 $extensionKey,
                 $fileContent
             );
@@ -290,11 +312,12 @@ class ExportController extends ActionController
     }
 
     /**
+     * @param string $vendorName
      * @param string $extensionKey
      * @param string $string
      * @return string
      */
-    protected function replaceExtensionKey($extensionKey, $string)
+    protected function replaceExtensionKey($vendorName, $extensionKey, $string)
     {
         $camelCasedExtensionKey = GeneralUtility::underscoredToUpperCamelCase($extensionKey);
         $lowercaseExtensionKey = strtolower($camelCasedExtensionKey);
@@ -311,7 +334,7 @@ class ExportController extends ActionController
         );
         $string = preg_replace(
             '/MASK/',
-            strtoupper($camelCasedExtensionKey),
+            $vendorName,
             $string
         );
         $string = preg_replace(
@@ -331,7 +354,7 @@ class ExportController extends ActionController
         );
         $string = preg_replace(
             '/(")mask(\/)/',
-            '"' . str_replace('_', '-', $extensionKey) . '/',
+            '"' . strtolower($vendorName) . '/',
             $string
         );
         $string = preg_replace(
