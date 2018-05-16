@@ -28,14 +28,10 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
      */
     protected function process()
     {
-        $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask_export']);
         $this->addExtEmconf();
         $this->addComposerJson();
         $this->addExtIcon();
-
-        if (!empty($extensionConfiguration['maskConfiguration'])) {
-            $this->addMaskConfiguration();
-        }
+        $this->addMaskConfiguration();
     }
 
     /**
