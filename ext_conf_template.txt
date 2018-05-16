@@ -1,6 +1,3 @@
-# cat=basic/enable; type=boolean; label=LLL:EXT:mask_export/Resources/Private/Language/locallang.xlf:config.maskConfiguration
-maskConfiguration =
-
 # cat=Experimental; type=boolean; label=LLL:EXT:mask_export/Resources/Private/Language/locallang.xlf:config.backendPreview
 backendPreview =
 
