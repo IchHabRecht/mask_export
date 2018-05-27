@@ -43,7 +43,6 @@ Simply install mask and mask_export with Composer or the Extension Manager.
 - use the mask wizard to configure own content elements
 - change to tab "Code Export"
 - if you like change the extension key, the default one is *my_mask_export*
-- press **save** to store and use the new key
 - either install or download your extension
 
 ## Best practise
