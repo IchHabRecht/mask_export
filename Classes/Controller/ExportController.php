@@ -333,13 +333,13 @@ class ExportController extends ActionController
             $string
         );
         $string = preg_replace(
-            '/MASK/',
-            $vendorName,
+            '/(.)mask\\1/',
+            '\\1' . $extensionKey . '\\1',
             $string
         );
         $string = preg_replace(
-            '/(.)mask\\1/',
-            '\\1' . $extensionKey . '\\1',
+            '/MASK/',
+            $vendorName,
             $string
         );
         $string = preg_replace(
