@@ -1,3 +1,8 @@
+2018-06-28         [RELEASE] Release of mask_export 2.0.1 (Nicole Cordes)
+2018-06-27 aef8cce [TASK] Update supporting files to EXT:my_skeleton 0.1.0 (Nicole Cordes)
+2018-06-27 cea9df6 [BUGFIX] Ensure $ is exposed as jQuery (Nicole Cordes)
+2018-06-15 615bfbc [BUGFIX] Prevent wrong extension key substitution in vendor name (Nicole Cordes)
+
 2018-05-27         [RELEASE] Release of mask_export 2.0.0 (Nicole Cordes)
 2018-05-16 a7b33e8 [!!!][TASK] Remove contentElementIcons extension configuration (Nicole Cordes)
 2018-05-16 4fee8a9 [!!!][TASK] Remove backendPreview extension configuration (Nicole Cordes)
