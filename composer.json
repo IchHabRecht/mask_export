@@ -28,8 +28,9 @@
         "typo3/cms-fluid-styled-content": "^7.6 || ^8.7",
         "nimut/testing-framework": "2.x-dev || 3.x-dev"
     },
-    "suggest": {
-        "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues"
+    "replace": {
+        "mask_export": "self.version",
+        "typo3-ter/mask-export": "self.version"
     },
     "autoload": {
         "psr-4": {
@@ -50,8 +51,10 @@
             "dev-master": "2.x-dev"
         },
         "typo3/cms": {
+            "extension-key": "mask_export",
             "cms-package-dir": "{$vendor-dir}/typo3/cms",
-            "web-dir": ".Build/Web"
+            "app-dir": ".Build",
+            "web-dir": ".Build/public"
         }
     }
 }
