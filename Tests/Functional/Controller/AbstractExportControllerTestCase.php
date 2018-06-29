@@ -53,7 +53,7 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     /**
      * @var string
      */
-    protected $vendorName = 'IchHabRecht';
+    protected $vendorName = 'ich-hab-recht';
 
     /**
      * @var string
