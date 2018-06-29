@@ -224,11 +224,12 @@ class ExportController extends ActionController
     protected function getVendorName()
     {
         $backendUser = $this->getBackendUser();
+        $vendorName = $this->defaultExtensionName;
         if (!empty($backendUser->uc['mask_export']['vendorName'])) {
-            return $backendUser->uc['mask_export']['vendorName'];
+            $vendorName = str_replace('-', '_', $backendUser->uc['mask_export']['vendorName']);
         }
 
-        return str_replace('_', '-', $this->defaultExtensionName);
+        return GeneralUtility::underscoredToUpperCamelCase($vendorName);
     }
 
     /**
