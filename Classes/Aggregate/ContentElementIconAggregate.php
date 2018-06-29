@@ -14,7 +14,10 @@ namespace IchHabRecht\MaskExport\Aggregate;
  * LICENSE file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider;
+use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
 
 class ContentElementIconAggregate extends TtContentOverridesAggregate implements PlainTextFileAwareInterface
 {
@@ -46,15 +49,18 @@ class ContentElementIconAggregate extends TtContentOverridesAggregate implements
             $iconIdentifier = 'tx_mask_' . $key;
 
             $iconFile = '';
-            foreach (['ce_' . $key . '.png', $key . '.png'] as $icon) {
+            foreach ([$key . '.svg', $key . '.png', 'ce_' . $key . '.png'] as $icon) {
                 if (file_exists($maskIconFolder . $icon)) {
                     $iconFile = $maskIconFolder . $icon;
+                    break;
                 }
             }
 
             if (!empty($iconFile) || empty($element['icon'])) {
                 $iconFileName = $iconFile ?: ExtensionManagementUtility::extPath('mask_export') . 'ext_icon.png';
-                $iconPath = $this->iconResourceFilePath . $key . '.png';
+                $iconFileExtension = strtolower(PathUtility::pathinfo($iconFileName, PATHINFO_EXTENSION));
+                $iconPath = $this->iconResourceFilePath . $key . '.' . $iconFileExtension;
+                $iconProviderClass = $iconFileExtension === 'svg' ? SvgIconProvider::class : BitmapIconProvider::class;
                 $this->addPlainTextFile(
                     $iconPath,
                     file_get_contents($iconFileName)
@@ -63,7 +69,7 @@ class ContentElementIconAggregate extends TtContentOverridesAggregate implements
 <<<EOS
 \$iconRegistry->registerIcon(
     '$iconIdentifier',
-    \TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider::class,
+    \\$iconProviderClass::class,
     [
         'source' => 'EXT:mask/$iconPath',
     ]
