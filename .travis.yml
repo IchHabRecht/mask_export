@@ -28,13 +28,13 @@ install:
     if [[ "$TYPO3" = *"dev"* ]]; then
       composer config minimum-stability dev;
       composer config prefer-stable true;
-      composer require typo3/cms-core="@dev" --no-update;
-      composer require typo3/cms-extbase="@dev" --no-update;
-      composer require typo3/cms-fluid="@dev" --no-update;
-      composer require typo3/cms-fluid-styled-content="@dev" --no-update;
+      composer require typo3/cms-core:"@dev" --no-update;
+      composer require typo3/cms-extbase:"@dev" --no-update;
+      composer require typo3/cms-fluid:"@dev" --no-update;
+      composer require typo3/cms-fluid-styled-content:"@dev" --no-update;
     fi
-  - if [ "$MASK" != "" ]; then composer require mask/mask="$MASK" --no-update; fi
-  - composer require nimut/typo3-complete:$TYPO3
+  - if [ "$MASK" != "" ]; then composer require mask/mask:"$MASK" --no-update; fi
+  - composer require nimut/typo3-complete:"$TYPO3"
   - mkdir -p .Build/public/typo3conf/ext/
   - if [ ! -L .Build/public/typo3conf/ext/mask_export ]; then ln -snvf ../../../../. .Build/public/typo3conf/ext/mask_export; fi
   - export TYPO3_PATH_ROOT=$PWD/.Build/public
@@ -163,8 +163,8 @@ jobs:
         echo "Preparing upload of release ${TRAVIS_TAG} to TER";
         echo;
         echo;
-        composer require --dev nimut/typo3-complete:$TYPO3;
-        composer require --update-no-dev helhum/ter-client:dev-master;
+        composer require --dev nimut/typo3-complete:"$TYPO3";
+        composer require --update-no-dev helhum/ter-client:"dev-master";
 
         # Cleanup before we upload
         git reset --hard HEAD && git clean -fx;
@@ -199,7 +199,7 @@ jobs:
               echo;
               echo;
               git clean -Xdf;
-              composer require --dev nimut/typo3-complete:$TYPO3;
+              composer require --dev nimut/typo3-complete:"$TYPO3";
               git checkout composer.json;
               VERSION=${TYPO3//[!0-9]/};
 
