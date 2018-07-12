@@ -20,7 +20,6 @@ use IchHabRecht\MaskExport\Tests\Functional\Controller\AbstractExportControllerT
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\PageLayoutView;
 use TYPO3\CMS\Backend\View\PageLayoutViewDrawItemHookInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Lang\LanguageService;
 
@@ -34,15 +33,14 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         $this->assertArrayHasKey('Configuration/PageTSconfig/BackendPreview.ts', $this->files);
 
         // Get templatePaths from file
-        $templatePaths = [];
-        preg_match_all(
-            '#mod\.web_layout\.tt_content\.preview\.([^ ]+) = [^:]+:[^/]+/(.*)#',
+        $templatePath = [];
+        preg_match(
+            '#mod\.web_layout\.tt_content\.preview\.([^.]+)\.templateRootPath = [^:]+:[^/]+/(.*)#',
             $this->files['Configuration/PageTSconfig/BackendPreview.ts'],
-            $templatePaths,
-            PREG_SET_ORDER
+            $templatePath
         );
 
-        $this->assertNotEmpty($templatePaths);
+        $this->assertNotEmpty($templatePath);
 
         // Fetch supported content types from file
         $matches = [];
@@ -56,12 +54,8 @@ class ExportControllerTest extends AbstractExportControllerTestCase
 
         $supportedContentTypes = eval('return ' . $matches[1] . ';');
 
-        $this->assertSame(count($templatePaths), count($supportedContentTypes));
-
-        foreach ($templatePaths as $contentType) {
-            $this->assertCount(3, $contentType);
-            $this->assertContains($contentType[1], $supportedContentTypes);
-            $this->assertArrayHasKey($contentType[2], $this->files);
+        foreach ($supportedContentTypes as $contentType) {
+            $this->assertArrayHasKey($templatePath[2] . ucfirst($contentType) . '.html', $this->files);
         }
     }
 
@@ -90,10 +84,9 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         // Get StandaloneView mock
         /** @var \PHPUnit_Framework_MockObject_MockObject|StandaloneView $viewMock */
         $viewMock = $this->getMockBuilder(StandaloneView::class)
-            ->setMethods(['render', 'setLayoutRootPaths', 'setPartialRootPaths', 'setTemplatePathAndFilename'])
+            ->setMethods(['render'])
             ->getMock();
         $viewMock->expects($this->once())->method('render');
-        GeneralUtility::addInstance(StandaloneView::class, $viewMock);
 
         // Call preProcess function on PageLayoutViewDrawItem
         $pageLayoutView = new PageLayoutView();
@@ -102,10 +95,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         $itemContent = '';
         $row = BackendUtility::getRecord('tt_content', 1);
         /** @var \PHPUnit_Framework_MockObject_MockObject|PageLayoutViewDrawItemHookInterface $subject */
-        $subject = $this->getMockBuilder($className)
-            ->setMethods(['getTemplatePath'])
-            ->getMock();
-        $subject->expects($this->once())->method('getTemplatePath')->willReturn(PATH_site . 'typo3conf/ext/mask_export/Resources/Private/Backend/Templates/Export/List.html');
+        $subject = new $className($viewMock);
         $subject->preProcess($pageLayoutView, $drawItem, $headerContent, $itemContent, $row);
 
         // Get variable container
