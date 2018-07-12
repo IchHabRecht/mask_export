@@ -64,19 +64,16 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements Plai
 
     protected function addPageTsConfiguration()
     {
-        $contentTypes = array_keys($this->maskConfiguration[$this->table]['elements']);
-        sort($contentTypes);
-
-        $pageTSConfig = [];
-        foreach ($contentTypes as $type) {
-            $templateKey = GeneralUtility::underscoredToUpperCamelCase($type);
-            $pageTSConfig[] = 'mod.web_layout.tt_content.preview.mask_' . $type
-                . ' = EXT:mask/' . $this->templatesFilePath . 'Content/' . $templateKey . '.html';
-        }
+        $rootPath = dirname($this->templatesFilePath);
 
         $this->appendPlainTextFile(
             $this->pageTSConfigFilePath . $this->pageTSConfigFileIdentifier,
-            implode("\n", $pageTSConfig) . "\n"
+            <<<EOS
+mod.web_layout.tt_content.preview.mask.templateRootPath = EXT:mask/{$this->templatesFilePath}Content/
+mod.web_layout.tt_content.preview.mask.layoutRootPath = EXT:mask/{$rootPath}/Layout/
+mod.web_layout.tt_content.preview.mask.partialRootPath = EXT:mask/{$rootPath}/Partials/
+
+EOS
         );
 
         $this->appendPhpFile(
@@ -105,13 +102,11 @@ EOS
 EOS
         );
 
-        $contentTypes = array_map(
-            function ($key) {
-                return 'mask_' . $key;
-            },
-            array_keys($this->maskConfiguration[$this->table]['elements'])
-        );
-        sort($contentTypes);
+        $contentTypes = [];
+        foreach (array_keys($this->maskConfiguration[$this->table]['elements']) as $key) {
+            $contentTypes['mask_' . $key] = $key;
+        }
+        asort($contentTypes);
         $supportedContentTypes = var_export($contentTypes, true);
 
         $this->addPhpFile(
@@ -136,6 +131,16 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
     protected \$supportedContentTypes = {$supportedContentTypes};
 
     /**
+     * @var StandaloneView
+     */
+    protected \$view;
+
+    public function __construct(StandaloneView \$view = null)
+    {
+        \$this->view = \$view ?: GeneralUtility::makeInstance(StandaloneView::class);
+    }
+
+    /**
      * Preprocesses the preview rendering of a content element.
      *
      * @param PageLayoutView \$parentObject
@@ -146,12 +151,9 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
      */
     public function preProcess(PageLayoutView &\$parentObject, &\$drawItem, &\$headerContent, &\$itemContent, array &\$row)
     {
-        if (!in_array(\$row['CType'], \$this->supportedContentTypes, true)) {
+        if (!isset(\$this->supportedContentTypes[\$row['CType']])) {
             return;
         }
-
-        \$objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        \$view = \$objectManager->get(StandaloneView::class);
         
         \$formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
         \$formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, \$formDataGroup);
@@ -162,23 +164,17 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
         ];
         try {
             \$result = \$formDataCompiler->compile(\$formDataCompilerInput);
-            
-            \$templatePath = \$this->getTemplatePath(\$result['pageTsConfig'], \$row['CType']);
-            if (!file_exists(\$templatePath)) {
-                return;
-            }
-        
             \$processedRow = \$this->getProcessedData(\$result['databaseRow'], \$result['processedTca']['columns']);
-    
-            \$view->setTemplatePathAndFilename(\$templatePath);
-            \$view->assignMultiple(
+            
+            \$this->configureView(\$result['pageTsConfig'], \$row['CType']);
+            \$this->view->assignMultiple(
                 [
                     'row' => \$row,
                     'processedRow' => \$processedRow,
                 ]
             );
     
-            \$itemContent = \$view->render();
+            \$itemContent = \$this->view->render();
         } catch (Exception \$exception) {
             \$message = \$GLOBALS['BE_USER']->errorMsg;
             if (empty(\$message)) {
@@ -192,19 +188,33 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
     }
 
     /**
-     * This function is needed for testing purpose
-     *
      * @param array \$pageTsConfig
      * @param string \$contentType
-     * @return string
      */
-    protected function getTemplatePath(array \$pageTsConfig, \$contentType)
+    protected function configureView(array \$pageTsConfig, \$contentType)
     {
-        if (empty(\$pageTsConfig['mod.']['web_layout.']['tt_content.']['preview.'][\$contentType])) {
-            return '';
+        if (empty(\$pageTsConfig['mod.']['web_layout.']['tt_content.']['preview.'])) {
+            return;
         }
 
-        return GeneralUtility::getFileAbsFileName(\$pageTsConfig['mod.']['web_layout.']['tt_content.']['preview.'][\$contentType]);
+        \$previewConfiguration = \$pageTsConfig['mod.']['web_layout.']['tt_content.']['preview.'];
+        \$extensionKey = substr(\$contentType, 0, -strlen(\$this->supportedContentTypes[\$contentType]) - 1) . '.';
+        if (!empty(\$previewConfiguration[\$contentType])) {
+            GeneralUtility::deprecationLog('Setting the complete template path with filename is deprecated and will be removed in mask_export 3.0');
+            \$templatePath = GeneralUtility::getFileAbsFileName(\$previewConfiguration[\$contentType]);
+            \$this->view->setTemplatePathAndFilename(\$templatePath);
+        } else {
+            if (!empty(\$previewConfiguration[\$extensionKey]['templateRootPath'])) {
+                \$this->view->setTemplateRootPaths([\$previewConfiguration[\$extensionKey]['templateRootPath']]);
+            }
+            if (!empty(\$previewConfiguration[\$extensionKey]['layoutRootPath'])) {
+                \$this->view->setLayoutRootPaths([\$previewConfiguration[\$extensionKey]['layoutRootPath']]);
+            }
+            if (!empty(\$previewConfiguration[\$extensionKey]['partialRootPath'])) {
+                \$this->view->setPartialRootPaths([\$previewConfiguration[\$extensionKey]['partialRootPath']]);
+            }
+            \$this->view->setTemplate(ucfirst(\$this->supportedContentTypes[\$contentType]));
+        }
     }
 
     /**
