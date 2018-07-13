@@ -74,6 +74,7 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
     {
         $composerData = [
             'name' => 'mask/mask',
+            'description' => '',
             'type' => 'typo3-cms-extension',
             'license' => 'GPL-2.0-or-later',
             'require' => [
