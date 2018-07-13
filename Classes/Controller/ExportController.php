@@ -110,7 +110,14 @@ class ExportController extends ActionController
      */
     public function saveAction($vendorName = '', $extensionName = '')
     {
-        $vendorName = $vendorName ?: $this->getVendorName();
+        if (empty($vendorName)) {
+            $vendorName = $this->getVendorName();
+        } else {
+            $vendorName = str_replace('-', '_', $vendorName);
+            if (strpos($vendorName, '_') !== false) {
+                $vendorName = GeneralUtility::underscoredToUpperCamelCase($vendorName);
+            }
+        }
         $extensionName = $extensionName ?: $this->getExtensionName();
 
         $backendUser = $this->getBackendUser();
@@ -224,12 +231,11 @@ class ExportController extends ActionController
     protected function getVendorName()
     {
         $backendUser = $this->getBackendUser();
-        $vendorName = $this->defaultExtensionName;
         if (!empty($backendUser->uc['mask_export']['vendorName'])) {
-            $vendorName = str_replace('-', '_', $backendUser->uc['mask_export']['vendorName']);
+            return $backendUser->uc['mask_export']['vendorName'];
         }
 
-        return GeneralUtility::underscoredToUpperCamelCase($vendorName);
+        return GeneralUtility::underscoredToUpperCamelCase($this->defaultExtensionName);
     }
 
     /**
