@@ -73,9 +73,7 @@ jobs:
   fast_finish: true
   allow_failures:
     - env: TYPO3="9.5.x-dev as 9.5.0" MASK="dev-master as 4.0.0"
-    - env: TYPO3=^8.7 MASK="dev-master as 3.0.0"
     - env: TYPO3="8.7.x-dev as 8.7.0"
-    - env: TYPO3="8.7.x-dev as 8.7.0" MASK="dev-master as 3.0.0"
     - env: TYPO3="7.6.x-dev as 7.6.0"
   include:
     - stage: test
@@ -89,13 +87,7 @@ jobs:
       env: TYPO3="8.7.x-dev as 8.7.0"
     - stage: test
       php: 7.2
-      env: TYPO3="8.7.x-dev as 8.7.0" MASK="dev-master as 3.0.0"
-    - stage: test
-      php: 7.2
       env: TYPO3=^8.7
-    - stage: test
-      php: 7.2
-      env: TYPO3=^8.7 MASK="dev-master as 3.0.0"
     - stage: test
       php: 7.2
       env: TYPO3=^7.6
@@ -107,13 +99,7 @@ jobs:
       env: TYPO3="8.7.x-dev as 8.7.0"
     - stage: test
       php: 7.1
-      env: TYPO3="8.7.x-dev as 8.7.0" MASK="dev-master as 3.0.0"
-    - stage: test
-      php: 7.1
       env: TYPO3=^8.7
-    - stage: test
-      php: 7.1
-      env: TYPO3=^8.7 MASK="dev-master as 3.0.0"
     - stage: test
       php: 7.1
       env: TYPO3=^7.6
@@ -125,13 +111,7 @@ jobs:
       env: TYPO3="8.7.x-dev as 8.7.0"
     - stage: test
       php: 7.0
-      env: TYPO3="8.7.x-dev as 8.7.0" MASK="dev-master as 3.0.0"
-    - stage: test
-      php: 7.0
       env: TYPO3=^8.7
-    - stage: test
-      php: 7.0
-      env: TYPO3=^8.7 MASK="dev-master as 3.0.0"
     - stage: test
       php: 7.0
       env: TYPO3=^8.7
