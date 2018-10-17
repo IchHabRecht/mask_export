@@ -55,11 +55,12 @@ class InlineContentColPosAggregate extends AbstractInlineContentAggregate implem
 EOS
         );
 
-        sort($inlineFields);
-        array_walk($inlineFields, function (&$value) {
-            $value .= '_parent';
+        $flattenedInlineFields = [];
+        array_walk_recursive($inlineFields, function ($field) use (&$flattenedInlineFields) {
+            $flattenedInlineFields[] = $field . '_parent';
         });
-        $supportedInlineParentFields = var_export($inlineFields, true);
+        sort($flattenedInlineFields);
+        $supportedInlineParentFields = var_export($flattenedInlineFields, true);
 
         $this->addPhpFile(
             'Classes/Form/FormDataProvider/TcaColPosItem.php',
