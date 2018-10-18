@@ -29,12 +29,14 @@ class InlineContentCTypeAggregate extends AbstractInlineContentAggregate impleme
         }
 
         $supportedInlineParentFields = [];
-        foreach ($inlineFields as $field) {
-            if (empty($this->maskConfiguration['tt_content']['tca'][$field]['cTypes'])) {
-                continue;
-            }
+        foreach ($inlineFields as $table => $fieldArray) {
+            foreach ($fieldArray as $field) {
+                if (empty($this->maskConfiguration[$table]['tca'][$field]['cTypes'])) {
+                    continue;
+                }
 
-            $supportedInlineParentFields[$field . '_parent'] = $this->maskConfiguration['tt_content']['tca'][$field]['cTypes'];
+                $supportedInlineParentFields[$field . '_parent'] = $this->maskConfiguration[$table]['tca'][$field]['cTypes'];
+            }
         }
 
         if (empty($supportedInlineParentFields)) {

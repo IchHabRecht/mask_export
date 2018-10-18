@@ -458,6 +458,12 @@
                     }
                 },
                 "exclude": "1",
+                "cTypes": [
+                    "header",
+                    "textmedia",
+                    "shortcut",
+                    "list"
+                ],
                 "inlineParent": "tx_mask_additionalcontent",
                 "label": "More Content",
                 "key": "morecontent"

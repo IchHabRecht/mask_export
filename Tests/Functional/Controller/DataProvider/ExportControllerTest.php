@@ -634,4 +634,181 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             $this->assertGreaterThan(3, count($result['processedTca']['columns']['CType']['config']['items']));
         }
     }
+
+    /**
+     * @return array
+     */
+    public function tcaCTypeItemDataProviderRemovesRestrictedCTypesForMultiNestedRecordsDataProvider()
+    {
+        return [
+            'Add multi-nested inline record' => [
+                [
+                    'command' => 'new',
+                    'tableName' => 'tt_content',
+                    'vanillaUid' => 1,
+                    'isInlineChild' => true,
+                    'inlineFirstPid' => '1',
+                    'inlineParentUid' => '1',
+                    'inlineParentTableName' => 'tx_maskexampleexport_additionalcontent',
+                    'inlineParentFieldName' => 'tx_maskexampleexport_morecontent',
+                    'inlineParentConfig' => [
+                        'type' => 'inline',
+                        'foreign_table' => 'tt_content',
+                        'foreign_sortby' => 'sorting',
+                        'appearance' => [
+                            'collapseAll' => '1',
+                            'levelLinksPosition' => 'top',
+                            'showSynchronizationLink' => '1',
+                            'showPossibleLocalizationRecords' => true,
+                            'showAllLocalizationLink' => '1',
+                            'useSortable' => '1',
+                            'enabledControls' => [
+                                'info' => true,
+                                'new' => true,
+                                'dragdrop' => '1',
+                                'sort' => true,
+                                'hide' => true,
+                                'delete' => true,
+                                'localize' => true,
+                            ],
+                            'showRemovedLocalizationRecords' => false,
+                        ],
+                        'behaviour' => [
+                            'localizationMode' => 'none',
+                        ],
+                        'foreign_field' => 'tx_maskexampleexport_morecontent_parent',
+                        'foreign_record_defaults' => [
+                            'colPos' => '999',
+                        ],
+                        'overrideChildTca' => [
+                            'columns' => [
+                                'colPos' => [
+                                    'config' => [
+                                        'default' => '999',
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'minitems' => 0,
+                        'maxitems' => 99999,
+                        'inline' => [
+                            'parentSysLanguageUid' => 0,
+                            'first' => 2,
+                            'last' => 2,
+                        ],
+                    ],
+                    'inlineTopMostParentUid' => '1',
+                    'inlineTopMostParentTableName' => 'tt_content',
+                    'inlineTopMostParentFieldName' => 'tx_maskexampleexport_additionalcontent',
+                ],
+                true,
+            ],
+            'Edit multi-nested record' => [
+                [
+                    'command' => 'edit',
+                    'tableName' => 'tt_content',
+                    'vanillaUid' => 6,
+                    'isInlineChild' => true,
+                    'inlineFirstPid' => '1',
+                    'inlineParentConfig' => [
+                        'type' => 'inline',
+                        'foreign_table' => 'tt_content',
+                        'foreign_sortby' => 'sorting',
+                        'appearance' => [
+                            'collapseAll' => '1',
+                            'levelLinksPosition' => 'top',
+                            'showSynchronizationLink' => '1',
+                            'showPossibleLocalizationRecords' => true,
+                            'showAllLocalizationLink' => '1',
+                            'useSortable' => '1',
+                            'enabledControls' => [
+                                'info' => true,
+                                'new' => true,
+                                'dragdrop' => '1',
+                                'sort' => true,
+                                'hide' => true,
+                                'delete' => true,
+                                'localize' => true,
+                            ],
+                            'showRemovedLocalizationRecords' => false,
+                        ],
+                        'behaviour' => [
+                            'localizationMode' => 'none',
+                        ],
+                        'foreign_field' => 'tx_maskexampleexport_morecontent_parent',
+                        'foreign_record_defaults' => [
+                            'colPos' => '999',
+                        ],
+                        'overrideChildTca' => [
+                            'columns' => [
+                                'colPos' => [
+                                    'config' => [
+                                        'default' => '999',
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'minitems' => 0,
+                        'maxitems' => 99999,
+                        'inline' => [
+                            'parentSysLanguageUid' => 0,
+                            'first' => 6,
+                            'last' => 6,
+                        ],
+                        'renderFieldsOnly' => true,
+                    ],
+                    'isInlineAjaxOpeningContext' => true,
+                    'inlineParentUid' => 1,
+                    'inlineParentTableName' => 'tx_maskexampleexport_additionalcontent',
+                    'inlineParentFieldName' => 'tx_maskexampleexport_morecontent',
+                    'inlineTopMostParentUid' => '1',
+                    'inlineTopMostParentTableName' => 'tt_content',
+                    'inlineTopMostParentFieldName' => 'tx_maskexampleexport_additionalcontent',
+                ],
+                true,
+            ],
+            'Open multi-nested record directly' => [
+                [
+                    'command' => 'edit',
+                    'tableName' => 'tt_content',
+                    'vanillaUid' => 6,
+                ],
+                true,
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider tcaCTypeItemDataProviderRemovesRestrictedCTypesForMultiNestedRecordsDataProvider
+     * @param array $formDataCompilerInput
+     * @param bool $expectation
+     */
+    public function tcaCTypeItemDataProviderRemovesRestrictedCTypesForMultiNestedRecords(array $formDataCompilerInput, $expectation)
+    {
+        $this->installExtension();
+
+        // Load database fixtures
+        $fixturePath = ORIGINAL_ROOT . 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Database/';
+        $this->importDataSet($fixturePath . 'pages.xml');
+        $this->importDataSet($fixturePath . 'tt_content.xml');
+        $this->importDataSet($fixturePath . 'tx_maskexampleexport_additionalcontent.xml');
+        $this->importDataSet($fixturePath . 'sys_file.xml');
+
+        $this->setUpBackendUserFromFixture(1);
+        $languageService = new LanguageService();
+        $languageService->init('default');
+        $GLOBALS['LANG'] = $languageService;
+
+        $formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
+        $formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, $formDataGroup);
+        $result = $formDataCompiler->compile($formDataCompilerInput);
+
+        if ($expectation) {
+            $this->assertCount(4, $result['processedTca']['columns']['CType']['config']['items']);
+            $this->assertNotContains('bullets', $result['processedTca']['columns']['CType']['config']['items']);
+        } else {
+            $this->assertGreaterThan(4, count($result['processedTca']['columns']['CType']['config']['items']));
+        }
+    }
 }
