@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <tx_maskexampleexport_additionalcontent>
+        <uid>1</uid>
+        <pid>1</pid>
+        <parentid>1</parentid>
+        <parenttable>tt_content</parenttable>
+        <tx_maskexampleexport_morecontent>1</tx_maskexampleexport_morecontent>
+    </tx_maskexampleexport_additionalcontent>
+</dataset>

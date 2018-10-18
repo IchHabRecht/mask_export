@@ -37,4 +37,12 @@
         <header>Text &amp; Madia</header>
         <CType>textmedia</CType>
     </tt_content>
+    <tt_content>
+        <uid>6</uid>
+        <pid>1</pid>
+        <header>Mask Export first more content</header>
+        <CType>list</CType>
+        <colPos>999</colPos>
+        <tx_maskexampleexport_morecontent_parent>1</tx_maskexampleexport_morecontent_parent>
+    </tt_content>
 </dataset>
