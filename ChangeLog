@@ -1,3 +1,6 @@
+2018-10-18         [RELEASE] Release of mask_export 2.1.1 (Nicole Cordes)
+2018-10-18 6d46907 [TASK] Update supporting files to EXT:my_skeleton 0.1.5 (Nicole Cordes)
+
 2018-10-18         [RELEASE] Release of mask_export 2.1.0 (Nicole Cordes)
 2018-10-18 2acc171 [FEATURE] Add functional test for multi-nested limited content elements (Nicole Cordes)
 2018-10-18 06e9df4 [BUGFIX] Exclude disallowed CTypes from multi-nested content elements (Nicole Cordes)
