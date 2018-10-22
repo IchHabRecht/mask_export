@@ -15,9 +15,9 @@
                     ""
                 ]
             },
-            "empty-content-element": {
+            "empty_content_element": {
                 "label": "Empty Content Element",
-                "key": "empty-content-element",
+                "key": "empty_content_element",
                 "shortLabel": "Empty",
                 "description": "Content Element that has no column definitions",
                 "icon": "fa-remove",
