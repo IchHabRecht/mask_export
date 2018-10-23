@@ -34,8 +34,8 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             case '8.7':
                 $expectedVersionConstraint = '8.7.0-8.7.99';
                 break;
-            case '9.0':
-                $expectedVersionConstraint = '9.0.0-9.0.99';
+            case '9.5':
+                $expectedVersionConstraint = '9.5.0-9.5.99';
                 break;
             default:
                 throw new \UnexpectedValueException('Missing test configuration in ensureTypo3DependencyInExtEmConf', 1506012559);
@@ -61,8 +61,8 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             case '8.7':
                 $expectedVersionConstraint = '^8.7';
                 break;
-            case '9.0':
-                $expectedVersionConstraint = '^9.0';
+            case '9.5':
+                $expectedVersionConstraint = '^9.5';
                 break;
             default:
                 throw new \UnexpectedValueException('Missing test configuration in ensureTypo3DependencyInExtEmConf', 1526087286);
