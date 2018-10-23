@@ -86,11 +86,11 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     {
         $this->assertArrayHasKey('Configuration/TypoScript/setup.ts', $this->files);
         $this->assertContains(
-            'where = tx_maskexampleexport_related_content_parent=###uid### AND deleted=0 AND hidden=0 AND colPos=\'999\'',
+            'where = tx_maskexampleexport_related_content_parent=###uid### AND deleted=0 AND hidden=0 AND colPos=###colPos### AND CType IN (###CType1###, ###CType2###, ###CType3###)',
             $this->files['Configuration/TypoScript/setup.ts']
         );
         $this->assertContains(
-            'where = tx_maskexampleexport_morecontent_parent=###uid### AND deleted=0 AND hidden=0 AND colPos=\'999\'',
+            'where = tx_maskexampleexport_morecontent_parent=###uid### AND deleted=0 AND hidden=0 AND colPos=###colPos###',
             $this->files['Configuration/TypoScript/setup.ts']
         );
     }
