@@ -64,14 +64,14 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements Plai
 
     protected function addPageTsConfiguration()
     {
-        $rootPath = dirname($this->templatesFilePath);
+        $rootPaths = $this->getFluidRootPaths();
 
         $this->appendPlainTextFile(
             $this->pageTSConfigFilePath . $this->pageTSConfigFileIdentifier,
             <<<EOS
-mod.web_layout.tt_content.preview.mask.templateRootPath = EXT:mask/{$this->templatesFilePath}Content/
-mod.web_layout.tt_content.preview.mask.layoutRootPath = EXT:mask/{$rootPath}/Layout/
-mod.web_layout.tt_content.preview.mask.partialRootPath = EXT:mask/{$rootPath}/Partials/
+mod.web_layout.tt_content.preview.mask.templateRootPath = {$rootPaths['template']}
+mod.web_layout.tt_content.preview.mask.layoutRootPath = {$rootPaths['layout']}
+mod.web_layout.tt_content.preview.mask.partialRootPath = {$rootPaths['partials']}
 
 EOS
         );
@@ -102,6 +102,7 @@ EOS
 EOS
         );
 
+        $rootPaths = $this->getFluidRootPaths();
         $contentTypes = [];
         foreach (array_keys($this->maskConfiguration[$this->table]['elements']) as $key) {
             $contentTypes['mask_' . $key] = GeneralUtility::underscoredToUpperCamelCase($key);
@@ -120,7 +121,6 @@ use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
 use TYPO3\CMS\Backend\View\PageLayoutView;
 use TYPO3\CMS\Backend\View\PageLayoutViewDrawItemHookInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
@@ -206,13 +206,22 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
             \$this->view->setTemplatePathAndFilename(\$templatePath);
         } else {
             if (!empty(\$previewConfiguration[\$extensionKey]['templateRootPath'])) {
-                \$this->view->setTemplateRootPaths([\$previewConfiguration[\$extensionKey]['templateRootPath']]);
+                \$this->view->setTemplateRootPaths([
+                    '{$rootPaths['template']}',
+                    \$previewConfiguration[\$extensionKey]['templateRootPath'],
+                ]);
             }
             if (!empty(\$previewConfiguration[\$extensionKey]['layoutRootPath'])) {
-                \$this->view->setLayoutRootPaths([\$previewConfiguration[\$extensionKey]['layoutRootPath']]);
+                \$this->view->setLayoutRootPaths([
+                    '{$rootPaths['layout']}',
+                    \$previewConfiguration[\$extensionKey]['layoutRootPath'],
+                ]);
             }
             if (!empty(\$previewConfiguration[\$extensionKey]['partialRootPath'])) {
-                \$this->view->setPartialRootPaths([\$previewConfiguration[\$extensionKey]['partialRootPath']]);
+                \$this->view->setPartialRootPaths([
+                    '{$rootPaths['partials']}',
+                    \$previewConfiguration[\$extensionKey]['partialRootPath'],
+                ]);
             }
             \$this->view->setTemplate(\$this->supportedContentTypes[\$contentType]);
         }
@@ -295,5 +304,16 @@ EOS
                 }
             }
         }
+    }
+
+    protected function getFluidRootPaths()
+    {
+        $rootPath = dirname($this->templatesFilePath);
+
+        return [
+            'template' => 'EXT:mask/' . $this->templatesFilePath . 'Content/',
+            'layout' => 'EXT:mask/' . $rootPath . '/Layout/',
+            'partials' => 'EXT:mask/' . $rootPath . '/Partials/',
+        ];
     }
 }
