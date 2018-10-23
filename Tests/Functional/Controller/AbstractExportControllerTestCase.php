@@ -41,6 +41,12 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
                 'mask' => 'a:2:{s:4:"json";s:83:"typo3conf/ext/mask_export/Tests/Functional/Fixtures/Configuration/mask-default.json";s:7:"preview";s:70:"typo3conf/ext/mask_export/Tests/Functional/Fixtures/Templates/Preview/";}',
             ],
         ],
+        'EXTENSIONS' => [
+            'mask' => [
+                'json' => 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Configuration/mask-default.json',
+                'preview' => 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Templates/Preview/',
+            ],
+        ],
     ];
 
     /**
@@ -130,6 +136,7 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
 
         foreach ($configuration as $key => $value) {
             $this->configurationToUseInTestInstance['EXT']['extConf'][$key] = serialize($value);
+            $this->configurationToUseInTestInstance['EXTENSIONS'][$key] = $value;
         }
 
         self::setUp();
@@ -142,9 +149,11 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     {
         // Load ext_tables.sql
         if (!empty($this->files['ext_tables.sql'])) {
-            $installToolSqlParser = new SqlSchemaMigrationService();
             $installUtility = new InstallUtility();
-            $installUtility->injectInstallToolSqlParser($installToolSqlParser);
+            if (class_exists('TYPO3\\CMS\\Install\\Service\\SqlSchemaMigrationService')) {
+                $installToolSqlParser = new SqlSchemaMigrationService();
+                $installUtility->injectInstallToolSqlParser($installToolSqlParser);
+            }
             $installUtility->updateDbWithExtTablesSql($this->files['ext_tables.sql']);
         }
 

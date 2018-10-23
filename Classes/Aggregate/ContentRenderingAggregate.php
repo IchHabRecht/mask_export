@@ -232,6 +232,9 @@ EOS;
     protected function addDatabaseQueryProcessorForField($table, $columnName, $index)
     {
         $where = $GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_field'] . '=###uid### AND deleted=0 AND hidden=0';
+        $markerArray = [
+            'uid.field' => 'uid',
+        ];
         $overrideColumns = [];
         if (!empty($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_record_defaults'])) {
             $overrideColumns = $GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_record_defaults'];
@@ -252,18 +255,37 @@ EOS;
             if ('CType' === $key) {
                 continue;
             }
-            $where .= ' AND ' . $key . '=' . $this->getDatabaseConnection()->fullQuoteStr($value, 'tt_content');
+            $where .= ' AND ' . $key . '=###' . $key . '###';
+            $markerArray[$key] = $value;
         }
 
         if (!empty($this->maskConfiguration[$table]['tca'][$columnName]['cTypes'])) {
-            $types = $this->maskConfiguration[$table]['tca'][$columnName]['cTypes'];
-            $where .= ' AND CType IN (' . implode(', ', $this->getDatabaseConnection()->fullQuoteArray($types, $table)) . ')';
+            $types = array_combine(
+                array_map(
+                    function ($value) {
+                        return 'CType' . $value;
+                    },
+                    range(1, count($this->maskConfiguration[$table]['tca'][$columnName]['cTypes']))
+                ),
+                $this->maskConfiguration[$table]['tca'][$columnName]['cTypes']
+            );
+            $where .= ' AND CType IN (###' . implode('###, ###', array_keys($types)) . '###)';
+            $markerArray += $types;
         }
 
         $sorting = 'uid';
         if (!empty($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_sortby'])) {
             $sorting = $GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_sortby'];
         }
+
+        uksort($markerArray, 'strnatcasecmp');
+        $markers = implode("\n        ", array_map(
+            function ($key, $value) {
+                return 'markers.' . $key . (strpos($key, '.') === false ? '.value' : '') . ' = ' . $value;
+            },
+            array_keys($markerArray),
+            $markerArray
+        ));
 
         return <<<EOS
     dataProcessing.{$index} = TYPO3\CMS\Frontend\DataProcessing\DatabaseQueryProcessor
@@ -273,9 +295,7 @@ EOS;
         pidInList.field = pid
         where = {$where}
         orderBy = {$sorting}
-        markers {
-            uid.field = uid
-        }
+        {$markers}
         as = data_{$columnName}
     }
 
