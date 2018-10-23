@@ -42,6 +42,7 @@ class EmptyMaskConfigurationTest extends AbstractExportControllerTestCase
 
         $this->assertArrayHasKey('ext_emconf.php', $this->files);
         $this->assertArrayHasKey('ext_icon.png', $this->files);
+        $this->assertArrayHasKey('Resources/Public/Icons/Extension.png', $this->files);
         $this->assertArrayHasKey('Configuration/Mask/mask.json', $this->files);
     }
 }
