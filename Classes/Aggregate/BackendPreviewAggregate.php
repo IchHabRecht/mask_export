@@ -104,7 +104,7 @@ EOS
 
         $contentTypes = [];
         foreach (array_keys($this->maskConfiguration[$this->table]['elements']) as $key) {
-            $contentTypes['mask_' . $key] = $key;
+            $contentTypes['mask_' . $key] = GeneralUtility::underscoredToUpperCamelCase($key);
         }
         asort($contentTypes);
         $supportedContentTypes = var_export($contentTypes, true);
@@ -198,7 +198,8 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
         }
 
         \$previewConfiguration = \$pageTsConfig['mod.']['web_layout.']['tt_content.']['preview.'];
-        \$extensionKey = substr(\$contentType, 0, -strlen(\$this->supportedContentTypes[\$contentType]) - 1) . '.';
+        list(\$extensionKey) = explode('_', \$contentType, 2);
+        \$extensionKey .= '.';
         if (!empty(\$previewConfiguration[\$contentType])) {
             GeneralUtility::deprecationLog('Setting the complete template path with filename is deprecated and will be removed in mask_export 3.0');
             \$templatePath = GeneralUtility::getFileAbsFileName(\$previewConfiguration[\$contentType]);
@@ -213,7 +214,7 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
             if (!empty(\$previewConfiguration[\$extensionKey]['partialRootPath'])) {
                 \$this->view->setPartialRootPaths([\$previewConfiguration[\$extensionKey]['partialRootPath']]);
             }
-            \$this->view->setTemplate(ucfirst(\$this->supportedContentTypes[\$contentType]));
+            \$this->view->setTemplate(\$this->supportedContentTypes[\$contentType]);
         }
     }
 
