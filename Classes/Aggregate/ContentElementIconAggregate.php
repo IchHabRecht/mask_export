@@ -17,6 +17,7 @@ namespace IchHabRecht\MaskExport\Aggregate;
 use TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 
 class ContentElementIconAggregate extends TtContentOverridesAggregate implements PlainTextFileAwareInterface
@@ -38,7 +39,7 @@ class ContentElementIconAggregate extends TtContentOverridesAggregate implements
         }
 
         $maskConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask']);
-        $maskIconFolder = PATH_site . $maskConfiguration['preview'];
+        $maskIconFolder = GeneralUtility::getFileAbsFileName($maskConfiguration['preview']);
 
         $elements = $this->maskConfiguration['tt_content']['elements'];
         ksort($elements);
