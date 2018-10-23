@@ -1,3 +1,12 @@
+2018-10-23         [RELEASE] Release of mask_export 2.2.0 (Nicole Cordes)
+2018-10-23 5b7be43 [BUGFIX] Add flexible path handling for mask configuration (Nicole Cordes)
+2018-10-23 83b9dc2 [FEATURE] Add extension path as fallback for backend templates (Nicole Cordes)
+2018-10-23 1e13175 [BUGFIX] Fix functional tests (Nicole Cordes)
+2018-10-23 35c79bd [BUGFIX] Remove dependency to DatabaseConnection (Nicole Cordes)
+2018-10-23 b0d9a80 [BUGFIX] Add public extension icon (Nicole Cordes)
+2018-10-23 961d1a0 [TASK] Raise compatibility to TYPO3 9.5 (Nicole Cordes)
+2018-10-22 5415aa3 [BUGFIX] Correctly resolve backend template path with underscore (Nicole Cordes)
+
 2018-10-18         [RELEASE] Release of mask_export 2.1.1 (Nicole Cordes)
 2018-10-18 6d46907 [TASK] Update supporting files to EXT:my_skeleton 0.1.5 (Nicole Cordes)
 
