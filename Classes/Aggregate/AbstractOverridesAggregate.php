@@ -14,9 +14,10 @@ namespace IchHabRecht\MaskExport\Aggregate;
  * LICENSE file that was distributed with this source code.
  */
 
-abstract class AbstractOverridesAggregate extends AbstractAggregate implements LanguageAwareInterface, PhpAwareInterface, SqlAwareInterface
+abstract class AbstractOverridesAggregate extends AbstractAggregate implements LanguageAwareInterface, PhpWithScopeAwareInterface, PhpAwareInterface, SqlAwareInterface
 {
     use PhpAwareTrait;
+    use PhpWithScopeAwareTrait;
     use SqlAwareTrait;
     use TcaAwareTrait;
 

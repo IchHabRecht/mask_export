@@ -14,10 +14,11 @@ namespace IchHabRecht\MaskExport\Aggregate;
  * LICENSE file that was distributed with this source code.
  */
 
-class InlineContentColPosAggregate extends AbstractInlineContentAggregate implements LanguageAwareInterface, PhpAwareInterface
+class InlineContentColPosAggregate extends AbstractInlineContentAggregate implements LanguageAwareInterface, PhpWithScopeAwareInterface, PhpAwareInterface
 {
     use LanguageAwareTrait;
     use PhpAwareTrait;
+    use PhpWithScopeAwareTrait;
 
     /**
      * @var string
@@ -40,7 +41,7 @@ class InlineContentColPosAggregate extends AbstractInlineContentAggregate implem
             'Nested content (mask)'
         );
 
-        $this->appendPhpFile(
+        $this->appendPhpFileWithScope(
             'ext_localconf.php',
 <<<EOS
 \$GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\MASK\Mask\Form\FormDataProvider\TcaColPosItem::class] = [

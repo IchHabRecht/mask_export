@@ -76,7 +76,7 @@ mod.web_layout.tt_content.preview.mask.partialRootPath = {$rootPaths['partials']
 EOS
         );
 
-        $this->appendPhpFile(
+        $this->appendPhpFileWithScope(
             'ext_localconf.php',
             <<<EOS
 \\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::addPageTSConfig(
@@ -92,7 +92,7 @@ EOS
      */
     protected function addDrawItemHook()
     {
-        $this->appendPhpFile(
+        $this->appendPhpFileWithScope(
             'ext_localconf.php',
             <<<EOS
 // Add backend preview hook

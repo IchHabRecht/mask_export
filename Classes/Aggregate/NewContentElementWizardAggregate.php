@@ -14,11 +14,12 @@ namespace IchHabRecht\MaskExport\Aggregate;
  * LICENSE file that was distributed with this source code.
  */
 
-class NewContentElementWizardAggregate extends AbstractAggregate implements LanguageAwareInterface, PlainTextFileAwareInterface, PhpAwareInterface
+class NewContentElementWizardAggregate extends AbstractAggregate implements LanguageAwareInterface, PlainTextFileAwareInterface, PhpWithScopeAwareInterface, PhpAwareInterface
 {
     use LanguageAwareTrait;
     use PlainTextFileAwareTrait;
     use PhpAwareTrait;
+    use PhpWithScopeAwareTrait;
 
     /**
      * @var string
@@ -66,7 +67,7 @@ EOS
 EOS
         );
 
-        $this->appendPhpFile(
+        $this->appendPhpFileWithScope(
             'ext_localconf.php',
 <<<EOS
 \\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::addPageTSConfig(

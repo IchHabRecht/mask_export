@@ -14,9 +14,10 @@ namespace IchHabRecht\MaskExport\Aggregate;
  * LICENSE file that was distributed with this source code.
  */
 
-class InlineContentCTypeAggregate extends AbstractInlineContentAggregate implements PhpAwareInterface
+class InlineContentCTypeAggregate extends AbstractInlineContentAggregate implements PhpAwareInterface, PhpWithScopeAwareInterface
 {
     use PhpAwareTrait;
+    use PhpWithScopeAwareTrait;
 
     /**
      * Adds dataProvider for inline content CType restriction
@@ -46,7 +47,7 @@ class InlineContentCTypeAggregate extends AbstractInlineContentAggregate impleme
         ksort($supportedInlineParentFields);
         $supportedInlineParentFields = var_export($supportedInlineParentFields, true);
 
-        $this->appendPhpFile(
+        $this->appendPhpFileWithScope(
             'ext_localconf.php',
             <<<EOS
 \$GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\MASK\Mask\Form\FormDataProvider\TcaCTypeItem::class] = [

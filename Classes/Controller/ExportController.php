@@ -27,6 +27,7 @@ use IchHabRecht\MaskExport\Aggregate\TtContentOverridesAggregate;
 use IchHabRecht\MaskExport\FileCollection\FileCollection;
 use IchHabRecht\MaskExport\FileCollection\LanguageFileCollection;
 use IchHabRecht\MaskExport\FileCollection\PhpFileCollection;
+use IchHabRecht\MaskExport\FileCollection\PhpWithScopeFileCollection;
 use IchHabRecht\MaskExport\FileCollection\PlainTextFileCollection;
 use IchHabRecht\MaskExport\FileCollection\SqlFileCollection;
 use MASK\Mask\Domain\Repository\StorageRepository;
@@ -40,7 +41,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extensionmanager\Domain\Model\Extension;
 use TYPO3\CMS\Extensionmanager\Service\ExtensionManagementService;
 use TYPO3\CMS\Extensionmanager\Utility\InstallUtility;
-
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 class ExportController extends ActionController
 {
     /**
@@ -70,6 +71,7 @@ class ExportController extends ActionController
         LanguageFileCollection::class,
         PlainTextFileCollection::class,
         PhpFileCollection::class,
+        PhpWithScopeFileCollection::class,
         SqlFileCollection::class,
     ];
 
@@ -258,9 +260,9 @@ class ExportController extends ActionController
             $this->fileCollectionClassNames,
             $aggregateCollection
         )->getFiles();
-
         $files = $this->replaceExtensionInformation($vendorName, $extensionName, $files);
         $files = $this->sortFiles($files);
+
 
         return $files;
     }

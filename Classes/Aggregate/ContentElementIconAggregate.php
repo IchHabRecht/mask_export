@@ -102,7 +102,7 @@ EOS
         }
 
         if (!empty($iconRegistryConfiguration)) {
-            $this->appendPhpFile(
+            $this->appendPhpFileWithScope(
                 'ext_localconf.php',
 <<<EOS
 // Register content element icons
