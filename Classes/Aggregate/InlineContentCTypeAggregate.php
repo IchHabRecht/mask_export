@@ -79,8 +79,8 @@ class TcaCTypeItem implements FormDataProviderInterface
     public function addData(array \$result)
     {
         if ('tt_content' !== \$result['tableName']
-            || empty(\$result['databaseRow']['colPos'][0])
-            || 999 !== (int)\$result['databaseRow']['colPos'][0]
+            || empty(\$result['databaseRow']['colPos'])
+            || (is_array(\$result['databaseRow']['colPos']) ? 999 !== (int)\$result['databaseRow']['colPos'][0] : 999 !== (int)\$result['databaseRow']['colPos'])
         ) {
             return \$result;
         }
