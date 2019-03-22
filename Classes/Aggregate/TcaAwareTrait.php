@@ -106,7 +106,7 @@ trait TcaAwareTrait
     protected function replaceFieldLabels(array $fields, $table)
     {
         foreach ($fields as $field => &$configuration) {
-            if (0 === strpos($configuration['label'], 'LLL:')) {
+            if (0 !== strpos($field, 'tx_mask_') || 0 === strpos($configuration['label'], 'LLL:')) {
                 continue;
             }
             if (!isset($configuration['label']) && empty($this->maskConfiguration[$table]['elements'])) {
@@ -150,7 +150,7 @@ trait TcaAwareTrait
     protected function replaceItemsLabels(array $fields, $table)
     {
         foreach ($fields as $field => &$configuration) {
-            if (empty($configuration['config']['items'])) {
+            if (0 !== strpos($field, 'tx_mask_') || empty($configuration['config']['items'])) {
                 continue;
             }
             foreach ($configuration['config']['items'] as $key => &$item) {
