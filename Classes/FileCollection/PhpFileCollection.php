@@ -23,19 +23,72 @@ class PhpFileCollection extends AbstractFileCollection
      */
     protected function processAggregateCollection()
     {
-        $files = [];
+        $fileInformation = $this->fetchFileInformation();
+
+        return $this->processFileInformation($fileInformation);
+    }
+
+    /**
+     * @return array
+     */
+    protected function fetchFileInformation()
+    {
+        $fileInformation = [];
         foreach ($this->aggregateCollection as $aggregate) {
             if (!$aggregate instanceof PhpAwareInterface) {
                 continue;
             }
 
             $aggregateFiles = $aggregate->getPhpFiles();
-            foreach ($aggregateFiles as $file => $content) {
-                if (!isset($files[$file])) {
-                    $files[$file] = '<?php' . PHP_EOL;
+            foreach ($aggregateFiles as $file => $information) {
+                if (!isset($fileInformation[$file])) {
+                    $fileInformation[$file] = [
+                        'content' => '',
+                        'flags' => 0,
+                    ];
                 }
-                $files[$file] .= $content;
+
+                $fileInformation[$file]['content'] .= $information['content'];
+                $fileInformation[$file]['flags'] |= $information['flags'];
             }
+        }
+
+        return $fileInformation;
+    }
+
+    /**
+     * @param array $fileInformation
+     * @return array
+     */
+    protected function processFileInformation(array $fileInformation)
+    {
+        $files = [];
+        foreach ($fileInformation as $file => $information) {
+            $content = $information['content'];
+            $flags = $information['flags'];
+
+            if (($flags & PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION) === PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION) {
+                $content = <<<EOS
+call_user_func(function () {
+
+{$content}
+});
+
+EOS;
+            }
+
+            if (($flags & PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE) === PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE) {
+                $content = <<<EOS
+defined('TYPO3_MODE') || die();
+
+{$content}
+
+EOS;
+            }
+
+            $content = '<?php' . PHP_EOL . $content;
+
+            $files[$file] = $content;
         }
 
         return $files;

@@ -16,6 +16,9 @@ namespace IchHabRecht\MaskExport\Aggregate;
 
 interface PhpAwareInterface
 {
+    const PHPFILE_DEFINED_TYPO3_MODE = 1;
+    const PHPFILE_CLOSURE_FUNCTION = 2;
+
     /**
      * @return array
      */

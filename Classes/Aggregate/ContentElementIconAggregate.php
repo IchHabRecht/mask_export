@@ -98,6 +98,8 @@ EOS;
 \$GLOBALS['TCA']['{$this->table}']['ctrl']['typeicon_classes']['mask_{$key}'] = '{$iconIdentifier}';
 
 EOS
+                ,
+                PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE | PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION
             );
         }
 
@@ -110,6 +112,8 @@ EOS
 $iconRegistryConfiguration
 
 EOS
+                ,
+                PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE | PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION
             );
         }
     }
