@@ -15,23 +15,27 @@ namespace IchHabRecht\MaskExport\FileCollection;
  */
 
 use IchHabRecht\MaskExport\Aggregate\PhpAwareInterface;
+use IchHabRecht\MaskExport\FlagResolver\PhpFileFlagResolver;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class PhpFileCollection extends AbstractFileCollection
 {
     /**
-     * @return array
+     * @var PhpFileFlagResolver
      */
-    protected function processAggregateCollection()
-    {
-        $fileInformation = $this->fetchFileInformation();
+    protected $phpFileFlagResolver;
 
-        return $this->processFileInformation($fileInformation);
+    public function __construct(array $aggregateCollection, PhpFileFlagResolver $phpFileFlagResolver = null)
+    {
+        parent::__construct($aggregateCollection);
+
+        $this->phpFileFlagResolver = $phpFileFlagResolver ?: GeneralUtility::makeInstance(PhpFileFlagResolver::class);
     }
 
     /**
      * @return array
      */
-    protected function fetchFileInformation()
+    protected function processAggregateCollection()
     {
         $fileInformation = [];
         foreach ($this->aggregateCollection as $aggregate) {
@@ -53,44 +57,6 @@ class PhpFileCollection extends AbstractFileCollection
             }
         }
 
-        return $fileInformation;
-    }
-
-    /**
-     * @param array $fileInformation
-     * @return array
-     */
-    protected function processFileInformation(array $fileInformation)
-    {
-        $files = [];
-        foreach ($fileInformation as $file => $information) {
-            $content = $information['content'];
-            $flags = $information['flags'];
-
-            if (($flags & PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION) === PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION) {
-                $content = <<<EOS
-call_user_func(function () {
-
-{$content}
-});
-
-EOS;
-            }
-
-            if (($flags & PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE) === PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE) {
-                $content = <<<EOS
-defined('TYPO3_MODE') || die();
-
-{$content}
-
-EOS;
-            }
-
-            $content = '<?php' . PHP_EOL . $content;
-
-            $files[$file] = $content;
-        }
-
-        return $files;
+        return $this->phpFileFlagResolver->resolveFlags($fileInformation);
     }
 }
