@@ -174,7 +174,7 @@ class ExportController extends ActionController
             throw new \RuntimeException('Local extension install path is missing', 1500061028);
         }
 
-        $extensionPath = $paths['Local'] . $extensionName;
+        $extensionPath = $paths['Local'] . GeneralUtility::camelCaseToLowerCaseUnderscored($extensionName);
         $files = $this->getFiles($vendorName, $extensionName);
         $this->writeExtensionFilesToPath($files, $extensionPath);
 
