@@ -69,7 +69,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         }
 
         $this->assertContains(
-            '"name": "ichhabrecht/mask-example-export",',
+            '"name": "ich-hab-recht/mask-example-export",',
             $this->files['composer.json']
         );
 
