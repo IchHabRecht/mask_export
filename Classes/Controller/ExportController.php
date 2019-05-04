@@ -361,7 +361,7 @@ class ExportController extends ActionController
         );
         $string = preg_replace(
             '/(")mask(\/)/',
-            '"' . strtolower($vendorName) . '/',
+            '"' . str_replace('_', '-', GeneralUtility::camelCaseToLowerCaseUnderscored($vendorName)) . '/',
             $string
         );
         $string = preg_replace(
