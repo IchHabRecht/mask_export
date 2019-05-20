@@ -54,6 +54,8 @@ abstract class AbstractOverridesAggregate extends AbstractAggregate implements L
 \\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::addTCAcolumns('{$this->table}', \$tempColumns);
 
 EOS
+            ,
+            PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE | PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION
         );
     }
 }

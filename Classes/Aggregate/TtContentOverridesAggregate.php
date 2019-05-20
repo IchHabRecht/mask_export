@@ -72,6 +72,8 @@ class TtContentOverridesAggregate extends AbstractOverridesAggregate
 ];
 
 EOS
+            ,
+            PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE | PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION
         );
         foreach ($newTypeFields as $type => $_) {
             $this->addLabel(
@@ -89,6 +91,8 @@ EOS
 ];
 
 EOS
+                ,
+                PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE | PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION
             );
         }
 
@@ -100,6 +104,8 @@ EOS
 \$GLOBALS['TCA']['{$this->table}']['types'] += \$tempTypes;
 
 EOS
+            ,
+            PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE | PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION
         );
     }
 }

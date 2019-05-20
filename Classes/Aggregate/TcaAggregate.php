@@ -62,6 +62,8 @@ class TcaAggregate extends AbstractAggregate implements LanguageAwareInterface, 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('{$tableList}');
 
 EOS
+            ,
+            PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE | PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION
         );
     }
 

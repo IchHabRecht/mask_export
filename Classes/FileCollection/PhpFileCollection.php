@@ -15,29 +15,48 @@ namespace IchHabRecht\MaskExport\FileCollection;
  */
 
 use IchHabRecht\MaskExport\Aggregate\PhpAwareInterface;
+use IchHabRecht\MaskExport\FlagResolver\PhpFileFlagResolver;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class PhpFileCollection extends AbstractFileCollection
 {
+    /**
+     * @var PhpFileFlagResolver
+     */
+    protected $phpFileFlagResolver;
+
+    public function __construct(array $aggregateCollection, PhpFileFlagResolver $phpFileFlagResolver = null)
+    {
+        parent::__construct($aggregateCollection);
+
+        $this->phpFileFlagResolver = $phpFileFlagResolver ?: GeneralUtility::makeInstance(PhpFileFlagResolver::class);
+    }
+
     /**
      * @return array
      */
     protected function processAggregateCollection()
     {
-        $files = [];
+        $fileInformation = [];
         foreach ($this->aggregateCollection as $aggregate) {
             if (!$aggregate instanceof PhpAwareInterface) {
                 continue;
             }
 
             $aggregateFiles = $aggregate->getPhpFiles();
-            foreach ($aggregateFiles as $file => $content) {
-                if (!isset($files[$file])) {
-                    $files[$file] = '<?php' . PHP_EOL;
+            foreach ($aggregateFiles as $file => $information) {
+                if (!isset($fileInformation[$file])) {
+                    $fileInformation[$file] = [
+                        'content' => '',
+                        'flags' => 0,
+                    ];
                 }
-                $files[$file] .= $content;
+
+                $fileInformation[$file]['content'] .= $information['content'];
+                $fileInformation[$file]['flags'] |= $information['flags'];
             }
         }
 
-        return $files;
+        return $this->phpFileFlagResolver->resolveFlags($fileInformation);
     }
 }

@@ -32,22 +32,31 @@ trait PhpAwareTrait
     /**
      * @param string $fileIdentifier
      * @param string $content
+     * @param int $flags
      */
-    protected function addPhpFile($fileIdentifier, $content)
+    protected function addPhpFile($fileIdentifier, $content, $flags = 0)
     {
-        $this->phpFiles[$fileIdentifier] = $content;
+        $this->phpFiles[$fileIdentifier] = [
+            'content' => $content,
+            'flags' => $flags,
+        ];
     }
 
     /**
      * @param string $fileIdentifier
      * @param string $content
+     * @param array $flags
      */
-    protected function appendPhpFile($fileIdentifier, $content)
+    protected function appendPhpFile($fileIdentifier, $content, $flags = 0)
     {
         if (!isset($this->phpFiles[$fileIdentifier])) {
-            $this->phpFiles[$fileIdentifier] = '';
+            $this->phpFiles[$fileIdentifier] = [
+                'content' => '',
+                'flags' => 0,
+            ];
         }
 
-        $this->phpFiles[$fileIdentifier] .= $content;
+        $this->phpFiles[$fileIdentifier]['content'] .= $content;
+        $this->phpFiles[$fileIdentifier]['flags'] |= $flags;
     }
 }

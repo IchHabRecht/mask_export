@@ -84,6 +84,8 @@ EOS
 );
 
 EOS
+            ,
+            PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE | PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION
         );
     }
 
@@ -100,6 +102,8 @@ EOS
     MASK\Mask\Hooks\PageLayoutViewDrawItem::class;
 
 EOS
+            ,
+            PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE | PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION
         );
 
         $rootPaths = $this->getFluidRootPaths();

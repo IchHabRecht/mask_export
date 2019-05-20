@@ -1,10 +1,10 @@
 <?php
-namespace IchHabRecht\MaskExport\Aggregate;
+namespace IchHabRecht\MaskExport\FlagResolver;
 
 /*
  * This file is part of the TYPO3 extension mask_export.
  *
- * (c) 2016 Nicole Cordes <typo3@cordes.co>, CPS-IT GmbH
+ * (c) 2019 Nicole Cordes <typo3@cordes.co>, biz-design
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -14,13 +14,11 @@ namespace IchHabRecht\MaskExport\Aggregate;
  * LICENSE file that was distributed with this source code.
  */
 
-interface PhpAwareInterface
+interface FlagResolverInterface
 {
-    const PHPFILE_DEFINED_TYPO3_MODE = 1;
-    const PHPFILE_CLOSURE_FUNCTION = 2;
-
     /**
+     * @param array $fileInformation
      * @return array
      */
-    public function getPhpFiles();
+    public function resolveFlags(array $fileInformation);
 }
