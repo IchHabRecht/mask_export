@@ -126,18 +126,10 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
      */
     protected function addMaskConfiguration()
     {
-        $maskConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask']);
-        if (empty($maskConfiguration['json'])) {
-            return;
-        }
-
-        $jsonFile = GeneralUtility::getFileAbsFileName($maskConfiguration['json']);
-        if (file_exists($jsonFile)) {
-            $content = file_get_contents($jsonFile);
-            $this->addPlainTextFile(
-                $this->escapeMaskExtensionKey('Configuration/Mask/mask.json'),
-                $this->escapeMaskExtensionKey($content)
-            );
-        }
+        $content = json_encode($this->maskConfiguration, JSON_PRETTY_PRINT);
+        $this->addPlainTextFile(
+            $this->escapeMaskExtensionKey('Configuration/Mask/mask.json'),
+            $this->escapeMaskExtensionKey($content)
+        );
     }
 }
