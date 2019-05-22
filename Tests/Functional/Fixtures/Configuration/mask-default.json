@@ -478,5 +478,9 @@
                 }
             }
         }
+    },
+    "mask_export": {
+        "extensionName": "mask_example_export",
+        "vendorName": "IchHabRecht"
     }
 }

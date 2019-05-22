@@ -16,7 +16,6 @@ namespace IchHabRecht\MaskExport\Tests\Functional\Controller;
 
 use IchHabRecht\MaskExport\Controller\ExportController;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
-use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Request;
 use TYPO3\CMS\Extbase\Mvc\Web\Response;
@@ -57,16 +56,6 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     ];
 
     /**
-     * @var string
-     */
-    protected $vendorName = 'IchHabRecht';
-
-    /**
-     * @var string
-     */
-    protected $extensionName = 'mask_example_export';
-
-    /**
      * @var array
      */
     protected $files = [];
@@ -85,12 +74,6 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     protected function setUp()
     {
         parent::setUp();
-
-        // The export stores new extension names in backend user settings, so we need a pseudo user object here
-        $backendUser = new BackendUserAuthentication();
-        $backendUser->uc['mask_export']['vendorName'] = $this->vendorName;
-        $backendUser->uc['mask_export']['extensionName'] = $this->extensionName;
-        $GLOBALS['BE_USER'] = $backendUser;
 
         $objectManager = new ObjectManager();
 
