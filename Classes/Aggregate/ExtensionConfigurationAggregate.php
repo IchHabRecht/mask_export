@@ -24,6 +24,17 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
     use PlainTextFileAwareTrait;
 
     /**
+     * Own constructor method to ensure that the mask configuration is not changed before export.
+     *
+     * @param array $maskConfiguration
+     */
+    public function __construct(array $maskConfiguration)
+    {
+        $this->maskConfiguration = $maskConfiguration;
+        $this->process();
+    }
+
+    /**
      * Adds typical extension files
      */
     protected function process()
@@ -122,7 +133,7 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
     }
 
     /**
-     * Adds mask.josn configuration file
+     * Adds mask.json configuration file
      */
     protected function addMaskConfiguration()
     {
