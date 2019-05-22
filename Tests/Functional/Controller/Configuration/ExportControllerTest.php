@@ -105,7 +105,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     {
         $this->assertArrayHasKey('Configuration/Mask/mask.json', $this->files);
 
-        $this->assertStringEqualsFile(
+        $this->assertJsonStringEqualsJsonFile(
             __DIR__ . '/../../Fixtures/Configuration/mask-default.json',
             $this->files['Configuration/Mask/mask.json']
         );

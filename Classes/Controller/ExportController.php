@@ -74,23 +74,25 @@ class ExportController extends ActionController
     ];
 
     /**
-     * StorageRepository
-     *
-     * @var StorageRepository
+     * @var array
      */
-    protected $storageRepository;
+    protected $maskConfiguration;
 
     public function __construct(StorageRepository $storageRepository)
     {
         parent::__construct();
 
-        $this->storageRepository = $storageRepository;
+        $this->maskConfiguration = (array)$storageRepository->load();
     }
 
-    public function listAction()
+    /**
+     * @param string $vendorName
+     * @param string $extensionName
+     */
+    public function listAction($vendorName = '', $extensionName = '')
     {
-        $extensionName = $this->getExtensionName();
-        $vendorName = $this->getVendorName();
+        $extensionName = $extensionName ?: $this->getExtensionName();
+        $vendorName = $vendorName ?: $this->getVendorName();
 
         $files = $this->getFiles($vendorName, $extensionName);
 
@@ -125,14 +127,15 @@ class ExportController extends ActionController
         $backendUser->uc['mask_export']['extensionName'] = $extensionName;
         $backendUser->writeUC();
 
+        $action = 'list';
         if ($this->request->hasArgument('submit')) {
-            $action = strtolower($this->request->getArgument('submit'));
-            if (in_array($action, ['download', 'install'])) {
-                $this->redirect($action, null, null, ['vendorName' => $vendorName, 'extensionName' => $extensionName]);
+            $submit = strtolower($this->request->getArgument('submit'));
+            if (in_array($submit, ['download', 'install'], true)) {
+                $action = $submit;
             }
         }
 
-        $this->redirect('list');
+        $this->redirect($action, null, null, ['vendorName' => $vendorName, 'extensionName' => $extensionName]);
     }
 
     /**
@@ -217,12 +220,18 @@ class ExportController extends ActionController
      */
     protected function getExtensionName()
     {
-        $backendUser = $this->getBackendUser();
-        if (!empty($backendUser->uc['mask_export']['extensionName'])) {
-            return $backendUser->uc['mask_export']['extensionName'];
+        $extensionName = $this->defaultExtensionName;
+
+        if (!empty($this->maskConfiguration['mask_export']['extensionName'])) {
+            $extensionName = $this->maskConfiguration['mask_export']['extensionName'];
+        } else {
+            $backendUser = $this->getBackendUser();
+            if (!empty($backendUser->uc['mask_export']['extensionName'])) {
+                $extensionName = $backendUser->uc['mask_export']['extensionName'];
+            }
         }
 
-        return $this->defaultExtensionName;
+        return $extensionName;
     }
 
     /**
@@ -230,12 +239,18 @@ class ExportController extends ActionController
      */
     protected function getVendorName()
     {
-        $backendUser = $this->getBackendUser();
-        if (!empty($backendUser->uc['mask_export']['vendorName'])) {
-            return $backendUser->uc['mask_export']['vendorName'];
+        $vendorName = GeneralUtility::underscoredToUpperCamelCase($this->defaultExtensionName);
+
+        if (!empty($this->maskConfiguration['mask_export']['vendorName'])) {
+            $vendorName = $this->maskConfiguration['mask_export']['vendorName'];
+        } else {
+            $backendUser = $this->getBackendUser();
+            if (!empty($backendUser->uc['mask_export']['vendorName'])) {
+                $vendorName = $backendUser->uc['mask_export']['vendorName'];
+            }
         }
 
-        return GeneralUtility::underscoredToUpperCamelCase($this->defaultExtensionName);
+        return $vendorName;
     }
 
     /**
@@ -245,12 +260,15 @@ class ExportController extends ActionController
      */
     protected function getFiles($vendorName, $extensionName)
     {
-        $maskConfiguration = (array)$this->storageRepository->load();
+        $this->maskConfiguration['mask_export'] = [
+            'extensionName' => $extensionName,
+            'vendorName' => $vendorName,
+        ];
 
         $aggregateCollection = GeneralUtility::makeInstance(
             AggregateCollection::class,
             $this->aggregateClassNames,
-            $maskConfiguration
+            $this->maskConfiguration
         )->getCollection();
 
         $files = GeneralUtility::makeInstance(

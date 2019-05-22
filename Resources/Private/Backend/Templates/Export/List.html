@@ -14,7 +14,7 @@
                             </label>
                             <div class="t3js-formengine-field-item">
                                 <div class="form-control-wrap">
-                                    <f:form.textfield value="" name="extensionName" placeholder="{extensionName}" id="extensionName" title="Extension Name" class="form-control" />
+                                    <f:form.textfield value="{extensionName}" name="extensionName" id="extensionName" title="Extension Name" class="form-control" />
                                 </div>
                             </div>
                         </div>
@@ -25,7 +25,7 @@
                             </label>
                             <div class="t3js-formengine-field-item">
                                 <div class="form-control-wrap">
-                                    <f:form.textfield value="" name="vendorName" placeholder="{vendorName}" id="vendorName" title="Vendor Name" class="form-control" />
+                                    <f:form.textfield value="{vendorName}" name="vendorName" id="vendorName" title="Vendor Name" class="form-control" />
                                 </div>
                             </div>
                         </div>
@@ -33,7 +33,7 @@
                         <div class="form-group col-sm-4">
                             <div class="t3js-formengine-field-item">
                                 <div class="form-control-wrap">
-                                    <f:form.submit name="submit" value="Save" class="btn btn-success col-sm-3" />
+                                    <f:form.submit name="submit" value="Preview" class="btn btn-success col-sm-3" />
                                     <f:form.hidden name="submit" value="" />
                                     <f:if condition="{composerMode}}">
                                         <f:then>
