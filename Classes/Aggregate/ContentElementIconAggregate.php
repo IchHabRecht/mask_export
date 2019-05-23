@@ -60,19 +60,26 @@ class ContentElementIconAggregate extends TtContentOverridesAggregate implements
             if (!empty($iconFile) || empty($element['icon'])) {
                 $iconFileName = $iconFile ?: ExtensionManagementUtility::extPath('mask_export') . 'ext_icon.png';
                 $iconFileExtension = strtolower(PathUtility::pathinfo($iconFileName, PATHINFO_EXTENSION));
-                $iconPath = $this->iconResourceFilePath . $key . '.' . $iconFileExtension;
                 $iconProviderClass = $iconFileExtension === 'svg' ? SvgIconProvider::class : BitmapIconProvider::class;
-                $this->addPlainTextFile(
-                    $iconPath,
-                    file_get_contents($iconFileName)
-                );
+
+                if ($iconFile && strpos($maskConfiguration['preview'], 'EXT:') === 0) {
+                    $iconSource = $maskConfiguration['preview'] . basename($iconFileName);
+                } else {
+                    $iconPath = $this->iconResourceFilePath . $key . '.' . $iconFileExtension;
+                    $iconSource = 'EXT:mask/' . $iconPath;
+                    $this->addPlainTextFile(
+                        $iconPath,
+                        file_get_contents($iconFileName)
+                    );
+                }
+
                 $iconRegistryConfiguration .=
 <<<EOS
 \$iconRegistry->registerIcon(
     '$iconIdentifier',
     \\$iconProviderClass::class,
     [
-        'source' => 'EXT:mask/$iconPath',
+        'source' => '$iconSource',
     ]
 );
 
