@@ -30,13 +30,13 @@ class ExportControllerTest extends AbstractExportControllerTestCase
      */
     public function checkFluidTemplatePathInBackendPreview()
     {
-        $this->assertArrayHasKey('Configuration/PageTSconfig/BackendPreview.ts', $this->files);
+        $this->assertArrayHasKey('Configuration/PageTSconfig/BackendPreview.typoscript', $this->files);
 
         // Get templatePaths from file
         $templatePath = [];
         preg_match(
             '#mod\.web_layout\.tt_content\.preview\.([^.]+)\.templateRootPath = [^:]+:[^/]+/(.*)#',
-            $this->files['Configuration/PageTSconfig/BackendPreview.ts'],
+            $this->files['Configuration/PageTSconfig/BackendPreview.typoscript'],
             $templatePath
         );
 

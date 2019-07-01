@@ -29,7 +29,7 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements Plai
     /**
      * @var string
      */
-    protected $pageTSConfigFileIdentifier = 'BackendPreview.ts';
+    protected $pageTSConfigFileIdentifier = 'BackendPreview.typoscript';
 
     /**
      * @var string
