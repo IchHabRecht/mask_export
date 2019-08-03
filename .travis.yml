@@ -1,3 +1,5 @@
+dist: trusty
+
 language: php
 
 addons:
@@ -21,7 +23,7 @@ jdk:
 sudo: required
 
 before_install:
-  - if php -i | grep -q xdebug; then phpenv config-rm xdebug.ini; fi
+  - if php -i | grep -v TRAVIS_CMD | grep -q xdebug; then phpenv config-rm xdebug.ini; fi
 
 install:
   - >
