@@ -88,6 +88,12 @@ trait TcaAwareTrait
                 $field . '_parent',
                 $definition
             );
+            $this->addSqlDefinitions(
+                'tt_content',
+                [
+                    'KEY ' . $field . '_parent' => '(' . $field . '_parent,pid,deleted)',
+                ]
+            );
         }
         if ('pages' === $table) {
             $this->addSqlDefinition(
