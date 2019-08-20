@@ -53,9 +53,13 @@ Instead you should add necessary changes and your own templates into a [site pac
 This ensures you can edit your content elements within the mask wizard (add further content elements, change settings)
 and still be able to use the new extension version in your existing system.
 
-Please refer to the slides [CCE (Custom Content Elements) - Best Practice ](https://de.slideshare.net/cpsitgmbh/cce-custom-content-elements-best-practice)
-for further information. 
+You can find some common configuration in the [my_maskexport_sitepackage](https://github.com/IchHabRecht/my_maskexport_sitepackage)
+example site package.
+
+Furthermore you can refer to the slides [CCE (Custom Content Elements) - Best Practice ](https://de.slideshare.net/cpsitgmbh/cce-custom-content-elements-best-practice)
+for additional information. 
 
 ## Community
 
 - Thanks to [Marcus Schwemer](https://twitter.com/MarcusSchwemer) who wrote about mask_export in his blog [TYPO3worx](https://typo3worx.eu/2018/03/eight-typo3-extensions-making-developers-happy/)
+- Thanks to [Thomas Löffler](https://spooner-web.de) for his ongoing support as [Patron](https://www.patreon.com/IchHabRecht)
