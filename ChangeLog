@@ -1,3 +1,12 @@
+2019-08-20         [RELEASE] Release of mask_export 2.4.0 (Nicole Cordes)
+2019-08-20 27d942d [TASK] Update README.md (Nicole Cordes)
+2019-08-03 47fa5fd [TASK] Update supporting files to EXT:my_skeleton 0.2.1 (Nicole Cordes)
+2019-07-03 b8df9f8 [BUGFIX] Add indexes to tt_content for parent fields (Nicole Cordes)
+2019-05-22 cfcaf4a [BUGFIX] Compare JSON strings instead of file content (Nicole Cordes)
+2019-05-22 ffc920c [BUGFIX] Ensure unchanged mask configuration for export (Nicole Cordes)
+2019-05-22 bac264e [FEATURE] Move extension and vendor name to JSON test files (Nicole Cordes)
+2019-05-22 c6237d4 [FEATURE] Allow name configuration in mask.json (Nicole Cordes)
+
 2019-05-20         [RELEASE] Release of mask_export 2.3.0 (Nicole Cordes)
 2019-03-25 fef554d [FEATURE] Add unit and functional tests for PhpFile flags (Nicole Cordes)
 2019-03-25 8085238 [FEATURE] Introduce FlagResolver api (Nicole Cordes)
