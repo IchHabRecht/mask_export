@@ -34,7 +34,7 @@ class LanguageFileCollection extends AbstractFileCollection
 
         $files = [];
         foreach ($labels as $file => $body) {
-            $files[$file] = $this->generateLanguageFile($body);
+            $files[$file] = $this->generateLanguageFile($body, $file);
         }
 
         return $files;
@@ -42,9 +42,10 @@ class LanguageFileCollection extends AbstractFileCollection
 
     /**
      * @param array $body
+     * @param string $fileName
      * @return string
      */
-    protected function generateLanguageFile(array $body)
+    protected function generateLanguageFile(array $body, string $fileName)
     {
         $domDocument = new \DOMDocument('1.0', 'utf-8');
         $domDocument->formatOutput = true;
@@ -52,7 +53,7 @@ class LanguageFileCollection extends AbstractFileCollection
         $domFile = $domDocument->createElement('file');
         $domFile->appendChild(new \DOMAttr('source-language', 'en'));
         $domFile->appendChild(new \DOMAttr('datatype', 'plaintext'));
-        $domFile->appendChild(new \DOMAttr('original', 'messages'));
+        $domFile->appendChild(new \DOMAttr('original', $fileName));
         $domFile->appendChild(new \DOMAttr('date', date('c')));
         $domFile->appendChild(new \DOMAttr('product-name', 'mask'));
         $domFile->appendChild($domDocument->createElement('header'));
@@ -69,6 +70,7 @@ class LanguageFileCollection extends AbstractFileCollection
             $source->appendChild($domDocument->createTextNode($unit['source']));
             $transUnit = $domDocument->createElement('trans-unit');
             $transUnit->appendChild(new \DOMAttr('id', $unit['id']));
+            $transUnit->appendChild(new \DOMAttr('resname', $unit['id']));
             $transUnit->appendChild(new \DOMAttr('xml:space', 'preserve'));
             $transUnit->appendChild($source);
             $domBody->appendChild($transUnit);
