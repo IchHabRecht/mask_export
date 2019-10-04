@@ -110,7 +110,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             $id = array_pop(explode(':', $label[1]));
 
             $this->assertContains(
-                '<trans-unit id="' . $id . '" xml:space="preserve">',
+                '<trans-unit id="' . $id . '" resname="' . $id . '" xml:space="preserve">',
                 $this->files['Resources/Private/Language/locallang_db.xlf']
             );
         }
