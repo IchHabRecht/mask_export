@@ -29,7 +29,7 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements Plai
     /**
      * @var string
      */
-    protected $pageTSConfigFileIdentifier = 'BackendPreview.ts';
+    protected $pageTSConfigFileIdentifier = 'BackendPreview.typoscript';
 
     /**
      * @var string
@@ -171,12 +171,10 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
             \$processedRow = \$this->getProcessedData(\$result['databaseRow'], \$result['processedTca']['columns']);
             
             \$this->configureView(\$result['pageTsConfig'], \$row['CType']);
-            \$this->view->assignMultiple(
-                [
-                    'row' => \$row,
-                    'processedRow' => \$processedRow,
-                ]
-            );
+            \$this->view->assignMultiple([
+                'row' => \$row,
+                'processedRow' => \$processedRow,
+            ]);
     
             \$itemContent = \$this->view->render();
         } catch (Exception \$exception) {

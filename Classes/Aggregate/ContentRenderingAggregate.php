@@ -73,7 +73,7 @@ class ContentRenderingAggregate extends AbstractOverridesAggregate implements Pl
         }
 
         $this->addPlainTextFile(
-            $this->typoScriptFilePath . 'constants.ts',
+            $this->typoScriptFilePath . 'constants.typoscript',
             <<<EOS
 # cat=mask/file; type=string; label=Path to template root (FE)
 plugin.tx_mask.view.templateRootPath =
@@ -87,7 +87,7 @@ plugin.tx_mask.view.layoutRootPath =
 EOS
         );
         $this->addPlainTextFile(
-            $this->typoScriptFilePath . 'setup.ts',
+            $this->typoScriptFilePath . 'setup.typoscript',
             ''
         );
         $this->appendPhpFile(
@@ -123,7 +123,7 @@ EOS
         $key = $element['key'];
         $templateName = GeneralUtility::underscoredToUpperCamelCase($key);
         $this->appendPlainTextFile(
-            $this->typoScriptFilePath . 'setup.ts',
+            $this->typoScriptFilePath . 'setup.typoscript',
             <<<EOS
 tt_content.mask_{$key} = FLUIDTEMPLATE
 tt_content.mask_{$key} {
@@ -141,12 +141,12 @@ EOS
         if (!empty($element['columns'])) {
             $dataProcessing = $this->addDataProcessing('tt_content', $element['columns']);
             if (!empty($dataProcessing)) {
-                $this->appendPlainTextFile($this->typoScriptFilePath . 'setup.ts', $dataProcessing);
+                $this->appendPlainTextFile($this->typoScriptFilePath . 'setup.typoscript', $dataProcessing);
             }
         }
 
         $this->appendPlainTextFile(
-            $this->typoScriptFilePath . 'setup.ts',
+            $this->typoScriptFilePath . 'setup.typoscript',
             <<<EOS
 }
 

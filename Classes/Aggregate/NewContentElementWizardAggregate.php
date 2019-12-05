@@ -28,7 +28,7 @@ class NewContentElementWizardAggregate extends AbstractAggregate implements Lang
     /**
      * @var string
      */
-    protected $pageTSConfigFileIdentifier = 'NewContentElementWizard.ts';
+    protected $pageTSConfigFileIdentifier = 'NewContentElementWizard.typoscript';
 
     /**
      * Adds content elements to the newContentElementWizard
