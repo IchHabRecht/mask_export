@@ -96,7 +96,7 @@ class ExportController extends ActionController
 
         $this->view->assignMultiple(
             [
-                'composerMode' => (defined('TYPO3_COMPOSER_MODE') && TYPO3_COMPOSER_MODE), //Bootstrap::usesComposerClassLoading(),
+                'composerMode' => (defined('TYPO3_COMPOSER_MODE') && TYPO3_COMPOSER_MODE),
                 'vendorName' => $vendorName,
                 'extensionName' => $extensionName,
                 'files' => $files,
