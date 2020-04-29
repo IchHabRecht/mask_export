@@ -80,8 +80,6 @@ class ExportController extends ActionController
 
     public function __construct(StorageRepository $storageRepository)
     {
-        parent::__construct();
-
         $this->maskConfiguration = (array)$storageRepository->load();
     }
 
@@ -98,10 +96,11 @@ class ExportController extends ActionController
 
         $this->view->assignMultiple(
             [
-                'composerMode' => Bootstrap::usesComposerClassLoading(),
+                'composerMode' => (defined('TYPO3_COMPOSER_MODE') && TYPO3_COMPOSER_MODE), //Bootstrap::usesComposerClassLoading(),
                 'vendorName' => $vendorName,
                 'extensionName' => $extensionName,
                 'files' => $files,
+                'activeTab' => 'mask_export'
             ]
         );
     }
@@ -182,7 +181,7 @@ class ExportController extends ActionController
         $this->writeExtensionFilesToPath($files, $extensionPath);
 
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        if (!Bootstrap::usesComposerClassLoading()) {
+        if (!(defined('TYPO3_COMPOSER_MODE') && TYPO3_COMPOSER_MODE)) {
             $managementService = $objectManager->get(ExtensionManagementService::class);
             $managementService->reloadPackageInformation($extensionName);
             $extension = $managementService->getExtension($extensionName);

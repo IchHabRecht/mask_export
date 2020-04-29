@@ -1,0 +1,25 @@
+<f:be.container
+        pageTitle="Mask"
+        includeCssFiles="{0: '{f:uri.resource(path:\'Styles/styles.css\')}'}"
+        includeRequireJsModules="{
+	Modal:'TYPO3/CMS/Backend/Modal'
+	}"
+        includeJsFiles="{0: '{f:uri.resource(path:\'Scripts/libs.js\')}', 1: '{f:uri.resource(path:\'Scripts/scripts.js\')}'}"
+>
+    <ul class="nav nav-tabs t3js-tabs" role="tablist" id="tabs-DTM-mask" data-store-last-tab="1">
+        <li role="presentation" class="t3js-tabmenu-item{f:if(condition: '{activeTab} != \'mask_export\'', then: ' active')}">
+            <f:link.action action="list" controller="Wizard" additionalParams="{aria-controls:'DTM-mask-1', role:'tab', data-toggle:'tab'}">
+                Mask
+            </f:link.action>
+        </li>
+        <li role="presentation" class="t3js-tabmenu-item{f:if(condition: '{activeTab} == \'mask_export\'', then: ' active')}">
+            <f:link.action action="list" controller="Export" additionalParams="{aria-controls:'DTM-mask-2', role:'tab', data-toggle:'tab'}">
+                <f:translate key="tx_mask.all.export" extensionName="mask_export" />
+            </f:link.action>
+        </li>
+    </ul>
+
+    <f:flashMessages/>
+
+    <f:render section="content"/>
+</f:be.container>

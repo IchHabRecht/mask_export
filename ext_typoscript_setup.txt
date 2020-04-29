@@ -10,6 +10,7 @@ config {
 
 module.tx_mask {
     view {
+        layoutRootPaths.42 = EXT:mask_export/Resources/Private/Backend/Layout/
         partialRootPaths.42 = EXT:mask_export/Resources/Private/Backend/Partials/
         templateRootPaths.42 = EXT:mask_export/Resources/Private/Backend/Templates/
     }
