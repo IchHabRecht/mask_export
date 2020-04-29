@@ -12,6 +12,9 @@
 			<trans-unit id="config.contentElementIcons">
 				<source>Export icons for content elements: If enabled the export includes icons for content elements.</source>
 			</trans-unit>
+			<trans-unit id="tx_mask.all.mask">
+				<source>Mask</source>
+			</trans-unit>
 			<trans-unit id="tx_mask.all.export">
 				<source>Code Export</source>
 			</trans-unit>
