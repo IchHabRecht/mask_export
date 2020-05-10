@@ -30,6 +30,7 @@ return PhpCsFixer\Config::create()
             'spacing' => 'one',
         ],
         'declare_equal_normalize' => ['space' => 'single'],
+        'declare_strict_types' => true,
         'function_typehint_space' => true,
         'hash_to_slash_comment' => true,
         'linebreak_after_opening_tag' => true,
