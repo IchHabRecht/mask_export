@@ -19,6 +19,7 @@
         }
     ],
     "require": {
+        "php": ">= 5.5, < 7.5",
         "typo3/cms-core": "^7.6 || ^8.7 || ^9.5",
         "typo3/cms-extbase": "^7.6 || ^8.7 || ^9.5",
         "typo3/cms-fluid": "^7.6 || ^8.7 || ^9.5",
@@ -29,7 +30,6 @@
         "nimut/testing-framework": "2.x-dev || 3.x-dev || 4.x-dev"
     },
     "replace": {
-        "mask_export": "self.version",
         "typo3-ter/mask-export": "self.version"
     },
     "autoload": {
