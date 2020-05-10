@@ -33,7 +33,7 @@ use IchHabRecht\MaskExport\FileCollection\SqlFileCollection;
 use MASK\Mask\Domain\Repository\StorageRepository;
 use Symfony\Component\Finder\Finder;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Core\Bootstrap;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -81,8 +81,6 @@ class ExportController extends ActionController
 
     public function __construct(StorageRepository $storageRepository)
     {
-        parent::__construct();
-
         $this->maskConfiguration = (array)$storageRepository->load();
     }
 
@@ -99,7 +97,7 @@ class ExportController extends ActionController
 
         $this->view->assignMultiple(
             [
-                'composerMode' => Bootstrap::usesComposerClassLoading(),
+                'composerMode' => Environment::isComposerMode(),
                 'vendorName' => $vendorName,
                 'extensionName' => $extensionName,
                 'files' => $files,
@@ -183,7 +181,7 @@ class ExportController extends ActionController
         $this->writeExtensionFilesToPath($files, $extensionPath);
 
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        if (!Bootstrap::usesComposerClassLoading()) {
+        if (!Environment::isComposerMode()) {
             $managementService = $objectManager->get(ExtensionManagementService::class);
             $managementService->reloadPackageInformation($extensionName);
             $extension = $managementService->getExtension($extensionName);

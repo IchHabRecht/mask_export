@@ -39,7 +39,7 @@ class ContentElementIconAggregate extends TtContentOverridesAggregate implements
             return;
         }
 
-        $maskConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['mask']);
+        $maskConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['mask'];
         $maskIconFolder = GeneralUtility::getFileAbsFileName($maskConfiguration['preview']);
 
         $elements = $this->maskConfiguration['tt_content']['elements'];
