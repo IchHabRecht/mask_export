@@ -74,10 +74,6 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         );
 
         $this->assertContains(
-            '"mask_example_export": "self.version",',
-            $this->files['composer.json']
-        );
-        $this->assertContains(
             '"typo3-ter/mask-example-export": "self.version"',
             $this->files['composer.json']
         );

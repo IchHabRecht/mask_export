@@ -97,7 +97,6 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
                 'typo3/cms-frontend' => '^' . TYPO3_branch,
             ],
             'replace' => [
-                'mask' => 'self.version',
                 'typo3-ter/mask' => 'self.version',
             ],
             'autoload' => [
