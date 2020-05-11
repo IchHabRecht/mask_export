@@ -33,13 +33,9 @@ class EmptyMaskConfigurationTest extends AbstractExportControllerTestCase
      */
     public function basicExtensionFilesExistsWithoutMaskConfiguration()
     {
-        $this->setUpWithExtensionConfiguration(
-            [
-                'mask' => [
-                    'json' => 'typo3conf/mask.json',
-                ],
-            ]
-        );
+        $this->configurationToUseInTestInstance['EXTENSIONS']['mask']['json'] = 'typo3conf/mask.json';
+
+        parent::setUp();
 
         $this->assertArrayHasKey('ext_emconf.php', $this->files);
         $this->assertArrayHasKey('ext_icon.png', $this->files);
