@@ -26,10 +26,10 @@ class ExportControllerTest extends AbstractExportControllerTestCase
      */
     public function hiddenContentElementsIgnoredInExport()
     {
-        $this->assertArrayHasKey('Configuration/PageTSconfig/NewContentElementWizard.ts', $this->files);
+        $this->assertArrayHasKey('Configuration/TsConfig/Page/NewContentElementWizard.tsconfig', $this->files);
         $this->assertNotContains(
             'CType = maskexampleexport_hidden-element',
-            $this->files['Configuration/PageTSconfig/NewContentElementWizard.ts']
+            $this->files['Configuration/TsConfig/Page/NewContentElementWizard.tsconfig']
         );
     }
 }

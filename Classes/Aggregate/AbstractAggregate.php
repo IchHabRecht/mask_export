@@ -39,7 +39,7 @@ abstract class AbstractAggregate
     /**
      * @var string
      */
-    protected $pageTSConfigFilePath = 'Configuration/PageTSconfig/';
+    protected $pageTSConfigFilePath = 'Configuration/TsConfig/Page/';
 
     /**
      * @var string
