@@ -128,8 +128,8 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
             file_get_contents(ExtensionManagementUtility::extPath('mask_export') . 'ext_icon.png')
         );
         $this->addPlainTextFile(
-            'Resources/Public/Icons/Extension.png',
-            file_get_contents(ExtensionManagementUtility::extPath('mask_export') . 'ext_icon.png')
+            'Resources/Public/Icons/Extension.svg',
+            file_get_contents(ExtensionManagementUtility::extPath('mask_export') . 'Resources/Public/Icons/Extension.svg')
         );
     }
 
