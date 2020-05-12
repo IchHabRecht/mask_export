@@ -206,31 +206,23 @@ class PageLayoutViewDrawItem implements PageLayoutViewDrawItemHookInterface
         \$previewConfiguration = \$pageTsConfig['mod.']['web_layout.']['tt_content.']['preview.'];
         list(\$extensionKey) = explode('_', \$contentType, 2);
         \$extensionKey .= '.';
-        if (!empty(\$previewConfiguration[\$contentType])) {
-            GeneralUtility::deprecationLog('Setting the complete template path with filename is deprecated and will be removed in mask_export 3.0');
-            \$templatePath = GeneralUtility::getFileAbsFileName(\$previewConfiguration[\$contentType]);
-            \$this->view->setTemplatePathAndFilename(\$templatePath);
-        } else {
-            if (!empty(\$previewConfiguration[\$extensionKey]['templateRootPath'])) {
-                \$this->view->setTemplateRootPaths([
-                    '{$rootPaths['template']}',
-                    \$previewConfiguration[\$extensionKey]['templateRootPath'],
-                ]);
-            }
-            if (!empty(\$previewConfiguration[\$extensionKey]['layoutRootPath'])) {
-                \$this->view->setLayoutRootPaths([
-                    '{$rootPaths['layout']}',
-                    \$previewConfiguration[\$extensionKey]['layoutRootPath'],
-                ]);
-            }
-            if (!empty(\$previewConfiguration[\$extensionKey]['partialRootPath'])) {
-                \$this->view->setPartialRootPaths([
-                    '{$rootPaths['partials']}',
-                    \$previewConfiguration[\$extensionKey]['partialRootPath'],
-                ]);
-            }
-            \$this->view->setTemplate(\$this->supportedContentTypes[\$contentType]);
+        if (!empty(\$previewConfiguration[\$extensionKey]['templateRootPath'])) {
+            \$this->view->setTemplateRootPaths([
+                '{$rootPaths['template']}',
+                \$previewConfiguration[\$extensionKey]['templateRootPath'],
+            ]);
         }
+        if (!empty(\$previewConfiguration[\$extensionKey]['layoutRootPath'])) {
+            \$this->view->setLayoutRootPaths([
+                \$previewConfiguration[\$extensionKey]['layoutRootPath'],
+            ]);
+        }
+        if (!empty(\$previewConfiguration[\$extensionKey]['partialRootPath'])) {
+            \$this->view->setPartialRootPaths([
+                \$previewConfiguration[\$extensionKey]['partialRootPath'],
+            ]);
+        }
+        \$this->view->setTemplate(\$this->supportedContentTypes[\$contentType]);
     }
 
     /**
