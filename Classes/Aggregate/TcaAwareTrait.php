@@ -96,13 +96,6 @@ trait TcaAwareTrait
                 ]
             );
         }
-        if ('pages' === $table) {
-            $this->addSqlDefinition(
-                'pages_language_overlay',
-                $field,
-                $definition
-            );
-        }
     }
 
     /**

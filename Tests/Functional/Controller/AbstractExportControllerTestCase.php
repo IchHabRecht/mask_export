@@ -120,6 +120,23 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
      */
     protected function installExtension()
     {
+        // Require PHP files and take care of TCA configuration
+        $_EXTKEY = $this->extensionName;
+        $_EXTCONF = '';
+        foreach ($this->files as $file => $content) {
+            if (!preg_match('/\.php$/', $file)) {
+                continue;
+            }
+
+            if (preg_match('/Configuration\/TCA\/[^.\/]+\.php/', $file)) {
+                $tableName = basename($file, '.php');
+                $tableTca = eval('?>' . $content);
+                $GLOBALS['TCA'][$tableName] = $tableTca;
+            } else {
+                eval('?>' . $content);
+            }
+        }
+
         // Load ext_tables.sql
         if (!empty($this->files['ext_tables.sql'])) {
             $sqlReader = GeneralUtility::makeInstance(SqlReader::class);
@@ -130,22 +147,8 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
             }
         }
 
-        // Require PHP files and take care of TCA configuration
-        $_EXTKEY = $this->extensionName;
-        $_EXTCONF = '';
-        foreach ($this->files as $file => $content) {
-            if (!preg_match('/\.php$/', $file)) {
-                continue;
-            }
-
-            if (preg_match('/Configuration\/TCA\/[^.]+\.php', $file)) {
-                $tableName = basename($file);
-                $tableTca = eval('?>' . $content);
-                $GLOBALS['TCA'][$tableName] = $tableTca;
-            } else {
-                eval('?>' . $content);
-            }
-        }
+        $this->assertIsArray($GLOBALS['TCA']['tt_content']);
+        $this->assertIsArray($GLOBALS['TCA']['tx_maskexampleexport_additionalcontent']);
     }
 
     /**
