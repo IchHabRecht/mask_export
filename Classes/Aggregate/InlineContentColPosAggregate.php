@@ -15,6 +15,8 @@ namespace IchHabRecht\MaskExport\Aggregate;
  * LICENSE file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+
 class InlineContentColPosAggregate extends AbstractInlineContentAggregate implements LanguageAwareInterface, PhpAwareInterface
 {
     use LanguageAwareTrait;
@@ -63,7 +65,7 @@ EOS
             $flattenedInlineFields[] = $field . '_parent';
         });
         sort($flattenedInlineFields);
-        $supportedInlineParentFields = var_export($flattenedInlineFields, true);
+        $supportedInlineParentFields = ArrayUtility::arrayExport($flattenedInlineFields);
 
         $this->addPhpFile(
             'Classes/Form/FormDataProvider/TcaColPosItem.php',

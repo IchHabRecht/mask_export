@@ -15,6 +15,8 @@ namespace IchHabRecht\MaskExport\Aggregate;
  * LICENSE file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+
 class TcaAggregate extends AbstractAggregate implements LanguageAwareInterface, PhpAwareInterface, SqlAwareInterface
 {
     use PhpAwareTrait;
@@ -52,7 +54,7 @@ class TcaAggregate extends AbstractAggregate implements LanguageAwareInterface, 
             $this->addTableSqlDefinitions($tableConfiguration);
             $this->addPhpFile(
                 $this->tcaFilePath . $table . '.php',
-                'return ' . var_export($tcaConfiguration, true) . ';'
+                'return ' . ArrayUtility::arrayExport($tcaConfiguration) . ';'
             );
         }
 

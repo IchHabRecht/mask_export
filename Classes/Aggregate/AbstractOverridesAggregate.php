@@ -15,6 +15,8 @@ namespace IchHabRecht\MaskExport\Aggregate;
  * LICENSE file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+
 abstract class AbstractOverridesAggregate extends AbstractAggregate implements LanguageAwareInterface, PhpAwareInterface, SqlAwareInterface
 {
     use PhpAwareTrait;
@@ -47,7 +49,7 @@ abstract class AbstractOverridesAggregate extends AbstractAggregate implements L
         $newTableFields = $this->replaceFieldLabels($newTableFields, $this->table);
         $newTableFields = $this->replaceItemsLabels($newTableFields, $this->table);
         $this->addFieldsSqlDefinitions($newTableFields);
-        $tempColumns = var_export($newTableFields, true);
+        $tempColumns = ArrayUtility::arrayExport($newTableFields);
         $this->appendPhpFile(
             $this->tcaOverridesFilePath . $this->table . '.php',
 <<<EOS

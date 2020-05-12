@@ -15,6 +15,8 @@ namespace IchHabRecht\MaskExport\Aggregate;
  * LICENSE file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+
 class TtContentOverridesAggregate extends AbstractOverridesAggregate
 {
     /**
@@ -97,7 +99,7 @@ EOS
             );
         }
 
-        $tempTypes = var_export($newTypeFields, true);
+        $tempTypes = ArrayUtility::arrayExport($newTypeFields);
         $this->appendPhpFile(
             $this->tcaOverridesFilePath . $this->table . '.php',
 <<<EOS

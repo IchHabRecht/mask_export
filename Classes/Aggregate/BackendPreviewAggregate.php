@@ -16,6 +16,7 @@ namespace IchHabRecht\MaskExport\Aggregate;
  */
 
 use IchHabRecht\MaskExport\CodeGenerator\BackendFluidCodeGenerator;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class BackendPreviewAggregate extends AbstractOverridesAggregate implements PlainTextFileAwareInterface
@@ -113,7 +114,7 @@ EOS
             $contentTypes['mask_' . $key] = GeneralUtility::underscoredToUpperCamelCase($key);
         }
         asort($contentTypes);
-        $supportedContentTypes = var_export($contentTypes, true);
+        $supportedContentTypes = ArrayUtility::arrayExport($contentTypes);
 
         $this->addPhpFile(
             'Classes/Hooks/PageLayoutViewDrawItem.php',
