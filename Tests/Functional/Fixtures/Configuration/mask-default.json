@@ -481,6 +481,13 @@
     },
     "mask_export": {
         "extensionName": "mask_example_export",
-        "vendorName": "IchHabRecht"
+        "vendorName": "IchHabRecht",
+        "includedElements": [
+            "default-extension-icon",
+            "empty_content_element",
+            "hidden-element",
+            "nested-content-elements",
+            "simple-element"
+        ]
     }
 }

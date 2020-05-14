@@ -3,7 +3,8 @@
 <f:section name="content">
     <h1>Mask Export</h1>
 
-    <f:form action="save">
+    <f:form action="save" method="post">
+
         <div class="form-section">
             <div class="row">
                 <div class="form-group col-sm-4">
@@ -47,6 +48,24 @@
                 </div>
             </div>
         </div>
+
+        <div class="form-section">
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <h4 class="form-section-headline">Included content elements:</h4>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-sm-4">
+                    <f:for each="{availableElements}" as="element">
+                        <div class="form-check">
+                            <f:form.checkbox checked="{f:if(condition: '{includedElements.{element.key}} || {f:count(subject: \'{includedElements}\')} == 0', then: 1, else: 0)}" class="form-check-input" id="{element.key}" name="elements" multiple="1" value="{element.key}" />
+                            <label class="form-check-label" for="{element.key}">{element.label}</label>
+                        </div>
+                    </f:for>
+                </div>
+            </div>
+        </div>
+
     </f:form>
 
     <div class="panel panel-default panel-space" id="code">

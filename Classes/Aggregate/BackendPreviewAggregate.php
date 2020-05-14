@@ -271,8 +271,27 @@ EOS
                 continue;
             }
 
-            $GLOBALS['TCA'][$table]['columns'] = $this->replaceFieldLabels($GLOBALS['TCA'][$table]['columns'], $table);
-            $GLOBALS['TCA'][$table]['columns'] = $this->replaceItemsLabels($GLOBALS['TCA'][$table]['columns'], $table);
+            $columns = $GLOBALS['TCA'][$table]['columns'];
+            if ($table === 'tt_content' && !empty($this->maskConfiguration['tt_content']['elements'])) {
+                $columns = [];
+                foreach ($this->maskConfiguration['tt_content']['elements'] as $element) {
+                    $columns = array_merge($columns, $element['columns'] ?? []);
+                }
+                $columns = array_combine($columns, $columns);
+            }
+
+            $columns = array_intersect_key(
+                $GLOBALS['TCA'][$table]['columns'],
+                $columns
+            );
+
+            $columns = $this->replaceFieldLabels($columns, $table);
+            $columns = $this->replaceItemsLabels($columns, $table);
+
+            $GLOBALS['TCA'][$table]['columns'] = array_replace(
+                $GLOBALS['TCA'][$table]['columns'],
+                $columns
+            );
         }
     }
 
