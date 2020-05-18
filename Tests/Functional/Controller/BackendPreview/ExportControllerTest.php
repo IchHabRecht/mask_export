@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace IchHabRecht\MaskExport\Tests\Functional\Controller\BackendPreview;
 
 /*
@@ -17,11 +18,14 @@ namespace IchHabRecht\MaskExport\Tests\Functional\Controller\BackendPreview;
 require_once __DIR__ . '/../AbstractExportControllerTestCase.php';
 
 use IchHabRecht\MaskExport\Tests\Functional\Controller\AbstractExportControllerTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use Prophecy\Argument;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\PageLayoutView;
 use TYPO3\CMS\Backend\View\PageLayoutViewDrawItemHookInterface;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 use TYPO3\CMS\Fluid\View\StandaloneView;
-use TYPO3\CMS\Lang\LanguageService;
 
 class ExportControllerTest extends AbstractExportControllerTestCase
 {
@@ -30,13 +34,13 @@ class ExportControllerTest extends AbstractExportControllerTestCase
      */
     public function checkFluidTemplatePathInBackendPreview()
     {
-        $this->assertArrayHasKey('Configuration/PageTSconfig/BackendPreview.ts', $this->files);
+        $this->assertArrayHasKey('Configuration/TsConfig/Page/BackendPreview.tsconfig', $this->files);
 
         // Get templatePaths from file
         $templatePath = [];
         preg_match(
             '#mod\.web_layout\.tt_content\.preview\.([^.]+)\.templateRootPath = [^:]+:[^/]+/(.*)#',
-            $this->files['Configuration/PageTSconfig/BackendPreview.ts'],
+            $this->files['Configuration/TsConfig/Page/BackendPreview.tsconfig'],
             $templatePath
         );
 
@@ -77,24 +81,27 @@ class ExportControllerTest extends AbstractExportControllerTestCase
 
         // Load backend user and LanguageService for FormEngine
         $this->setUpBackendUserFromFixture(1);
-        $languageService = new LanguageService();
-        $languageService->init('default');
-        $GLOBALS['LANG'] = $languageService;
+        $GLOBALS['LANG'] = $this->getLanguageService();
 
         // Get StandaloneView mock
-        /** @var \PHPUnit_Framework_MockObject_MockObject|StandaloneView $viewMock */
+        /** @var MockObject|StandaloneView $viewMock */
         $viewMock = $this->getMockBuilder(StandaloneView::class)
             ->setMethods(['render'])
             ->getMock();
         $viewMock->expects($this->once())->method('render');
 
         // Call preProcess function on PageLayoutViewDrawItem
-        $pageLayoutView = new PageLayoutView();
+        $eventDispatcher = interface_exists('Psr\\EventDispatcher\\EventDispatcherInterface')
+            ? EventDispatcherInterface::class
+            : Dispatcher::class;
+        $eventDispatcher = $this->prophesize($eventDispatcher);
+        $eventDispatcher->dispatch(Argument::cetera())->willReturnArgument(0);
+        $pageLayoutView = new PageLayoutView($eventDispatcher->reveal());
         $drawItem = true;
         $headerContent = '';
         $itemContent = '';
         $row = BackendUtility::getRecord('tt_content', 1);
-        /** @var \PHPUnit_Framework_MockObject_MockObject|PageLayoutViewDrawItemHookInterface $subject */
+        /** @var MockObject|PageLayoutViewDrawItemHookInterface $subject */
         $subject = new $className($viewMock);
         $subject->preProcess($pageLayoutView, $drawItem, $headerContent, $itemContent, $row);
 
@@ -103,11 +110,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             return $viewMock->baseRenderingContext;
         }, null, StandaloneView::class);
         $renderingContext = $closure();
-        if (method_exists($renderingContext, 'getVariableProvider')) {
-            $variables = $renderingContext->getVariableProvider();
-        } else {
-            $variables = $renderingContext->getTemplateVariableContainer();
-        }
+        $variables = $renderingContext->getVariableProvider();
 
         $expectedArray = [
             'tx_maskexampleexport_related_content' => [

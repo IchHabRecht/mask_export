@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace IchHabRecht\MaskExport\Tests\Functional\Controller\MaskConfiguration;
 
 /*
@@ -32,13 +33,9 @@ class EmptyColumnsTest extends AbstractExportControllerTestCase
      */
     public function tempColumnsCodeNotGeneratedIfNoColumnsAvailable()
     {
-        $this->setUpWithExtensionConfiguration(
-            [
-                'mask' => [
-                    'json' => 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Configuration/mask-empty-columns.json',
-                ],
-            ]
-        );
+        $this->configurationToUseInTestInstance['EXTENSIONS']['mask']['json'] = 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Configuration/mask-empty-columns.json';
+
+        parent::setUp();
 
         $this->assertArrayHasKey('Configuration/TCA/Overrides/tt_content.php', $this->files);
         $this->assertNotContains(

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace IchHabRecht\MaskExport\Tests\Functional\Controller\Ressources;
 
 /*
@@ -98,7 +99,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
 
         $labels = [];
         preg_match_all(
-            '#\d+\s*=>\s*array\s*\(\s*\d+\s*=>\s*\'LLL:EXT:([^\']+.I.[^\']+)\',\s*\),#',
+            '#\[\s*\'LLL:EXT:([^\']+.I.[^\']+)\',\s*],#',
             $this->files['Configuration/TCA/Overrides/tt_content.php'],
             $labels,
             PREG_SET_ORDER
@@ -110,7 +111,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             $id = array_pop(explode(':', $label[1]));
 
             $this->assertContains(
-                '<trans-unit id="' . $id . '" xml:space="preserve">',
+                '<trans-unit id="' . $id . '">',
                 $this->files['Resources/Private/Language/locallang_db.xlf']
             );
         }

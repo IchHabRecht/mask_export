@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace IchHabRecht\MaskExport\Aggregate;
 
 /*
@@ -38,7 +39,7 @@ abstract class AbstractAggregate
     /**
      * @var string
      */
-    protected $pageTSConfigFilePath = 'Configuration/PageTSconfig/';
+    protected $pageTSConfigFilePath = 'Configuration/TsConfig/Page/';
 
     /**
      * @var string

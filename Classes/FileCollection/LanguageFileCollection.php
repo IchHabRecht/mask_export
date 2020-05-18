@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace IchHabRecht\MaskExport\FileCollection;
 
 /*
@@ -69,7 +70,6 @@ class LanguageFileCollection extends AbstractFileCollection
             $source->appendChild($domDocument->createTextNode($unit['source']));
             $transUnit = $domDocument->createElement('trans-unit');
             $transUnit->appendChild(new \DOMAttr('id', $unit['id']));
-            $transUnit->appendChild(new \DOMAttr('xml:space', 'preserve'));
             $transUnit->appendChild($source);
             $domBody->appendChild($transUnit);
         }

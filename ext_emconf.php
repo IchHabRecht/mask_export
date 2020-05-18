@@ -18,13 +18,13 @@ $EM_CONF[$_EXTKEY] = array (
   'author_email' => 'typo3@cordes.co',
   'author_company' => 'CPS-IT GmbH | biz-design.biz',
   'state' => 'stable',
-  'version' => '2.4.0',
+  'version' => '3.0.0',
   'constraints' => 
   array (
     'depends' => 
     array (
-      'typo3' => '7.6.0-9.5.99',
-      'mask' => '2.0.0-0.0.0',
+      'typo3' => '9.5.0-10.4.99',
+      'mask' => '4.0.0-0.0.0',
     ),
     'conflicts' => 
     array (

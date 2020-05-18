@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace IchHabRecht\MaskExport\Aggregate;
 
 /*
@@ -13,6 +14,8 @@ namespace IchHabRecht\MaskExport\Aggregate;
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
  */
+
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 
 class InlineContentCTypeAggregate extends AbstractInlineContentAggregate implements PhpAwareInterface
 {
@@ -44,7 +47,7 @@ class InlineContentCTypeAggregate extends AbstractInlineContentAggregate impleme
         }
 
         ksort($supportedInlineParentFields);
-        $supportedInlineParentFields = var_export($supportedInlineParentFields, true);
+        $supportedInlineParentFields = ArrayUtility::arrayExport($supportedInlineParentFields);
 
         $this->appendPhpFile(
             'ext_localconf.php',

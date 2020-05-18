@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace IchHabRecht\MaskExport\Tests\Functional\Controller;
 
 /*
@@ -16,13 +17,21 @@ namespace IchHabRecht\MaskExport\Tests\Functional\Controller;
 
 use IchHabRecht\MaskExport\Controller\ExportController;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use PHPUnit\Framework\MockObject\MockBuilder;
+use Prophecy\Argument;
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
+use TYPO3\CMS\Core\Database\Schema\SchemaMigrator;
+use TYPO3\CMS\Core\Database\Schema\SqlReader;
+use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Localization\LanguageStore;
+use TYPO3\CMS\Core\Localization\Locales;
+use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Web\Request;
-use TYPO3\CMS\Extbase\Mvc\Web\Response;
+use TYPO3\CMS\Extbase\Mvc\Request;
+use TYPO3\CMS\Extbase\Mvc\Response;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extensionmanager\Utility\InstallUtility;
 use TYPO3\CMS\Fluid\View\TemplateView;
-use TYPO3\CMS\Install\Service\SqlSchemaMigrationService;
 
 abstract class AbstractExportControllerTestCase extends FunctionalTestCase
 {
@@ -35,14 +44,12 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
      * @var array
      */
     protected $configurationToUseInTestInstance = [
-        'EXT' => [
-            'extConf' => [
-                'mask' => 'a:2:{s:4:"json";s:83:"typo3conf/ext/mask_export/Tests/Functional/Fixtures/Configuration/mask-default.json";s:7:"preview";s:70:"typo3conf/ext/mask_export/Tests/Functional/Fixtures/Templates/Preview/";}',
-            ],
-        ],
         'EXTENSIONS' => [
             'mask' => [
                 'json' => 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Configuration/mask-default.json',
+                'content' => 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Templates/Content/',
+                'partials' => 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Templates/Partials/',
+                'layouts' => 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Templates/Layouts/',
                 'preview' => 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Templates/Preview/',
             ],
         ],
@@ -75,54 +82,37 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     {
         parent::setUp();
 
-        $objectManager = new ObjectManager();
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
-        $viewMock = $objectManager->get(TemplateView::class);
-        $viewMock->setLayoutRootPaths(['EXT:mask_export/Resources/Private/Backend/Layout']);
-        $viewMock->setPartialRootPaths(['EXT:mask_export/Resources/Private/Backend/Partials']);
-        $viewMock->setTemplateRootPaths(['EXT:mask_export/Resources/Private/Backend/Templates']);
-        GeneralUtility::addInstance(TemplateView::class, $viewMock);
-
-        $request = new Request();
-        $request->setControllerVendorName('IchHabRecht');
-        $request->setControllerExtensionName('mask_export');
-        $request->setControllerName('Export');
+        $request = new Request('IchHabRecht\\MaskExport\\Controller\\ExportController');
+        $request->setControllerObjectName('IchHabRecht\\MaskExport\\Controller\\ExportController');
         $request->setControllerActionName('list');
+        $request->setFormat('html');
+        if (method_exists($request, 'setControllerAliasToClassNameMapping')) {
+            $request->setControllerAliasToClassNameMapping(['Export' => ExportController::class]);
+        }
+
         $response = new Response();
+
+        $view = $objectManager->get(TemplateView::class);
+        $view->setLayoutRootPaths(['EXT:mask_export/Resources/Private/Layouts']);
+        $view->setTemplateRootPaths(['EXT:mask_export/Tests/Functional/Fixtures/Templates']);
+        if (method_exists(GeneralUtility::class, 'getContainer')) {
+            $container = GeneralUtility::getContainer();
+            $container->set(TemplateView::class, $view);
+        } else {
+            GeneralUtility::addInstance(TemplateView::class, $view);
+        }
 
         $subject = $objectManager->get(ExportController::class);
         $subject->processRequest($request, $response);
 
-        $closure = \Closure::bind(function () use ($viewMock) {
-            return $viewMock->baseRenderingContext;
+        $closure = \Closure::bind(function () use ($view) {
+            return $view->baseRenderingContext;
         }, null, TemplateView::class);
         $renderingContext = $closure();
-        if (method_exists($renderingContext, 'getVariableProvider')) {
-            $variables = $renderingContext->getVariableProvider();
-        } else {
-            $variables = $renderingContext->getTemplateVariableContainer();
-        }
+        $variables = $renderingContext->getVariableProvider();
         $this->files = $variables->get('files');
-    }
-
-    /**
-     * @param array $additionalConfiguration
-     */
-    protected function setUpWithExtensionConfiguration(array $additionalConfiguration)
-    {
-        $configuration = [];
-        foreach ($this->configurationToUseInTestInstance['EXT']['extConf'] as $key => $value) {
-            $configuration[$key] = unserialize($value);
-        }
-
-        $configuration = array_replace_recursive($configuration, $additionalConfiguration);
-
-        foreach ($configuration as $key => $value) {
-            $this->configurationToUseInTestInstance['EXT']['extConf'][$key] = serialize($value);
-            $this->configurationToUseInTestInstance['EXTENSIONS'][$key] = $value;
-        }
-
-        self::setUp();
     }
 
     /**
@@ -130,16 +120,6 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
      */
     protected function installExtension()
     {
-        // Load ext_tables.sql
-        if (!empty($this->files['ext_tables.sql'])) {
-            $installUtility = new InstallUtility();
-            if (class_exists('TYPO3\\CMS\\Install\\Service\\SqlSchemaMigrationService')) {
-                $installToolSqlParser = new SqlSchemaMigrationService();
-                $installUtility->injectInstallToolSqlParser($installToolSqlParser);
-            }
-            $installUtility->updateDbWithExtTablesSql($this->files['ext_tables.sql']);
-        }
-
         // Require PHP files and take care of TCA configuration
         $_EXTKEY = $this->extensionName;
         $_EXTCONF = '';
@@ -148,13 +128,54 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
                 continue;
             }
 
-            if (preg_match('/Configuration\/TCA\/[^.]+\.php', $file)) {
-                $tableName = basename($file);
+            if (preg_match('/Configuration\/TCA\/[^.\/]+\.php/', $file)) {
+                $tableName = basename($file, '.php');
                 $tableTca = eval('?>' . $content);
                 $GLOBALS['TCA'][$tableName] = $tableTca;
             } else {
                 eval('?>' . $content);
             }
         }
+
+        // Load ext_tables.sql
+        if (!empty($this->files['ext_tables.sql'])) {
+            $sqlReader = GeneralUtility::makeInstance(SqlReader::class);
+            $statements = $sqlReader->getCreateTableStatementArray($this->files['ext_tables.sql']);
+            if (count($statements) !== 0) {
+                $schemaMigrationService = GeneralUtility::makeInstance(SchemaMigrator::class);
+                $schemaMigrationService->install($statements);
+            }
+        }
+
+        $this->assertIsArray($GLOBALS['TCA']['tt_content']);
+        $this->assertIsArray($GLOBALS['TCA']['tx_maskexampleexport_additionalcontent']);
+    }
+
+    /**
+     * @param bool $mockBuilder
+     * @return MockBuilder|LanguageService
+     */
+    protected function getLanguageService(bool $mockBuilder = false)
+    {
+        $cacheManagerProphecy = $this->prophesize(CacheManager::class);
+        $cacheFrontendProphecy = $this->prophesize(FrontendInterface::class);
+        $cacheManagerProphecy->getCache('l10n')->willReturn($cacheFrontendProphecy->reveal());
+        $cacheFrontendProphecy->get(Argument::cetera())->willReturn(false);
+        $cacheFrontendProphecy->set(Argument::cetera())->willReturn(null);
+
+        if ($mockBuilder) {
+            return $this->getMockBuilder(LanguageService::class)
+                ->setConstructorArgs(
+                    [
+                        new Locales(),
+                        new LocalizationFactory(new LanguageStore(), $cacheManagerProphecy->reveal()),
+                    ]
+                );
+        }
+
+        $languageService = new LanguageService(new Locales(), new LocalizationFactory(new LanguageStore(), $cacheManagerProphecy->reveal()));
+        $languageService->init('default');
+
+        return $languageService;
     }
 }

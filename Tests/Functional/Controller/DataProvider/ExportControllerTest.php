@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace IchHabRecht\MaskExport\Tests\Functional\Controller\DataProvider;
 
 /*
@@ -17,10 +18,14 @@ namespace IchHabRecht\MaskExport\Tests\Functional\Controller\DataProvider;
 require_once __DIR__ . '/../AbstractExportControllerTestCase.php';
 
 use IchHabRecht\MaskExport\Tests\Functional\Controller\AbstractExportControllerTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use Prophecy\Argument;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
 use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Lang\LanguageService;
 
 class ExportControllerTest extends AbstractExportControllerTestCase
 {
@@ -339,11 +344,16 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         $this->importDataSet($fixturePath . 'sys_file.xml');
 
         $this->setUpBackendUserFromFixture(1);
-        /** @var \PHPUnit_Framework_MockObject_MockObject|LanguageService $languageService */
-        $languageService = $this->getMockBuilder(LanguageService::class)
+
+        $cacheManagerProphecy = $this->prophesize(CacheManager::class);
+        $cacheFrontendProphecy = $this->prophesize(FrontendInterface::class);
+        $cacheManagerProphecy->getCache('l10n')->willReturn($cacheFrontendProphecy->reveal());
+        $cacheFrontendProphecy->get(Argument::cetera())->willReturn(false);
+        $cacheFrontendProphecy->set(Argument::cetera())->willReturn(null);
+        /** @var MockObject|LanguageService $languageService */
+        $languageService = $this->getLanguageService(true)
             ->setMethods(['sL'])
             ->getMock();
-        $languageService->init('default');
         $languageService->expects($this->any())
             ->method('sL')
             ->willReturnCallback(function ($argument) {
@@ -353,6 +363,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
 
                 return 'placeholder';
             });
+        $languageService->init('default');
         $GLOBALS['LANG'] = $languageService;
 
         $formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
@@ -620,9 +631,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         $this->importDataSet($fixturePath . 'sys_file.xml');
 
         $this->setUpBackendUserFromFixture(1);
-        $languageService = new LanguageService();
-        $languageService->init('default');
-        $GLOBALS['LANG'] = $languageService;
+        $GLOBALS['LANG'] = $this->getLanguageService();
 
         $formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
         $formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, $formDataGroup);
@@ -796,9 +805,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         $this->importDataSet($fixturePath . 'sys_file.xml');
 
         $this->setUpBackendUserFromFixture(1);
-        $languageService = new LanguageService();
-        $languageService->init('default');
-        $GLOBALS['LANG'] = $languageService;
+        $GLOBALS['LANG'] = $this->getLanguageService();
 
         $formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
         $formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, $formDataGroup);

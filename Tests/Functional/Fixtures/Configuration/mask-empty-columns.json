@@ -33,6 +33,9 @@
     },
     "mask_export": {
         "extensionName": "mask_example_export",
-        "vendorName": "IchHabRecht"
+        "vendorName": "IchHabRecht",
+        "includedElements": [
+            "intro_element"
+        ]
     }
 }

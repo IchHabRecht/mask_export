@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace IchHabRecht\MaskExport\FileCollection;
 
 /*
@@ -14,7 +15,10 @@ namespace IchHabRecht\MaskExport\FileCollection;
  * LICENSE file that was distributed with this source code.
  */
 
+use Doctrine\DBAL\Schema\Table;
 use IchHabRecht\MaskExport\Aggregate\SqlAwareInterface;
+use TYPO3\CMS\Core\Database\Schema\DefaultTcaSchema;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class SqlFileCollection extends AbstractFileCollection
 {
@@ -22,6 +26,18 @@ class SqlFileCollection extends AbstractFileCollection
      * @var string
      */
     protected $fileIdentifier = 'ext_tables.sql';
+
+    /**
+     * @var DefaultTcaSchema
+     */
+    protected $defaultSchema;
+
+    public function __construct(array $aggregateCollection, DefaultTcaSchema $defaultSchema = null)
+    {
+        parent::__construct($aggregateCollection);
+
+        $this->defaultSchema = $defaultSchema ?: GeneralUtility::makeInstance(DefaultTcaSchema::class);
+    }
 
     /**
      * @return array
@@ -45,10 +61,22 @@ class SqlFileCollection extends AbstractFileCollection
         ksort($sqlDefinitions);
         $files[$this->fileIdentifier] = '';
         foreach ($sqlDefinitions as $table => $fields) {
-            array_walk($fields, function (&$definition, $field) {
+            $schemaTable = new Table($table);
+            $schema = $this->defaultSchema->enrich([$schemaTable])[0];
+
+            $schemaColumns = $schema->getColumns();
+            $schemaIndexes = $schema->getIndexes();
+
+            $aggregatedFields = array_diff_key($fields, $schemaColumns);
+            unset($aggregatedFields['PRIMARY KEY']);
+            foreach (array_keys($schemaIndexes) as $index) {
+                unset($aggregatedFields['KEY ' . $index]);
+            }
+
+            array_walk($aggregatedFields, function (&$definition, $field) {
                 $definition = sprintf('    %s %s', $field, $definition);
             });
-            $fieldDefinitions = implode(',' . PHP_EOL, $fields);
+            $fieldDefinitions = implode(',' . PHP_EOL, $aggregatedFields);
             $files[$this->fileIdentifier] .=
 <<<EOS
 CREATE TABLE {$table} (

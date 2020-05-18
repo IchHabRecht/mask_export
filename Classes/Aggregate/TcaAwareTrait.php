@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace IchHabRecht\MaskExport\Aggregate;
 
 /*
@@ -95,13 +96,6 @@ trait TcaAwareTrait
                 ]
             );
         }
-        if ('pages' === $table) {
-            $this->addSqlDefinition(
-                'pages_language_overlay',
-                $field,
-                $definition
-            );
-        }
     }
 
     /**
@@ -112,7 +106,7 @@ trait TcaAwareTrait
     protected function replaceFieldLabels(array $fields, $table)
     {
         foreach ($fields as $field => &$configuration) {
-            if (0 !== strpos($field, 'tx_mask_') || 0 === strpos($configuration['label'], 'LLL:')) {
+            if (0 !== strpos($field, 'tx_mask_') || 0 === strpos(($configuration['label'] ?? ''), 'LLL:')) {
                 continue;
             }
             if (!isset($configuration['label']) && empty($this->maskConfiguration[$table]['elements'])) {

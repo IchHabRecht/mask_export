@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace IchHabRecht\MaskExport\Aggregate;
 
 /*
@@ -96,7 +97,6 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
                 'typo3/cms-frontend' => '^' . TYPO3_branch,
             ],
             'replace' => [
-                'mask' => 'self.version',
                 'typo3-ter/mask' => 'self.version',
             ],
             'autoload' => [
@@ -127,8 +127,8 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
             file_get_contents(ExtensionManagementUtility::extPath('mask_export') . 'ext_icon.png')
         );
         $this->addPlainTextFile(
-            'Resources/Public/Icons/Extension.png',
-            file_get_contents(ExtensionManagementUtility::extPath('mask_export') . 'ext_icon.png')
+            'Resources/Public/Icons/Extension.svg',
+            file_get_contents(ExtensionManagementUtility::extPath('mask_export') . 'Resources/Public/Icons/Extension.svg')
         );
     }
 

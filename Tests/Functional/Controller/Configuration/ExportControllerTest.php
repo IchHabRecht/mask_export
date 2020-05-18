@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace IchHabRecht\MaskExport\Tests\Functional\Controller\Configuration;
 
 /*
@@ -28,17 +29,14 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         $this->assertArrayHasKey('ext_emconf.php', $this->files);
 
         switch (TYPO3_branch) {
-            case '7.6':
-                $expectedVersionConstraint = '7.6.0-7.6.99';
-                break;
-            case '8.7':
-                $expectedVersionConstraint = '8.7.0-8.7.99';
-                break;
             case '9.5':
                 $expectedVersionConstraint = '9.5.0-9.5.99';
                 break;
+            case '10.4':
+                $expectedVersionConstraint = '10.4.0-10.4.99';
+                break;
             default:
-                throw new \UnexpectedValueException('Missing test configuration in ensureTypo3DependencyInExtEmConf', 1506012559);
+                throw new \UnexpectedValueException('Missing test configuration for "' . TYPO3_branch . '" in ensureTypo3DependencyInExtEmConf', 1506012559);
         }
 
         $this->assertContains(
@@ -55,17 +53,14 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         $this->assertArrayHasKey('composer.json', $this->files);
 
         switch (TYPO3_branch) {
-            case '7.6':
-                $expectedVersionConstraint = '^7.6';
-                break;
-            case '8.7':
-                $expectedVersionConstraint = '^8.7';
-                break;
             case '9.5':
                 $expectedVersionConstraint = '^9.5';
                 break;
+            case '10.4':
+                $expectedVersionConstraint = '^10.4';
+                break;
             default:
-                throw new \UnexpectedValueException('Missing test configuration in ensureTypo3DependencyInExtEmConf', 1526087286);
+                throw new \UnexpectedValueException('Missing test configuration for "' . TYPO3_branch . '" in ensureTypo3DependencyInExtEmConf', 1526087286);
         }
 
         $this->assertContains(
@@ -78,10 +73,6 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             $this->files['composer.json']
         );
 
-        $this->assertContains(
-            '"mask_example_export": "self.version",',
-            $this->files['composer.json']
-        );
         $this->assertContains(
             '"typo3-ter/mask-example-export": "self.version"',
             $this->files['composer.json']

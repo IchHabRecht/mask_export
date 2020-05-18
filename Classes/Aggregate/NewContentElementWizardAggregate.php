@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace IchHabRecht\MaskExport\Aggregate;
 
 /*
@@ -28,7 +29,7 @@ class NewContentElementWizardAggregate extends AbstractAggregate implements Lang
     /**
      * @var string
      */
-    protected $pageTSConfigFileIdentifier = 'NewContentElementWizard.ts';
+    protected $pageTSConfigFileIdentifier = 'NewContentElementWizard.tsconfig';
 
     /**
      * Adds content elements to the newContentElementWizard

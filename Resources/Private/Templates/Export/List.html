@@ -1,0 +1,95 @@
+<f:layout name="Default" />
+
+<f:section name="content">
+    <h1>Mask Export</h1>
+
+    <f:form action="save" method="post">
+
+        <div class="form-section">
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <label for="extensionName" class="t3js-formengine-label">
+                        Extension name
+                    </label>
+                    <div class="t3js-formengine-field-item">
+                        <div class="form-control-wrap">
+                            <f:form.textfield value="{extensionName}" name="extensionName" id="extensionName" title="Extension Name" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-sm-4">
+                    <label for="vendorName" class="t3js-formengine-label">
+                        Vendor name
+                    </label>
+                    <div class="t3js-formengine-field-item">
+                        <div class="form-control-wrap">
+                            <f:form.textfield value="{vendorName}" name="vendorName" id="vendorName" title="Vendor Name" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-sm-4">
+                    <div class="t3js-formengine-field-item">
+                        <div class="form-control-wrap">
+                            <f:form.submit name="submit" value="Preview" class="btn btn-success col-sm-3" />
+                            <f:form.hidden name="submit" value="" />
+                            <f:if condition="{composerMode}}">
+                                <f:then>
+                                    <f:form.submit name="submit" value="Write" class="btn btn-default col-sm-3 t3js-modal-trigger" additionalAttributes="{data-href: 'javascript:$ = $ || jQuery;$(\'form input[type=submit].t3js-modal-trigger\').prev().val(\'install\');$(\'form\').trigger(\'submit\')', data-severity: 'warning', data-title: 'Write extension to file system?', data-content: 'Are you sure you want to write the new extension files to your local file system? This action might overwrite extisting files.', data-button-ok-text: 'Overwrite'}" style="margin-left: 9px;" />
+                                </f:then>
+                                <f:else>
+                                    <f:form.submit value="Install" class="btn btn-default col-sm-3 t3js-modal-trigger" additionalAttributes="{data-href: 'javascript:$ = $ || jQuery;$(\'form input[type=submit].t3js-modal-trigger\').prev().val(\'install\');$(\'form\').trigger(\'submit\')', data-severity: 'warning', data-title: 'Write and install the extension?', data-content: 'Are you sure you want to write the new extension files to your local file system and install it afterwards? This action might overwrite extisting files.', data-button-ok-text: 'Overwrite'}" style="margin-left: 9px;" />
+                                </f:else>
+                            </f:if>
+                            <f:form.submit name="submit" value="Download" class="btn btn-default col-sm-3" style="margin-left: 9px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <h4 class="form-section-headline">Included content elements:</h4>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-sm-4">
+                    <f:for each="{availableElements}" as="element">
+                        <div class="form-check">
+                            <f:form.checkbox checked="{f:if(condition: '{includedElements.{element.key}} || {f:count(subject: \'{includedElements}\')} == 0', then: 1, else: 0)}" class="form-check-input" id="{element.key}" name="elements" multiple="1" value="{element.key}" />
+                            <label class="form-check-label" for="{element.key}">{element.label}</label>
+                        </div>
+                    </f:for>
+                </div>
+            </div>
+        </div>
+
+    </f:form>
+
+    <div class="panel panel-default panel-space" id="code">
+        <div class="panel-heading">
+            Generated code
+            <button class="btn btn-default btn-toggle pull-right">
+                <span>{f:translate(id: 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.toggleall')}</span>
+            </button>
+        </div>
+        <div class="panel-body" aria-multiselectable="true">
+            <f:for each="{files}" as="fileContent" key="fileName" iteration="iterator">
+                <div class="panel panel-space panel-default">
+                    <div class="panel-heading" role="tab" id="file-{iterator.cycle}-heading">
+                        <a class="collapsed" data-toggle="collapse" title="{fileName}" data-parent="#file-{iterator.cycle}-content" href="#file-{iterator.cycle}-content" aria-expanded="false" aria-controls="file-{iterator.cycle}-content">
+                            <span class="caret"></span>
+                            {fileName}
+                        </a>
+                    </div>
+                    <div id="file-{iterator.cycle}-content" class="panel-collapse collapse" role="tabpanel" aria-labelledby="file-{iterator.cycle}-heading">
+                        <pre><code>{fileContent}</code></pre>
+                    </div>
+                </div>
+            </f:for>
+        </div>
+    </div>
+
+</f:section>

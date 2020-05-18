@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace IchHabRecht\MaskExport\Controller;
 
 /*
@@ -32,7 +33,7 @@ use IchHabRecht\MaskExport\FileCollection\SqlFileCollection;
 use MASK\Mask\Domain\Repository\StorageRepository;
 use Symfony\Component\Finder\Finder;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Core\Bootstrap;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -80,27 +81,29 @@ class ExportController extends ActionController
 
     public function __construct(StorageRepository $storageRepository)
     {
-        parent::__construct();
-
         $this->maskConfiguration = (array)$storageRepository->load();
     }
 
     /**
      * @param string $vendorName
      * @param string $extensionName
+     * @param array $elements
      */
-    public function listAction($vendorName = '', $extensionName = '')
+    public function listAction($vendorName = '', $extensionName = '', $elements = [])
     {
         $extensionName = $extensionName ?: $this->getExtensionName();
         $vendorName = $vendorName ?: $this->getVendorName();
+        $elements = $elements ?: $this->getElements();
 
-        $files = $this->getFiles($vendorName, $extensionName);
+        $files = $this->getFiles($vendorName, $extensionName, $elements);
 
         $this->view->assignMultiple(
             [
-                'composerMode' => Bootstrap::usesComposerClassLoading(),
+                'composerMode' => Environment::isComposerMode(),
                 'vendorName' => $vendorName,
                 'extensionName' => $extensionName,
+                'availableElements' => $this->maskConfiguration['tt_content']['elements'] ?? [],
+                'includedElements' => array_combine($elements, $elements),
                 'files' => $files,
             ]
         );
@@ -109,8 +112,9 @@ class ExportController extends ActionController
     /**
      * @param string $vendorName
      * @param string $extensionName
+     * @param array $elements
      */
-    public function saveAction($vendorName = '', $extensionName = '')
+    public function saveAction($vendorName = '', $extensionName = '', $elements = [])
     {
         if (empty($vendorName)) {
             $vendorName = $this->getVendorName();
@@ -125,6 +129,7 @@ class ExportController extends ActionController
         $backendUser = $this->getBackendUser();
         $backendUser->uc['mask_export']['vendorName'] = $vendorName;
         $backendUser->uc['mask_export']['extensionName'] = $extensionName;
+        $backendUser->uc['mask_export']['elements'] = implode(',', $elements);
         $backendUser->writeUC();
 
         $action = 'list';
@@ -135,16 +140,17 @@ class ExportController extends ActionController
             }
         }
 
-        $this->redirect($action, null, null, ['vendorName' => $vendorName, 'extensionName' => $extensionName]);
+        $this->forward($action, null, null, ['vendorName' => $vendorName, 'extensionName' => $extensionName, 'elements' => $elements]);
     }
 
     /**
      * @param string $vendorName
      * @param string $extensionName
+     * @param array $elements
      */
-    public function downloadAction($vendorName, $extensionName)
+    public function downloadAction($vendorName, $extensionName, $elements)
     {
-        $files = $this->getFiles($vendorName, $extensionName);
+        $files = $this->getFiles($vendorName, $extensionName, $elements);
 
         $zipFile = tempnam(sys_get_temp_dir(), 'zip');
 
@@ -169,8 +175,9 @@ class ExportController extends ActionController
     /**
      * @param string $vendorName
      * @param string $extensionName
+     * @param array $elements
      */
-    public function installAction($vendorName, $extensionName)
+    public function installAction($vendorName, $extensionName, $elements)
     {
         $paths = Extension::returnInstallPaths();
         if (empty($paths['Local']) || !file_exists($paths['Local'])) {
@@ -178,11 +185,11 @@ class ExportController extends ActionController
         }
 
         $extensionPath = $paths['Local'] . $extensionName;
-        $files = $this->getFiles($vendorName, $extensionName);
+        $files = $this->getFiles($vendorName, $extensionName, $elements);
         $this->writeExtensionFilesToPath($files, $extensionPath);
 
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        if (!Bootstrap::usesComposerClassLoading()) {
+        if (!Environment::isComposerMode()) {
             $managementService = $objectManager->get(ExtensionManagementService::class);
             $managementService->reloadPackageInformation($extensionName);
             $extension = $managementService->getExtension($extensionName);
@@ -254,21 +261,38 @@ class ExportController extends ActionController
     }
 
     /**
+     * @return string[]
+     */
+    protected function getElements()
+    {
+        $elements = [];
+
+        if (!empty($this->maskConfiguration['mask_export']['includedElements'])) {
+            $elements = $this->maskConfiguration['mask_export']['includedElements'];
+        } else {
+            $backendUser = $this->getBackendUser();
+            if (!empty($backendUser->uc['mask_export']['elements'])) {
+                $elements = explode(',', $backendUser->uc['mask_export']['elements']);
+            }
+        }
+
+        return $elements;
+    }
+
+    /**
      * @param string $vendorName
      * @param string $extensionName
+     * @param array $elements
      * @return array
      */
-    protected function getFiles($vendorName, $extensionName)
+    protected function getFiles($vendorName, $extensionName, $elements)
     {
-        $this->maskConfiguration['mask_export'] = [
-            'extensionName' => $extensionName,
-            'vendorName' => $vendorName,
-        ];
+        $aggregatedMaskConfiguration = $this->prepareConfiguration($vendorName, $extensionName, $elements);
 
         $aggregateCollection = GeneralUtility::makeInstance(
             AggregateCollection::class,
             $this->aggregateClassNames,
-            $this->maskConfiguration
+            $aggregatedMaskConfiguration
         )->getCollection();
 
         $files = GeneralUtility::makeInstance(
@@ -281,6 +305,74 @@ class ExportController extends ActionController
         $files = $this->sortFiles($files);
 
         return $files;
+    }
+
+    protected function prepareConfiguration(string $vendorName, string $extensionName, array $elements)
+    {
+        $aggregatedConfiguration = $this->maskConfiguration;
+
+        $aggregatedConfiguration['mask_export'] = [
+            'extensionName' => $extensionName,
+            'vendorName' => $vendorName,
+            'includedElements' => $elements,
+        ];
+
+        if (empty($aggregatedConfiguration['tt_content']['elements'])
+            || empty($elements)
+        ) {
+            return $aggregatedConfiguration;
+        }
+
+        // Use selected elements only
+        $aggregatedConfiguration['tt_content']['elements'] = array_intersect_key(
+            $aggregatedConfiguration['tt_content']['elements'],
+            array_flip($elements)
+        );
+
+        // Find all used fields in elements and foreign tables
+        $columns = [];
+        $closure = null;
+        $closure = function ($value) use ($aggregatedConfiguration, &$columns, &$closure) {
+            foreach (($value['columns'] ?? []) as $field) {
+                $columns[] = $field;
+                if (!empty($aggregatedConfiguration[$field]['tca'])) {
+                    array_map($closure, [['columns' => array_keys($aggregatedConfiguration[$field]['tca'])]]);
+                }
+            }
+        };
+
+        array_map($closure, $aggregatedConfiguration['tt_content']['elements']);
+
+        $columns = array_combine($columns, $columns);
+
+        // Remove unused fields from configuration
+        foreach ($aggregatedConfiguration as $table => &$configuration) {
+            if (!empty($configuration['sql'])) {
+                $configuration['sql'] = array_intersect_key(
+                    $configuration['sql'],
+                    $columns
+                );
+                if (empty($configuration['sql'])) {
+                    unset($configuration['sql']);
+                }
+            }
+
+            if (!empty($configuration['tca'])) {
+                $configuration['tca'] = array_intersect_key(
+                    $configuration['tca'],
+                    $columns
+                );
+                if (empty($configuration['tca'])) {
+                    unset($configuration['tca']);
+                }
+            }
+
+            if (empty($configuration)) {
+                unset($aggregatedConfiguration[$table]);
+            }
+        }
+
+        return $aggregatedConfiguration;
     }
 
     /**
