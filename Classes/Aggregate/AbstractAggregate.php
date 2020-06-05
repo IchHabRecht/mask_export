@@ -29,6 +29,7 @@ abstract class AbstractAggregate
         'pages' => 'pages',
         'tt_content' => 'tt_content',
         'sys_file_reference' => 'sys_file_reference',
+        'mask_export' => 'mask_export',
     ];
 
     /**
