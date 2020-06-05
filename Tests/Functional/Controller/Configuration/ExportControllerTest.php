@@ -110,4 +110,22 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             $this->files['Configuration/Mask/mask.json']
         );
     }
+
+    /*
+     * @test
+     */
+    public function ensureMaskConfigurationIsNotExported()
+    {
+        $this->assertArrayHasKey('ext_tables.php', $this->files);
+        $this->assertArrayHasKey('ext_tables.sql', $this->files);
+
+        $this->assertNotContains(
+            'maskexampleexport_export',
+            $this->files['ext_tables.php']
+        );
+        $this->assertNotContains(
+            'maskexampleexport_export',
+            $this->files['ext_tables.sql']
+        );
+    }
 }
