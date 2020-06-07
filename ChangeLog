@@ -1,3 +1,9 @@
+2020-06-07         [RELEASE] Release of master 3.0.1 (Nicole Cordes)
+2020-06-05 d1d4032 [BUGFIX] Remove configuration options from export handling (Nicole Cordes)
+2020-05-30 8d89754 [BUGFIX] Remove dev-master tests from Travis CI configuration (Nicole Cordes)
+2020-05-27 71b1418 [BUGFIX] Fix functional tests on Travis CI (Nicole Cordes)
+2020-05-22 582917a [BUGFIX] Enforce phpunit/phpunit ^7.5 (Nicole Cordes)
+
 2020-05-18         [RELEASE] Release of mask_export 3.0.0 (Nicole Cordes)
 2020-05-16 9ef69ee [FEATURE] Remove original mask elements from TCA (Nicole Cordes)
 2020-05-14 ecb11df [FEATURE] Add ability to select content elements (Nicole Cordes)
