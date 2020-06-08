@@ -1,3 +1,7 @@
+2020-06-08         [RELEASE] Release of mask_export 2.4.1 (Nicole Cordes)
+2020-06-05 4fab5f4 [BUGFIX] Remove configuration options from export handling (Nicole Cordes)
+2020-06-08 56360ec [TASK] Include PHP 7.3 and 7.4 in Travis CI configuration (Nicole Cordes)
+
 2019-08-20         [RELEASE] Release of mask_export 2.4.0 (Nicole Cordes)
 2019-08-20 27d942d [TASK] Update README.md (Nicole Cordes)
 2019-08-03 47fa5fd [TASK] Update supporting files to EXT:my_skeleton 0.2.1 (Nicole Cordes)
