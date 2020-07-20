@@ -16,17 +16,36 @@ namespace IchHabRecht\MaskExport\CodeGenerator;
  * LICENSE file that was distributed with this source code.
  */
 
-use MASK\Mask\CodeGenerator\AbstractCodeGenerator;
+use MASK\Mask\Domain\Repository\StorageRepository;
 use MASK\Mask\Helper\FieldHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Generates the html and fluid for mask content elements
- *
- * @author Benjamin Butschell <bb@webprofil.at>
  */
-class HtmlCodeGenerator extends AbstractCodeGenerator
+class HtmlCodeGenerator
 {
+    /**
+     * @var FieldHelper
+     */
+    protected $fieldHelper;
+
+    /**
+     * @var StorageRepository
+     */
+    protected $storageRepository;
+
+    public function __construct(StorageRepository $storageRepository = null, FieldHelper $fieldHelper = null)
+    {
+        $this->storageRepository = $storageRepository ?: GeneralUtility::makeInstance(StorageRepository::class);
+
+        if (method_exists($this->storageRepository, 'getFormType')) {
+            $this->fieldHelper = $this->storageRepository;
+        } else {
+            $this->fieldHelper = $fieldHelper ?: GeneralUtility::makeInstance(FieldHelper::class, $this->storageRepository);
+        }
+    }
+
     /**
      * Generates Fluid HTML for Contentelements
      *
@@ -63,8 +82,7 @@ EOS;
     protected function generateFieldHtml($fieldKey, $elementKey, $table = 'tt_content', $datafield = 'data')
     {
         $html = '';
-        $fieldHelper = GeneralUtility::makeInstance(FieldHelper::class);
-        switch ($fieldHelper->getFormType($fieldKey, $elementKey, $table)) {
+        switch ($this->fieldHelper->getFormType($fieldKey, $elementKey, $table)) {
             case 'Check':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
