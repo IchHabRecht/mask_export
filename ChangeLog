@@ -1,4 +1,7 @@
-2020-06-07         [RELEASE] Release of master 3.0.1 (Nicole Cordes)
+2020-07-23         [RELEASE] Release of mask_export 3.0.2 (Nicole Cordes)
+2020-07-20 1e2cd58 [BUGFIX] Remove dependency to AbstractCodeGenerator (Nicole Cordes)
+
+2020-06-07         [RELEASE] Release of mask_export 3.0.1 (Nicole Cordes)
 2020-06-05 d1d4032 [BUGFIX] Remove configuration options from export handling (Nicole Cordes)
 2020-05-30 8d89754 [BUGFIX] Remove dev-master tests from Travis CI configuration (Nicole Cordes)
 2020-05-27 71b1418 [BUGFIX] Fix functional tests on Travis CI (Nicole Cordes)
