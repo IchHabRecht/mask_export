@@ -1,5 +1,7 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace IchHabRecht\MaskExport\Aggregate;
 
 /*
@@ -107,7 +109,7 @@ EOS
         if (!empty($iconRegistryConfiguration)) {
             $this->appendPhpFile(
                 'ext_localconf.php',
-<<<EOS
+                <<<EOS
 // Register content element icons
 \$iconRegistry = \\TYPO3\\CMS\\Core\\Utility\\GeneralUtility::makeInstance(\\TYPO3\\CMS\\Core\\Imaging\\IconRegistry::class);
 $iconRegistryConfiguration

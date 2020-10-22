@@ -1,5 +1,7 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace IchHabRecht\MaskExport\Aggregate;
 
 /*
@@ -68,7 +70,7 @@ class TtContentOverridesAggregate extends AbstractOverridesAggregate
         );
         $this->appendPhpFile(
             $this->tcaOverridesFilePath . $this->table . '.php',
-<<<EOS
+            <<<EOS
 \$GLOBALS['TCA']['{$this->table}']['columns']['CType']['config']['items'][] = [
     'LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:{$this->table}.CType.div._mask_',
     '--div--',
@@ -86,7 +88,7 @@ EOS
             );
             $this->appendPhpFile(
                 $this->tcaOverridesFilePath . $this->table . '.php',
-<<<EOS
+                <<<EOS
 \$GLOBALS['TCA']['{$this->table}']['columns']['CType']['config']['items'][] = [
     'LLL:EXT:mask/{$this->languageFilePath}{$this->languageFileIdentifier}:{$this->table}.CType.{$type}',
     '{$type}',
@@ -102,7 +104,7 @@ EOS
         $tempTypes = ArrayUtility::arrayExport($newTypeFields);
         $this->appendPhpFile(
             $this->tcaOverridesFilePath . $this->table . '.php',
-<<<EOS
+            <<<EOS
 \$tempTypes = {$tempTypes};
 \$GLOBALS['TCA']['{$this->table}']['types'] += \$tempTypes;
 

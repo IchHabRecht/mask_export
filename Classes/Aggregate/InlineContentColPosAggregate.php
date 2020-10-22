@@ -1,5 +1,7 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace IchHabRecht\MaskExport\Aggregate;
 
 /*
@@ -45,7 +47,7 @@ class InlineContentColPosAggregate extends AbstractInlineContentAggregate implem
 
         $this->appendPhpFile(
             'ext_localconf.php',
-<<<EOS
+            <<<EOS
 \$GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\MASK\Mask\Form\FormDataProvider\TcaColPosItem::class] = [
     'depends' => [
         \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseRowDefaultValues::class,
@@ -69,7 +71,7 @@ EOS
 
         $this->addPhpFile(
             'Classes/Form/FormDataProvider/TcaColPosItem.php',
-<<<EOS
+            <<<EOS
 namespace MASK\Mask\Form\FormDataProvider;
 
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;

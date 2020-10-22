@@ -1,5 +1,7 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace IchHabRecht\MaskExport\Aggregate;
 
 /*
@@ -61,7 +63,7 @@ class TcaAggregate extends AbstractAggregate implements LanguageAwareInterface, 
         $tableList = implode(', ', array_keys($newTcaTables));
         $this->appendPhpFile(
             'ext_tables.php',
-<<<EOS
+            <<<EOS
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('{$tableList}');
 
 EOS

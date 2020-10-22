@@ -1,5 +1,7 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace IchHabRecht\MaskExport\Aggregate;
 
 /*
@@ -65,7 +67,7 @@ EOS
 
         $this->addPhpFile(
             'Classes/Form/FormDataProvider/TcaCTypeItem.php',
-<<<EOS
+            <<<EOS
 namespace MASK\Mask\Form\FormDataProvider;
 
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;

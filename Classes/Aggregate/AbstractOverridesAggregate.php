@@ -1,5 +1,7 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace IchHabRecht\MaskExport\Aggregate;
 
 /*
@@ -52,7 +54,7 @@ abstract class AbstractOverridesAggregate extends AbstractAggregate implements L
         $tempColumns = ArrayUtility::arrayExport($newTableFields);
         $this->appendPhpFile(
             $this->tcaOverridesFilePath . $this->table . '.php',
-<<<EOS
+            <<<EOS
 \$tempColumns = {$tempColumns};
 \\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::addTCAcolumns('{$this->table}', \$tempColumns);
 
