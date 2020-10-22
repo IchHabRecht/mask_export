@@ -24,7 +24,7 @@
         "typo3/cms-extbase": "^9.5 || ^10.4",
         "typo3/cms-extensionmanager": "^9.5 || ^10.4",
         "typo3/cms-fluid": "^9.5 || ^10.4",
-        "mask/mask": "^4.0 || ^5.0"
+        "mask/mask": "^4.0 || ^5.0 || ^6.0"
     },
     "require-dev": {
         "typo3/cms-fluid-styled-content": "^9.5 || ^10.4",
