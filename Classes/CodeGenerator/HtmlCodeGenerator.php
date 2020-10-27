@@ -83,9 +83,14 @@ EOS;
      */
     protected function generateFieldHtml($fieldKey, $elementKey, $table = 'tt_content', $datafield = 'data')
     {
+        $formType = strtolower($this->fieldHelper->getFormType($fieldKey, $elementKey, $table));
+        if (in_array($formType, ['linebreak', 'tab'], true)) {
+            return '';
+        }
+
         $html = '';
-        switch ($this->fieldHelper->getFormType($fieldKey, $elementKey, $table)) {
-            case 'Check':
+        switch ($formType) {
+            case 'check':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:then>
@@ -100,7 +105,7 @@ EOS;
 EOS;
                 break;
 
-            case 'Content':
+            case 'content':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}_{$fieldKey}}">
     <f:for each="{{$datafield}_{$fieldKey}}" as="content_item">
@@ -112,7 +117,7 @@ EOS;
 EOS;
                 break;
 
-            case 'Date':
+            case 'date':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:format.date format="d.m.Y">{{$datafield}.{$fieldKey}}</f:format.date><br />
@@ -122,7 +127,7 @@ EOS;
 EOS;
                 break;
 
-            case 'Datetime':
+            case 'datetime':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:format.date format="d.m.Y - H:i:s">{{$datafield}.{$fieldKey}}</f:format.date><br />
@@ -132,7 +137,7 @@ EOS;
 EOS;
                 break;
 
-            case 'File':
+            case 'file':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}_{$fieldKey}}">
     <f:for each="{{$datafield}_{$fieldKey}}" as="file">
@@ -145,7 +150,7 @@ EOS;
 EOS;
                 break;
 
-            case 'Float':
+            case 'float':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:format.number decimals="2" decimalSeparator="," thousandsSeparator=".">{{$datafield}.{$fieldKey}}</f:format.number><br />
@@ -155,7 +160,7 @@ EOS;
 EOS;
                 break;
 
-            case 'Inline':
+            case 'inline':
                 $inlineFields = $this->storageRepository->loadInlineFields($fieldKey);
                 $inlineFieldsHtml = '';
                 $datafieldInline = strtr($datafield, '.', '_');
@@ -179,7 +184,7 @@ EOS;
 EOS;
                 break;
 
-            case 'Link':
+            case 'link':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:link.page pageUid="{{$datafield}.{$fieldKey}}">{{$datafield}.{$fieldKey}}</f:link.page><br />
@@ -189,8 +194,8 @@ EOS;
 EOS;
                 break;
 
-            case 'Radio':
-            case 'Select':
+            case 'radio':
+            case 'select':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:switch expression="{{$datafield}.{$fieldKey}}">
@@ -204,7 +209,7 @@ EOS;
 EOS;
                 break;
 
-            case 'Richtext':
+            case 'richtext':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:format.html parseFuncTSPath="lib.parseFunc_RTE">{{$datafield}.{$fieldKey}}</f:format.html><br />
@@ -214,7 +219,7 @@ EOS;
 EOS;
                 break;
 
-            case 'Text':
+            case 'text':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:format.nl2br>{{$datafield}.{$fieldKey}}</f:format.nl2br><br />
