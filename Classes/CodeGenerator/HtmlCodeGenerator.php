@@ -18,7 +18,6 @@ namespace IchHabRecht\MaskExport\CodeGenerator;
  * LICENSE file that was distributed with this source code.
  */
 
-use MASK\Mask\DataStructure\FieldType;
 use MASK\Mask\Domain\Repository\StorageRepository;
 use MASK\Mask\Helper\FieldHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -85,19 +84,19 @@ EOS;
     protected function generateFieldHtml($fieldKey, $elementKey, $table = 'tt_content', $datafield = 'data')
     {
         $html = '';
-        $formType = $this->fieldHelper->getFormType($fieldKey, $elementKey, $table);
-        if (in_array($formType, [FieldType::TAB, FieldType::LINEBREAK])) {
+        $formType = strtolower($this->fieldHelper->getFormType($fieldKey, $elementKey, $table));
+        if (in_array($formType, ['tab', 'linebreak'])) {
             return '';
         }
         switch ($formType) {
-            case FieldType::PALETTE:
+            case 'palette':
                 $paletteFields = $this->fieldHelper->loadInlineFields($fieldKey, $elementKey);
                 foreach ($paletteFields ?? [] as $paletteField) {
                     $html .= $this->generateFieldHtml(($paletteField['coreField'] ?? false) ? $paletteField['key'] : $paletteField['maskKey'], $elementKey, $table, $datafield);
                 }
                 break;
 
-            case FieldType::CHECK:
+            case 'check':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:then>
@@ -112,7 +111,7 @@ EOS;
 EOS;
                 break;
 
-            case FieldType::CONTENT:
+            case 'content':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}_{$fieldKey}}">
     <f:for each="{{$datafield}_{$fieldKey}}" as="content_item">
@@ -124,7 +123,7 @@ EOS;
 EOS;
                 break;
 
-            case FieldType::DATE:
+            case 'date':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:format.date format="d.m.Y">{{$datafield}.{$fieldKey}}</f:format.date><br />
@@ -134,8 +133,8 @@ EOS;
 EOS;
                 break;
 
-            case FieldType::DATETIME:
-            case FieldType::TIMESTAMP:
+            case 'datetime':
+            case 'timestamp':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:format.date format="d.m.Y - H:i:s">{{$datafield}.{$fieldKey}}</f:format.date><br />
@@ -145,7 +144,7 @@ EOS;
 EOS;
                 break;
 
-            case FieldType::FILE:
+            case 'file':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}_{$fieldKey}}">
     <f:for each="{{$datafield}_{$fieldKey}}" as="file">
@@ -158,7 +157,7 @@ EOS;
 EOS;
                 break;
 
-            case FieldType::FLOAT:
+            case 'float':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:format.number decimals="2" decimalSeparator="," thousandsSeparator=".">{{$datafield}.{$fieldKey}}</f:format.number><br />
@@ -168,7 +167,7 @@ EOS;
 EOS;
                 break;
 
-            case FieldType::INLINE:
+            case 'inline':
                 $inlineFields = $this->storageRepository->loadInlineFields($fieldKey);
                 $inlineFieldsHtml = '';
                 $datafieldInline = strtr($datafield, '.', '_');
@@ -192,7 +191,7 @@ EOS;
 EOS;
                 break;
 
-            case FieldType::LINK:
+            case 'link':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:link.page pageUid="{{$datafield}.{$fieldKey}}">{{$datafield}.{$fieldKey}}</f:link.page><br />
@@ -202,9 +201,9 @@ EOS;
 EOS;
                 break;
 
-            case FieldType::RADIO:
-            case FieldType::SELECT:
-            case FieldType::GROUP:
+            case 'radio':
+            case 'select':
+            case 'group':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:switch expression="{{$datafield}.{$fieldKey}}">
@@ -218,7 +217,7 @@ EOS;
 EOS;
                 break;
 
-            case FieldType::RICHTEXT:
+            case 'richtext':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:format.html>{{$datafield}.{$fieldKey}}</f:format.html><br />
@@ -228,7 +227,7 @@ EOS;
 EOS;
                 break;
 
-            case FieldType::TEXT:
+            case 'text':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:format.nl2br>{{$datafield}.{$fieldKey}}</f:format.nl2br><br />
