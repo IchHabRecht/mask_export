@@ -83,19 +83,13 @@ EOS;
      */
     protected function generateFieldHtml($fieldKey, $elementKey, $table = 'tt_content', $datafield = 'data')
     {
-        $html = '';
         $formType = strtolower($this->fieldHelper->getFormType($fieldKey, $elementKey, $table));
-        if (in_array($formType, ['tab', 'linebreak'])) {
+        if (in_array($formType, ['linebreak', 'tab'], true)) {
             return '';
         }
-        switch ($formType) {
-            case 'palette':
-                $paletteFields = $this->fieldHelper->loadInlineFields($fieldKey, $elementKey);
-                foreach ($paletteFields ?? [] as $paletteField) {
-                    $html .= $this->generateFieldHtml(($paletteField['coreField'] ?? false) ? $paletteField['key'] : $paletteField['maskKey'], $elementKey, $table, $datafield);
-                }
-                break;
 
+        $html = '';
+        switch ($formType) {
             case 'check':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
@@ -134,7 +128,6 @@ EOS;
                 break;
 
             case 'datetime':
-            case 'timestamp':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:format.date format="d.m.Y - H:i:s">{{$datafield}.{$fieldKey}}</f:format.date><br />
@@ -203,7 +196,6 @@ EOS;
 
             case 'radio':
             case 'select':
-            case 'group':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
     <f:switch expression="{{$datafield}.{$fieldKey}}">
@@ -220,7 +212,7 @@ EOS;
             case 'richtext':
                 $html .= <<<EOS
 <f:if condition="{{$datafield}.{$fieldKey}}">
-    <f:format.html>{{$datafield}.{$fieldKey}}</f:format.html><br />
+    <f:format.html parseFuncTSPath="lib.parseFunc_RTE">{{$datafield}.{$fieldKey}}</f:format.html><br />
 </f:if>
 
 
