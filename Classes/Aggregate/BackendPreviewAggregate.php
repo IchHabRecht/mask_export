@@ -61,6 +61,7 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements Plai
         }
 
         $this->addPageTsConfiguration();
+        $this->addPageLayoutViewHook();
         $this->addDrawItemHook();
         $this->replaceTableLabels();
         $this->addFluidTemplates();
@@ -90,6 +91,48 @@ EOS
 EOS
             ,
             PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE | PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION
+        );
+    }
+
+    protected function addPageLayoutViewHook()
+    {
+        $this->appendPhpFile(
+            'ext_localconf.php',
+            <<<EOS
+// Hook to override colpos check for unused tt_content elements
+\$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['record_is_used'][] = \MASK\Mask\Hooks\PageLayoutViewHook::class . '->contentIsUsed';
+
+EOS
+            ,
+            PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE | PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION
+        );
+
+        $this->addPhpFile(
+            'Classes/Hooks/PageLayoutViewHook.php',
+            <<<EOS
+namespace MASK\Mask\Hooks;
+
+use TYPO3\CMS\Backend\View\PageLayoutView;
+
+class PageLayoutViewHook
+{
+    /**
+     * Allow the usage of records in colpos 999 for mask nested content elements
+     *
+     * @param array \$params
+     * @param PageLayoutView \$parentObject
+     * @return bool
+     */
+    public function contentIsUsed(array \$params, PageLayoutView \$parentObject): bool
+    {
+        if (\$params['used']) {
+            return true;
+        }
+        \$record = \$params['record'];
+        return \$record['colPos'] === 999;
+    }
+}
+EOS
         );
     }
 
