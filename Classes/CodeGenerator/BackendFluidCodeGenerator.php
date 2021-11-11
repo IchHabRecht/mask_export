@@ -166,7 +166,7 @@ EOS;
 EOS;
         } else {
             $content = <<<EOS
-    <f:translate key="LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf/locallang_tca.xlf:sys_file_reference.uid_local" /> {item.uid_local} (id={item.uid})
+    <f:translate key="LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.uid_local" /> {item.uid_local} (id={item.uid})
 
 EOS;
         }
