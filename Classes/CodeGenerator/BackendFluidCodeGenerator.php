@@ -159,14 +159,14 @@ EOS;
             $content = <<<EOS
     <ul>
         <f:for each="{item.uid_local}" as="file">
-            <li><f:translate key="LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.uid_local" /> {file.table}|{file.uid}|{file.title} (id={item.uid})</li>
+            <li><f:translate key="LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.uid_local" /> {file.table}|{file.uid}|{file.title} (id={item.uid})</li>
         </f:for>
     </ul>
 
 EOS;
         } else {
             $content = <<<EOS
-    <f:translate key="LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.uid_local" /> {item.uid_local} (id={item.uid})
+    <f:translate key="LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf/locallang_tca.xlf:sys_file_reference.uid_local" /> {item.uid_local} (id={item.uid})
 
 EOS;
         }
