@@ -20,11 +20,11 @@
     ],
     "require": {
         "php": ">= 7.2, < 7.5",
-        "typo3/cms-core": "^9.5 || ^10.4",
-        "typo3/cms-extbase": "^9.5 || ^10.4",
-        "typo3/cms-extensionmanager": "^9.5 || ^10.4",
-        "typo3/cms-fluid": "^9.5 || ^10.4",
-        "mask/mask": "^4.0 || ^5.0 || ^6.0"
+        "typo3/cms-core": "^9.5 || ^10.4 || ^11",
+        "typo3/cms-extbase": "^9.5 || ^10.4 || ^11",
+        "typo3/cms-extensionmanager": "^9.5 || ^10.4 || ^11",
+        "typo3/cms-fluid": "^9.5 || ^10.4 || ^11",
+        "mask/mask": "^4.0 || ^5.0 || ^6.0 || ^7.0"
     },
     "require-dev": {
         "typo3/cms-fluid-styled-content": "^9.5 || ^10.4",

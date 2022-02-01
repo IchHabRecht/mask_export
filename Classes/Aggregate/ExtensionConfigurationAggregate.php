@@ -77,7 +77,7 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
 
         $this->addPhpFile(
             'ext_emconf.php',
-            substr($emConfUtility->constructEmConf($extensionData), 6)
+            substr($emConfUtility->constructEmConf('mask',$extensionData), 6)
         );
     }
 
