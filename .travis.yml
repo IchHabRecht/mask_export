@@ -197,6 +197,9 @@ jobs:
             php: 7.4
             env: TYPO3=10.4.x-dev
         -   <<: *dev-tests
+            php: 8.1
+            env: TYPO3=10.4.x-dev
+        -   <<: *dev-tests
             php: 7.4
             env: TYPO3=9.5.x-dev
         -   <<: *dev-tests
@@ -222,6 +225,9 @@ jobs:
                 - git checkout composer.json
             php: 7.4
             env: TYPO3=^10.4
+        -   <<: *lowest-tests
+            php: 8.1
+            env: TYPO3=10.4.x-dev
         -   <<: *lowest-tests
             php: 7.4
             env: TYPO3=10.4.x-dev
