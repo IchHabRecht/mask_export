@@ -125,10 +125,6 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
     protected function addExtIcon()
     {
         $this->addPlainTextFile(
-            'ext_icon.png',
-            file_get_contents(ExtensionManagementUtility::extPath('mask_export') . 'ext_icon.png')
-        );
-        $this->addPlainTextFile(
             'Resources/Public/Icons/Extension.svg',
             file_get_contents(ExtensionManagementUtility::extPath('mask_export') . 'Resources/Public/Icons/Extension.svg')
         );
