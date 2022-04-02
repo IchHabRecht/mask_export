@@ -111,7 +111,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         $subject->preProcess($pageLayoutView, $drawItem, $headerContent, $itemContent, $row);
 
         // Get variable container
-        $closure = \Closure::bind(function () use ($viewMock) {
+        $closure = \Closure::bind(static function () use ($viewMock) {
             return $viewMock->baseRenderingContext;
         }, null, StandaloneView::class);
         $renderingContext = $closure();

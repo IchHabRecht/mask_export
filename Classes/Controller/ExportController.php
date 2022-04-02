@@ -348,7 +348,7 @@ class ExportController extends ActionController
         // Find all used fields in elements and foreign tables
         $columns = [];
         $closure = null;
-        $closure = function ($value) use ($aggregatedConfiguration, &$columns, &$closure) {
+        $closure = static function ($value) use ($aggregatedConfiguration, &$columns, &$closure) {
             foreach (($value['columns'] ?? []) as $field) {
                 $columns[] = $field;
                 if (!empty($aggregatedConfiguration[$field]['tca'])) {
@@ -510,17 +510,21 @@ class ExportController extends ActionController
      */
     protected function sortFiles(array $files)
     {
-        uksort($files, function ($a, $b) {
+        uksort($files, static function ($a, $b) {
             if (substr_count($a, '/') === 0 && substr_count($b, '/') > 0) {
                 return -1;
-            } elseif (substr_count($a, '/') > 0 && substr_count($b, '/') === 0) {
+            }
+
+            if (substr_count($a, '/') > 0 && substr_count($b, '/') === 0) {
                 return 1;
             }
 
             if (strpos($b, dirname($a)) === 0 || strpos($a, dirname($b)) === 0) {
                 if (substr_count($a, '/') > substr_count($b, '/')) {
                     return 1;
-                } elseif (substr_count($a, '/') < substr_count($b, '/')) {
+                }
+
+                if (substr_count($a, '/') < substr_count($b, '/')) {
                     return -1;
                 }
             }

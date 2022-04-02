@@ -2,8 +2,8 @@
 
 defined('TYPO3_MODE') || die();
 
-call_user_func(function () {
-    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
+call_user_func(static function () {
+    TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
         'IchHabRecht.mask_export',
         'tools',
         'mask_export',
@@ -20,7 +20,7 @@ call_user_func(function () {
 
     $maskElements = array_filter(
         $GLOBALS['TCA']['tt_content']['types'] ?? [],
-        function ($key) {
+        static function ($key) {
             return strpos((string)$key, 'mask_') === 0;
         },
         ARRAY_FILTER_USE_KEY

@@ -63,7 +63,7 @@ EOS
         );
 
         $flattenedInlineFields = [];
-        array_walk_recursive($inlineFields, function ($field) use (&$flattenedInlineFields) {
+        array_walk_recursive($inlineFields, static function ($field) use (&$flattenedInlineFields) {
             $flattenedInlineFields[] = $field . '_parent';
         });
         sort($flattenedInlineFields);
