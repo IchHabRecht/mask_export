@@ -21,16 +21,12 @@ use IchHabRecht\MaskExport\FlagResolver\FlagInterface;
 
 class PhpStartTagFlag implements FlagInterface
 {
-    /**
-     * @param int $flags
-     * @return bool
-     */
-    public function isEnabled($flags)
+    public function isEnabled(int $flags): bool
     {
         return true;
     }
 
-    public function execute($content)
+    public function execute(string $content): string
     {
         return '<?php' . PHP_EOL . $content;
     }

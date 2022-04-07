@@ -35,10 +35,7 @@ class PhpFileCollection extends AbstractFileCollection
         $this->phpFileFlagResolver = $phpFileFlagResolver ?: GeneralUtility::makeInstance(PhpFileFlagResolver::class);
     }
 
-    /**
-     * @return array
-     */
-    protected function processAggregateCollection()
+    protected function processAggregateCollection(): array
     {
         $fileInformation = [];
         foreach ($this->aggregateCollection as $aggregate) {

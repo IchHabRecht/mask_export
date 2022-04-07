@@ -40,10 +40,6 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements Plai
      */
     protected $templatesFilePath = 'Resources/Private/Backend/Templates/';
 
-    /**
-     * @param array $maskConfiguration
-     * @param BackendFluidCodeGenerator $fluidCodeGenerator
-     */
     public function __construct(array $maskConfiguration, BackendFluidCodeGenerator $fluidCodeGenerator = null)
     {
         $this->fluidCodeGenerator = (null !== $fluidCodeGenerator) ? $fluidCodeGenerator : GeneralUtility::makeInstance(BackendFluidCodeGenerator::class);
@@ -54,7 +50,7 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements Plai
     /**
      * Adds PHP and Fluid files
      */
-    protected function process()
+    protected function process(): void
     {
         if (empty($this->maskConfiguration[$this->table]['elements'])) {
             return;
@@ -66,7 +62,7 @@ class BackendPreviewAggregate extends AbstractOverridesAggregate implements Plai
         $this->addFluidTemplates();
     }
 
-    protected function addPageTsConfiguration()
+    protected function addPageTsConfiguration(): void
     {
         $rootPaths = $this->getFluidRootPaths();
 
@@ -96,7 +92,7 @@ EOS
     /**
      * This adds the PHP file with the hook to render own element template
      */
-    protected function addDrawItemHook()
+    protected function addDrawItemHook(): void
     {
         $this->appendPhpFile(
             'ext_localconf.php',
@@ -266,7 +262,7 @@ EOS
     /**
      * Ensure proper labels in $GLOBALS['TCA'] configuration
      */
-    protected function replaceTableLabels()
+    protected function replaceTableLabels(): void
     {
         foreach ($this->maskConfiguration as $table => $_) {
             if (!isset($GLOBALS['TCA'][$table]) || empty($GLOBALS['TCA'][$table]['columns'])) {
@@ -297,7 +293,7 @@ EOS
         }
     }
 
-    protected function addFluidTemplates()
+    protected function addFluidTemplates(): void
     {
         foreach ($this->maskConfiguration[$this->table]['elements'] as $key => $element) {
             $templateKey = GeneralUtility::underscoredToUpperCamelCase($key);
@@ -325,7 +321,7 @@ EOS
         }
     }
 
-    protected function getFluidRootPaths()
+    protected function getFluidRootPaths(): array
     {
         $rootPath = dirname($this->templatesFilePath);
 

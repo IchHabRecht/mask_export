@@ -19,9 +19,5 @@ namespace IchHabRecht\MaskExport\FlagResolver;
 
 interface FlagResolverInterface
 {
-    /**
-     * @param array $fileInformation
-     * @return array
-     */
-    public function resolveFlags(array $fileInformation);
+    public function resolveFlags(array $fileInformation): array;
 }

@@ -29,7 +29,7 @@ class TtContentOverridesAggregate extends AbstractOverridesAggregate
     /**
      * Adds necessary TCA override information for tt_content table
      */
-    protected function process()
+    protected function process(): void
     {
         if (empty($GLOBALS['TCA'][$this->table])
             || empty($this->maskConfiguration[$this->table]['tca']) && empty($this->maskConfiguration[$this->table]['elements'])
@@ -45,7 +45,7 @@ class TtContentOverridesAggregate extends AbstractOverridesAggregate
     /**
      * @param array $tableConfiguration
      */
-    protected function addTableTypes(array $tableConfiguration)
+    protected function addTableTypes(array $tableConfiguration): void
     {
         if (empty($tableConfiguration['types']) || empty($this->maskConfiguration[$this->table]['elements'])) {
             return;

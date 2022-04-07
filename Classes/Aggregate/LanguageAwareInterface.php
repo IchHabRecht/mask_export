@@ -19,8 +19,5 @@ namespace IchHabRecht\MaskExport\Aggregate;
 
 interface LanguageAwareInterface
 {
-    /**
-     * @return array
-     */
-    public function getLabels();
+    public function getLabels(): array;
 }

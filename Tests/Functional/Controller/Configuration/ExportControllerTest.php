@@ -26,7 +26,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function ensureTypo3DependencyInExtEmConf()
+    public function ensureTypo3DependencyInExtEmConf(): void
     {
         $this->assertArrayHasKey('ext_emconf.php', $this->files);
 
@@ -53,7 +53,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function ensureExtensionNameIsReplacedInComposerJson()
+    public function ensureExtensionNameIsReplacedInComposerJson(): void
     {
         $this->assertArrayHasKey('composer.json', $this->files);
 
@@ -100,7 +100,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function ensureMaskConfigurationIsNotChanged()
+    public function ensureMaskConfigurationIsNotChanged(): void
     {
         $this->assertArrayHasKey('Configuration/Mask/mask.json', $this->files);
 
@@ -110,10 +110,10 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         );
     }
 
-    /*
+    /**
      * @test
      */
-    public function ensureMaskConfigurationIsNotExported()
+    public function ensureMaskConfigurationIsNotExported(): void
     {
         $this->assertArrayHasKey('ext_tables.php', $this->files);
         $this->assertArrayHasKey('ext_tables.sql', $this->files);

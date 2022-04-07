@@ -55,10 +55,6 @@ class ContentRenderingAggregate extends AbstractOverridesAggregate implements Pl
      */
     protected $partialPath = 'Partials/';
 
-    /**
-     * @param array $maskConfiguration
-     * @param HtmlCodeGenerator $htmlCodeGenerator
-     */
     public function __construct(array $maskConfiguration, HtmlCodeGenerator $htmlCodeGenerator = null)
     {
         $this->htmlCodeGenerator = (null !== $htmlCodeGenerator) ? $htmlCodeGenerator : GeneralUtility::makeInstance(HtmlCodeGenerator::class);
@@ -69,7 +65,7 @@ class ContentRenderingAggregate extends AbstractOverridesAggregate implements Pl
     /**
      * Adds TypoScript and Fluid information
      */
-    protected function process()
+    protected function process(): void
     {
         if (empty($this->maskConfiguration[$this->table]['elements'])) {
             return;
@@ -113,10 +109,7 @@ EOS
         }
     }
 
-    /**
-     * @param array $element
-     */
-    protected function addTypoScript(array $element)
+    protected function addTypoScript(array $element): void
     {
         $resourcesPath = 'EXT:mask/' . $this->resourcePath;
         $layoutsPath = $resourcesPath . $this->layoutPath;
@@ -157,12 +150,7 @@ EOS
         );
     }
 
-    /**
-     * @param string $table
-     * @param array $fields
-     * @return string
-     */
-    protected function addDataProcessing($table, array $fields)
+    protected function addDataProcessing(string $table, array $fields): string
     {
         $dataProcessing = '';
         $index = 10;
@@ -206,13 +194,7 @@ EOS;
         return $dataProcessing;
     }
 
-    /**
-     * @param string $table
-     * @param string $columnName
-     * @param int $index
-     * @return string
-     */
-    protected function addFileProcessorForField($table, $columnName, $index)
+    protected function addFileProcessorForField(string $table, string $columnName, int $index): string
     {
         return <<<EOS
     dataProcessing.{$index} = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor
@@ -228,13 +210,7 @@ EOS;
 EOS;
     }
 
-    /**
-     * @param string $table
-     * @param string $columnName
-     * @param int $index
-     * @return string
-     */
-    protected function addDatabaseQueryProcessorForField($table, $columnName, $index)
+    protected function addDatabaseQueryProcessorForField(string $table, string $columnName, int $index): string
     {
         $where = $GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_field'] . '=###uid### AND deleted=0 AND hidden=0';
         $markerArray = [
@@ -307,10 +283,7 @@ EOS;
 EOS;
     }
 
-    /**
-     * @param array $element
-     */
-    protected function addFluidTemplate(array $element)
+    protected function addFluidTemplate(array $element): void
     {
         $key = $element['key'];
         $templateSubFolder = 'tt_content' === $this->table ? 'Content' : GeneralUtility::underscoredToUpperCamelCase($this->table);

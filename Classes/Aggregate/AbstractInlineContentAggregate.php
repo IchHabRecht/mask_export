@@ -19,10 +19,7 @@ namespace IchHabRecht\MaskExport\Aggregate;
 
 abstract class AbstractInlineContentAggregate extends AbstractAggregate
 {
-    /**
-     * @return array
-     */
-    protected function getAvailableInlineFields()
+    protected function getAvailableInlineFields(): array
     {
         $inlineFields = [];
         foreach ($this->maskConfiguration as $table => $configuration) {

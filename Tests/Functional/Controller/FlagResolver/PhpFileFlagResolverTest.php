@@ -23,10 +23,7 @@ use IchHabRecht\MaskExport\Tests\Functional\Controller\AbstractExportControllerT
 
 class PhpFileFlagResolverTest extends AbstractExportControllerTestCase
 {
-    /**
-     * @return array
-     */
-    public function closureFunctionIsAppliedDataProvider()
+    public function closureFunctionIsAppliedDataProvider(): array
     {
         return [
             'ext_localconf.php' => [
@@ -46,7 +43,7 @@ class PhpFileFlagResolverTest extends AbstractExportControllerTestCase
      * @dataProvider closureFunctionIsAppliedDataProvider
      * @param string $filePattern
      */
-    public function closureFunctionIsApplied($filePattern)
+    public function closureFunctionIsApplied(string $filePattern): void
     {
         $files = [];
         foreach ($this->files as $file => $content) {
@@ -62,10 +59,7 @@ class PhpFileFlagResolverTest extends AbstractExportControllerTestCase
         }
     }
 
-    /**
-     * @return array
-     */
-    public function definedTypo3ModeIsAppliedDataProvider()
+    public function definedTypo3ModeIsAppliedDataProvider(): array
     {
         return [
             'ext_localconf.php' => [
@@ -85,7 +79,7 @@ class PhpFileFlagResolverTest extends AbstractExportControllerTestCase
      * @dataProvider definedTypo3ModeIsAppliedDataProvider
      * @param string $filePattern
      */
-    public function definedTypo3ModeIsApplied($filePattern)
+    public function definedTypo3ModeIsApplied(string $filePattern): void
     {
         $files = [];
         foreach ($this->files as $file => $content) {

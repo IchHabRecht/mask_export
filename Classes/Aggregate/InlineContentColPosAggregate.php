@@ -32,7 +32,7 @@ class InlineContentColPosAggregate extends AbstractInlineContentAggregate implem
     /**
      * Adds dataProvider for inline content colPos name
      */
-    protected function process()
+    protected function process(): void
     {
         $inlineFields = $this->getAvailableInlineFields();
         if (empty($inlineFields)) {

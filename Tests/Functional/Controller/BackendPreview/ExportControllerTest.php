@@ -35,7 +35,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function checkFluidTemplatePathInBackendPreview()
+    public function checkFluidTemplatePathInBackendPreview(): void
     {
         $this->assertArrayHasKey('Configuration/TsConfig/Page/BackendPreview.tsconfig', $this->files);
 
@@ -69,7 +69,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function validateProcessedRowDataFromPageLayoutViewDrawItem()
+    public function validateProcessedRowDataFromPageLayoutViewDrawItem(): void
     {
         $className = 'IchHabRecht\\MaskExampleExport\\Hooks\\PageLayoutViewDrawItem';
         $this->installExtension();
@@ -158,7 +158,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function validateFluidTemplateForSelectboxFields()
+    public function validateFluidTemplateForSelectboxFields(): void
     {
         $this->assertArrayHasKey('Resources/Private/Backend/Templates/Content/Simple-element.html', $this->files);
         $this->assertStringContainsString(

@@ -33,7 +33,7 @@ class EmptyColumnsTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function tempColumnsCodeNotGeneratedIfNoColumnsAvailable()
+    public function tempColumnsCodeNotGeneratedIfNoColumnsAvailable(): void
     {
         $this->configurationToUseInTestInstance['EXTENSIONS']['mask']['json'] = 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Configuration/mask-empty-columns.json';
 
