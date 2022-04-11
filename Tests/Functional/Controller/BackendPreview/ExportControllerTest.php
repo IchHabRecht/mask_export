@@ -19,6 +19,7 @@ namespace IchHabRecht\MaskExport\Tests\Functional\Controller\BackendPreview;
 
 require_once __DIR__ . '/../AbstractExportControllerTestCase.php';
 
+use GuzzleHttp\Psr7\ServerRequest;
 use IchHabRecht\MaskExport\Tests\Functional\Controller\AbstractExportControllerTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\Argument;
@@ -84,6 +85,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         // Load backend user and LanguageService for FormEngine
         $this->setUpBackendUserFromFixture(1);
         $GLOBALS['LANG'] = $this->getLanguageService();
+        $GLOBALS['TYPO3_REQUEST'] = new ServerRequest('GET', '/');
 
         // Get StandaloneView mock
         /** @var MockObject|StandaloneView $viewMock */

@@ -19,6 +19,7 @@ namespace IchHabRecht\MaskExport\Tests\Functional\Controller\DataProvider;
 
 require_once __DIR__ . '/../AbstractExportControllerTestCase.php';
 
+use GuzzleHttp\Psr7\ServerRequest;
 use IchHabRecht\MaskExport\Tests\Functional\Controller\AbstractExportControllerTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\Argument;
@@ -368,6 +369,8 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         $languageService->init('default');
         $GLOBALS['LANG'] = $languageService;
 
+        $GLOBALS['TYPO3_REQUEST'] = new ServerRequest('GET', '/');
+
         $formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
         $formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, $formDataGroup);
         $result = $formDataCompiler->compile($formDataCompilerInput);
@@ -634,6 +637,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
 
         $this->setUpBackendUserFromFixture(1);
         $GLOBALS['LANG'] = $this->getLanguageService();
+        $GLOBALS['TYPO3_REQUEST'] = new ServerRequest('GET', '/');
 
         $formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
         $formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, $formDataGroup);
@@ -808,6 +812,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
 
         $this->setUpBackendUserFromFixture(1);
         $GLOBALS['LANG'] = $this->getLanguageService();
+        $GLOBALS['TYPO3_REQUEST'] = new ServerRequest('GET', '/');
 
         $formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
         $formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, $formDataGroup);
