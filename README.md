@@ -1,8 +1,8 @@
 # TYPO3 Extension mask_export
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/ichhabrecht/mask-export.svg)](https://packagist.org/packages/ichhabrecht/mask-export)
-[![Build Status](https://img.shields.io/travis/IchHabRecht/mask_export/master.svg)](https://travis-ci.org/IchHabRecht/mask_export)
-[![StyleCI](https://styleci.io/repos/63010277/shield?branch=master)](https://styleci.io/repos/63010277)
+[![Build Status](https://img.shields.io/travis/IchHabRecht/mask_export/main.svg)](https://travis-ci.org/IchHabRecht/mask_export)
+[![StyleCI](https://styleci.io/repos/63010277/shield?branch=main)](https://styleci.io/repos/63010277)
 
 Want to create new content elements the easy way?
 
