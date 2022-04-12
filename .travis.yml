@@ -71,6 +71,9 @@ jobs:
                     echo;
                     find . -name \*.php ! -path "./.Build/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;;
             php: 7.4
+            env: TYPO3=^10.4 MASK=^7.1
+        -   <<: *tests
+            php: 7.4
             env: TYPO3=^10.4 MASK=^6.0
         -   <<: *tests
             php: 7.4
@@ -80,6 +83,9 @@ jobs:
             env: TYPO3=^9.5 MASK=^4.0
         -   <<: *tests
             php: 7.3
+            env: TYPO3=^10.4 MASK=^7.1
+        -   <<: *tests
+            php: 7.3
             env: TYPO3=^10.4 MASK=^6.0
         -   <<: *tests
             php: 7.3
@@ -87,6 +93,9 @@ jobs:
         -   <<: *tests
             php: 7.3
             env: TYPO3=^9.5 MASK=^4.0
+        -   <<: *tests
+            php: 7.2
+            env: TYPO3=^10.4 MASK=^7.1
         -   <<: *tests
             php: 7.2
             env: TYPO3=^10.4 MASK=^6.0
