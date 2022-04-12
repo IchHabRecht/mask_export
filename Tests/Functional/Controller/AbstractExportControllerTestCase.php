@@ -123,7 +123,7 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     protected function installExtension()
     {
         // Require PHP files and take care of TCA configuration
-        $_EXTKEY = $this->extensionName;
+        $_EXTKEY = 'mask_example_export';
         $_EXTCONF = '';
         foreach ($this->files as $file => $content) {
             if (!preg_match('/\.php$/', $file)) {
