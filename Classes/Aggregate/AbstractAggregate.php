@@ -56,6 +56,7 @@ abstract class AbstractAggregate
     {
         $this->maskConfiguration = $maskConfiguration;
         $this->removeHiddenContentElements();
+        $this->removeCoreFields();
         $this->process();
     }
 
@@ -79,6 +80,24 @@ abstract class AbstractAggregate
                 return empty($element['hidden']);
             }
         );
+    }
+
+    /**
+     * Remove core fields from configuration
+     */
+    protected function removeCoreFields()
+    {
+        foreach ($this->maskConfiguration as $table => $configuration) {
+            if (empty($configuration['tca'])) {
+                continue;
+            }
+            $this->maskConfiguration[$table]['tca'] = array_filter(
+                $this->maskConfiguration[$table]['tca'],
+                function ($field) {
+                    return empty($field['coreField']);
+                }
+            );
+        }
     }
 
     /**
