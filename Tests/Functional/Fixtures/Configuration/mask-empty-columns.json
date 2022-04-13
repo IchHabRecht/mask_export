@@ -1,4 +1,16 @@
 {
+    "mask_export": {
+        "elements": {
+            "configuration": {
+                "key": "configuration",
+                "label": "mask_example_export",
+                "shortLabel": "IchHabRecht",
+                "columns": [
+                    "intro_element"
+                ]
+            }
+        }
+    },
     "tt_content": {
         "elements": {
             "intro_element": {
@@ -30,12 +42,5 @@
                 "key": "tabsimages"
             }
         }
-    },
-    "mask_export": {
-        "extensionName": "mask_example_export",
-        "vendorName": "IchHabRecht",
-        "includedElements": [
-            "intro_element"
-        ]
     }
 }

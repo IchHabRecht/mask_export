@@ -231,7 +231,10 @@ class ExportController extends ActionController
     {
         $extensionName = $this->defaultExtensionName;
 
-        if (!empty($this->maskConfiguration['mask_export']['extensionName'])) {
+        if (!empty($this->maskConfiguration['mask_export']['elements']['configuration']['label'])) {
+            $extensionName = $this->maskConfiguration['mask_export']['elements']['configuration']['label'];
+        } elseif (!empty($this->maskConfiguration['mask_export']['extensionName'])) {
+            // Backwards compatibility for mask_export < 4.0
             $extensionName = $this->maskConfiguration['mask_export']['extensionName'];
         } else {
             $backendUser = $this->getBackendUser();
@@ -250,7 +253,10 @@ class ExportController extends ActionController
     {
         $vendorName = GeneralUtility::underscoredToUpperCamelCase($this->defaultExtensionName);
 
-        if (!empty($this->maskConfiguration['mask_export']['vendorName'])) {
+        if (!empty($this->maskConfiguration['mask_export']['elements']['configuration']['shortLabel'])) {
+            $vendorName = $this->maskConfiguration['mask_export']['elements']['configuration']['shortLabel'];
+        } elseif (!empty($this->maskConfiguration['mask_export']['vendorName'])) {
+            // Backwards compatibility for mask_export < 4.0
             $vendorName = $this->maskConfiguration['mask_export']['vendorName'];
         } else {
             $backendUser = $this->getBackendUser();
@@ -269,7 +275,10 @@ class ExportController extends ActionController
     {
         $elements = [];
 
-        if (!empty($this->maskConfiguration['mask_export']['includedElements'])) {
+        if (!empty($this->maskConfiguration['mask_export']['elements']['configuration']['columns'])) {
+            $elements = $this->maskConfiguration['mask_export']['elements']['configuration']['columns'];
+        } elseif (!empty($this->maskConfiguration['mask_export']['includedElements'])) {
+            // Backwards compatibility for mask_export < 4.0
             $elements = $this->maskConfiguration['mask_export']['includedElements'];
         } else {
             $backendUser = $this->getBackendUser();
@@ -314,9 +323,14 @@ class ExportController extends ActionController
         $aggregatedConfiguration = $this->maskConfiguration;
 
         $aggregatedConfiguration['mask_export'] = [
-            'extensionName' => $extensionName,
-            'vendorName' => $vendorName,
-            'includedElements' => $elements,
+            'elements' => [
+                'configuration' => [
+                    'key' => 'configuration',
+                    'label' => $extensionName,
+                    'shortLabel' => $vendorName,
+                    'columns' => $elements,
+                ],
+            ],
         ];
 
         if (empty($aggregatedConfiguration['tt_content']['elements'])

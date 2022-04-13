@@ -101,7 +101,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
 
         $labels = [];
         preg_match_all(
-            '#\[\s*\'LLL:EXT:([^\']+.I.[^\']+)\',\s*],#',
+            '#\'LLL:EXT:([^\']+\.I\.[^\']+)\',#',
             $this->files['Configuration/TCA/Overrides/tt_content.php'],
             $labels,
             PREG_SET_ORDER
