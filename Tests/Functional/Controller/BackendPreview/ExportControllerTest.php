@@ -85,7 +85,8 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         // Load backend user and LanguageService for FormEngine
         $this->setUpBackendUserFromFixture(1);
         $GLOBALS['LANG'] = $this->getLanguageService();
-        $GLOBALS['TYPO3_REQUEST'] = new ServerRequest('GET', '/');
+        $GLOBALS['TYPO3_REQUEST'] = (new ServerRequest('GET', '/'))
+            ->withAttribute('applicationType', \TYPO3\CMS\Core\Core\SystemEnvironmentBuilder::REQUESTTYPE_BE);
 
         // Get StandaloneView mock
         /** @var MockObject|StandaloneView $viewMock */

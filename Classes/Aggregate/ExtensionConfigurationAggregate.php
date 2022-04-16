@@ -17,6 +17,7 @@ namespace IchHabRecht\MaskExport\Aggregate;
  * LICENSE file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extensionmanager\Utility\EmConfUtility;
@@ -26,14 +27,17 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
     use PhpAwareTrait;
     use PlainTextFileAwareTrait;
 
+    protected $typo3Version;
+
     /**
      * Own constructor method to ensure that the mask configuration is not changed before export.
      *
      * @param array $maskConfiguration
      */
-    public function __construct(array $maskConfiguration)
+    public function __construct(array $maskConfiguration, Typo3Version $typo3Version = null)
     {
         $this->maskConfiguration = $maskConfiguration;
+        $this->typo3Version = $typo3Version ?: GeneralUtility::makeInstance(Typo3Version::class);
         $this->process();
     }
 
@@ -67,7 +71,7 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
                 'version' => '0.1.0',
                 'constraints' => [
                     'depends' => [
-                        'typo3' => sprintf('%s.0-%s.99', TYPO3_branch, TYPO3_branch),
+                        'typo3' => sprintf('%s.0-%s.99', $this->typo3Version->getBranch(), $this->typo3Version->getBranch()),
                     ],
                     'conflicts' => [],
                     'suggests' => [],
@@ -75,9 +79,15 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
             ],
         ];
 
+        if (version_compare($this->typo3Version->getBranch(), '11.0', '>=')) {
+            $extensionConfiguration = $emConfUtility->constructEmConf($extensionData['extKey'], $extensionData['EM_CONF']);
+        } else {
+            $extensionConfiguration = $emConfUtility->constructEmConf($extensionData);
+        }
+
         $this->addPhpFile(
             'ext_emconf.php',
-            substr($emConfUtility->constructEmConf($extensionData), 6)
+            substr($extensionConfiguration, 6)
         );
     }
 

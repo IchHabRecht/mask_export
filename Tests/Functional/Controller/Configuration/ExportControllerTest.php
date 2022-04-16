@@ -37,6 +37,9 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             case '10.4':
                 $expectedVersionConstraint = '10.4.0-10.4.99';
                 break;
+            case '11.5':
+                $expectedVersionConstraint = '11.5.0-11.5.99';
+                break;
             default:
                 throw new \UnexpectedValueException('Missing test configuration for "' . TYPO3_branch . '" in ensureTypo3DependencyInExtEmConf', 1506012559);
         }
@@ -60,6 +63,9 @@ class ExportControllerTest extends AbstractExportControllerTestCase
                 break;
             case '10.4':
                 $expectedVersionConstraint = '^10.4';
+                break;
+            case '11.5':
+                $expectedVersionConstraint = '^11.5';
                 break;
             default:
                 throw new \UnexpectedValueException('Missing test configuration for "' . TYPO3_branch . '" in ensureTypo3DependencyInExtEmConf', 1526087286);
