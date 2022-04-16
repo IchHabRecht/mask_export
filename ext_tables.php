@@ -9,7 +9,7 @@ call_user_func(function () {
         'mask_export',
         'after:MaskMask',
         [
-            'Export' => 'list, save, download, install',
+            \IchHabRecht\MaskExport\Controller\ExportController::class => 'list, save, download, install',
         ],
         [
             'access' => 'admin',

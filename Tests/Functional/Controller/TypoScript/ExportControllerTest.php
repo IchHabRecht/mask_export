@@ -78,7 +78,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         $this->assertNotEmpty($constants);
 
         foreach (array_unique($constants[1]) as $constant) {
-            $this->assertContains($constant, $this->files['Configuration/TypoScript/constants.typoscript']);
+            $this->assertStringContainsString($constant, $this->files['Configuration/TypoScript/constants.typoscript']);
         }
     }
 
@@ -88,11 +88,11 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     public function ensureDataProcessingWhereClauseIsBuiltCompletely()
     {
         $this->assertArrayHasKey('Configuration/TypoScript/setup.typoscript', $this->files);
-        $this->assertContains(
+        $this->assertStringContainsString(
             'where = tx_maskexampleexport_related_content_parent=###uid### AND deleted=0 AND hidden=0 AND colPos=###colPos### AND CType IN (###CType1###, ###CType2###, ###CType3###)',
             $this->files['Configuration/TypoScript/setup.typoscript']
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             'where = tx_maskexampleexport_morecontent_parent=###uid### AND deleted=0 AND hidden=0 AND colPos=###colPos###',
             $this->files['Configuration/TypoScript/setup.typoscript']
         );

@@ -71,6 +71,9 @@ jobs:
                     echo;
                     find . -name \*.php ! -path "./.Build/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;;
             php: 7.4
+            env: TYPO3=^11.5 MASK=^7.1
+        -   <<: *tests
+            php: 7.4
             env: TYPO3=^10.4 MASK=^7.1
         -   <<: *tests
             php: 7.4
@@ -130,7 +133,7 @@ jobs:
             git:
                 depth: false
             php: 7.2
-            env: TYPO3="^9.5 ^10.4"
+            env: TYPO3="^9.5 ^10.4 ^11.5"
             before_script:
                 - mkdir -p .Log/coverage/ .Log/junit/
                 - export TYPO3_PATH_WEB=$PWD/.Build/public
@@ -204,6 +207,9 @@ jobs:
                 - composer require --no-progress --no-suggest --no-update typo3/cms-fluid:"@dev"
                 - composer require --no-progress --no-suggest --no-update typo3/cms-fluid-styled-content:"@dev"
             php: 7.4
+            env: TYPO3=11.5.x-dev
+        -   <<: *dev-tests
+            php: 7.4
             env: TYPO3=10.4.x-dev
         -   <<: *dev-tests
             php: 7.4
@@ -229,6 +235,12 @@ jobs:
                 - composer require --no-progress --no-suggest --no-update --prefer-lowest nimut/typo3-complete:"$TYPO3"
                 - composer update
                 - git checkout composer.json
+            php: 7.4
+            env: TYPO3=^11.5
+        -   <<: *lowest-tests
+            php: 7.4
+            env: TYPO3=11.5.x-dev
+        -   <<: *lowest-tests
             php: 7.4
             env: TYPO3=^10.4
         -   <<: *lowest-tests

@@ -29,6 +29,7 @@ use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageStore;
 use TYPO3\CMS\Core\Localization\Locales;
 use TYPO3\CMS\Core\Localization\LocalizationFactory;
+use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Extbase\Mvc\Response;
@@ -80,7 +81,7 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     /**
      * Set up the subject under test
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -94,7 +95,10 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
             $request->setControllerAliasToClassNameMapping(['Export' => ExportController::class]);
         }
 
-        $response = new Response();
+        $response = null;
+        if (class_exists('TYPO3\\CMS\\Extbase\\Mvc\\Response')) {
+            $response = new Response();
+        }
 
         $view = $objectManager->get(TemplateView::class);
         $view->setLayoutRootPaths(['EXT:mask_export/Resources/Private/Layouts']);
@@ -107,7 +111,7 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
         }
 
         $subject = $objectManager->get(ExportController::class);
-        $subject->processRequest($request, $response);
+        $response = $subject->processRequest($request, $response) ?: $response;
 
         $closure = \Closure::bind(function () use ($view) {
             return $view->baseRenderingContext;
@@ -161,21 +165,23 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     {
         $cacheManagerProphecy = $this->prophesize(CacheManager::class);
         $cacheFrontendProphecy = $this->prophesize(FrontendInterface::class);
-        $cacheManagerProphecy->getCache('l10n')->willReturn($cacheFrontendProphecy->reveal());
         $cacheFrontendProphecy->get(Argument::cetera())->willReturn(false);
         $cacheFrontendProphecy->set(Argument::cetera())->willReturn(null);
+        $cacheManagerProphecy->getCache('l10n')->willReturn($cacheFrontendProphecy->reveal());
+        $packageManager = GeneralUtility::makeInstance(PackageManager::class);
 
         if ($mockBuilder) {
             return $this->getMockBuilder(LanguageService::class)
                 ->setConstructorArgs(
                     [
                         new Locales(),
-                        new LocalizationFactory(new LanguageStore(), $cacheManagerProphecy->reveal()),
+                        new LocalizationFactory(new LanguageStore($packageManager), $cacheManagerProphecy->reveal()),
+                        $cacheFrontendProphecy->reveal(),
                     ]
                 );
         }
 
-        $languageService = new LanguageService(new Locales(), new LocalizationFactory(new LanguageStore(), $cacheManagerProphecy->reveal()));
+        $languageService = new LanguageService(new Locales(), new LocalizationFactory(new LanguageStore($packageManager), $cacheManagerProphecy->reveal()), $cacheFrontendProphecy->reveal());
         $languageService->init('default');
 
         return $languageService;

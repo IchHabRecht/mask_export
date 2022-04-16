@@ -85,7 +85,8 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         // Load backend user and LanguageService for FormEngine
         $this->setUpBackendUserFromFixture(1);
         $GLOBALS['LANG'] = $this->getLanguageService();
-        $GLOBALS['TYPO3_REQUEST'] = new ServerRequest('GET', '/');
+        $GLOBALS['TYPO3_REQUEST'] = (new ServerRequest('GET', '/'))
+            ->withAttribute('applicationType', \TYPO3\CMS\Core\Core\SystemEnvironmentBuilder::REQUESTTYPE_BE);
 
         // Get StandaloneView mock
         /** @var MockObject|StandaloneView $viewMock */
@@ -160,11 +161,11 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     public function validateFluidTemplateForSelectboxFields()
     {
         $this->assertArrayHasKey('Resources/Private/Backend/Templates/Content/Simple-element.html', $this->files);
-        $this->assertContains(
+        $this->assertStringContainsString(
             '{processedRow.tx_maskexampleexport_simpleselectboxsingle.0} (raw={row.tx_maskexampleexport_simpleselectboxsingle})<br>',
             $this->files['Resources/Private/Backend/Templates/Content/Simple-element.html']
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<f:for each="{processedRow.tx_maskexampleexport_simpleselectboxmulti}" as="item">',
             $this->files['Resources/Private/Backend/Templates/Content/Simple-element.html']
         );

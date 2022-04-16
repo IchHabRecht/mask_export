@@ -32,7 +32,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ExportControllerTest extends AbstractExportControllerTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -369,7 +369,8 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         $languageService->init('default');
         $GLOBALS['LANG'] = $languageService;
 
-        $GLOBALS['TYPO3_REQUEST'] = new ServerRequest('GET', '/');
+        $GLOBALS['TYPO3_REQUEST'] = (new ServerRequest('GET', '/'))
+            ->withAttribute('applicationType', \TYPO3\CMS\Core\Core\SystemEnvironmentBuilder::REQUESTTYPE_BE);
 
         $formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
         $formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, $formDataGroup);
@@ -637,7 +638,8 @@ class ExportControllerTest extends AbstractExportControllerTestCase
 
         $this->setUpBackendUserFromFixture(1);
         $GLOBALS['LANG'] = $this->getLanguageService();
-        $GLOBALS['TYPO3_REQUEST'] = new ServerRequest('GET', '/');
+        $GLOBALS['TYPO3_REQUEST'] = (new ServerRequest('GET', '/'))
+            ->withAttribute('applicationType', \TYPO3\CMS\Core\Core\SystemEnvironmentBuilder::REQUESTTYPE_BE);
 
         $formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
         $formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, $formDataGroup);
@@ -812,7 +814,8 @@ class ExportControllerTest extends AbstractExportControllerTestCase
 
         $this->setUpBackendUserFromFixture(1);
         $GLOBALS['LANG'] = $this->getLanguageService();
-        $GLOBALS['TYPO3_REQUEST'] = new ServerRequest('GET', '/');
+        $GLOBALS['TYPO3_REQUEST'] = (new ServerRequest('GET', '/'))
+            ->withAttribute('applicationType', \TYPO3\CMS\Core\Core\SystemEnvironmentBuilder::REQUESTTYPE_BE);
 
         $formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
         $formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, $formDataGroup);

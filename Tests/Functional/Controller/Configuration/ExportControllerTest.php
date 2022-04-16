@@ -37,11 +37,14 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             case '10.4':
                 $expectedVersionConstraint = '10.4.0-10.4.99';
                 break;
+            case '11.5':
+                $expectedVersionConstraint = '11.5.0-11.5.99';
+                break;
             default:
                 throw new \UnexpectedValueException('Missing test configuration for "' . TYPO3_branch . '" in ensureTypo3DependencyInExtEmConf', 1506012559);
         }
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '\'typo3\' => \'' . $expectedVersionConstraint . '\',',
             $this->files['ext_emconf.php']
         );
@@ -61,31 +64,34 @@ class ExportControllerTest extends AbstractExportControllerTestCase
             case '10.4':
                 $expectedVersionConstraint = '^10.4';
                 break;
+            case '11.5':
+                $expectedVersionConstraint = '^11.5';
+                break;
             default:
                 throw new \UnexpectedValueException('Missing test configuration for "' . TYPO3_branch . '" in ensureTypo3DependencyInExtEmConf', 1526087286);
         }
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '"name": "ichhabrecht/mask-example-export",',
             $this->files['composer.json']
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '"typo3/cms-core": "' . $expectedVersionConstraint . '",',
             $this->files['composer.json']
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '"typo3-ter/mask-example-export": "self.version"',
             $this->files['composer.json']
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '"IchHabRecht\\\\MaskExampleExport\\\\": "Classes/"',
             $this->files['composer.json']
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '"extension-key": "mask_example_export"',
             $this->files['composer.json']
         );
