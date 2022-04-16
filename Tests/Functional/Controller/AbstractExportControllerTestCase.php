@@ -80,7 +80,7 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     /**
      * Set up the subject under test
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

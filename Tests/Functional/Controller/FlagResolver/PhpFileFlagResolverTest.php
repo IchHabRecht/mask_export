@@ -58,7 +58,7 @@ class PhpFileFlagResolverTest extends AbstractExportControllerTestCase
         $this->assertNotEmpty($files);
 
         foreach ($files as $file => $fileContent) {
-            $this->assertContains('call_user_func(function () {', $fileContent);
+            $this->assertStringContainsString('call_user_func(function () {', $fileContent);
         }
     }
 
@@ -97,7 +97,7 @@ class PhpFileFlagResolverTest extends AbstractExportControllerTestCase
         $this->assertNotEmpty($files);
 
         foreach ($files as $file => $fileContent) {
-            $this->assertContains('defined(\'TYPO3_MODE\') || die();', $fileContent);
+            $this->assertStringContainsString('defined(\'TYPO3_MODE\') || die();', $fileContent);
         }
     }
 }

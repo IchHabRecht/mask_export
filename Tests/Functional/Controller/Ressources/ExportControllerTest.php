@@ -112,7 +112,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         foreach ($labels as $label) {
             $id = array_pop(explode(':', $label[1]));
 
-            $this->assertContains(
+            $this->assertStringContainsString(
                 '<trans-unit id="' . $id . '">',
                 $this->files['Resources/Private/Language/locallang_db.xlf']
             );

@@ -23,7 +23,7 @@ use IchHabRecht\MaskExport\Tests\Functional\Controller\AbstractExportControllerT
 
 class EmptyColumnsTest extends AbstractExportControllerTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!defined('ORIGINAL_ROOT')) {
             $this->markTestSkipped('Functional tests must be called through phpunit on CLI');
