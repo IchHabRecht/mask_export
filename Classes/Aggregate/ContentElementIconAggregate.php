@@ -61,7 +61,7 @@ class ContentElementIconAggregate extends TtContentOverridesAggregate implements
             }
 
             if (!empty($iconFile) || empty($element['icon'])) {
-                $iconFileName = $iconFile ?: ExtensionManagementUtility::extPath('mask_export') . 'ext_icon.png';
+                $iconFileName = $iconFile ?: ExtensionManagementUtility::extPath('mask_export') . 'Resources/Public/Icons/Extension.svg';
                 $iconFileExtension = strtolower(PathUtility::pathinfo($iconFileName, PATHINFO_EXTENSION));
                 $iconPath = $this->iconResourceFilePath . $key . '.' . $iconFileExtension;
                 $iconProviderClass = $iconFileExtension === 'svg' ? SvgIconProvider::class : BitmapIconProvider::class;

@@ -56,11 +56,11 @@ class ExportControllerTest extends AbstractExportControllerTestCase
      */
     public function extensionIconIsUsedAsDefaultContentElementIcon()
     {
-        $this->assertArrayHasKey('Resources/Public/Icons/Content/default-extension-icon.png', $this->files);
+        $this->assertArrayHasKey('Resources/Public/Icons/Content/default-extension-icon.svg', $this->files);
 
         $this->assertStringEqualsFile(
-            __DIR__ . '/../../../../ext_icon.png',
-            $this->files['Resources/Public/Icons/Content/default-extension-icon.png']
+            __DIR__ . '/../../../../Resources/Public/Icons/Extension.svg',
+            $this->files['Resources/Public/Icons/Content/default-extension-icon.svg']
         );
     }
 
