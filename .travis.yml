@@ -129,11 +129,14 @@ jobs:
                     $HOME/.config/composer/vendor/bin/ter-client upload mask_export . -u "$TYPO3_ORG_USERNAME" -p "$TYPO3_ORG_PASSWORD" -m "$TAG_MESSAGE";
 
         -   stage: ✔ with sonarqube scanner
-            if: type = push AND branch IN (master, pre-merge) AND env(SONAR_TOKEN) IS present AND fork = false
+            if: type = push AND branch IN (main, pre-merge) AND env(SONAR_TOKEN) IS present AND fork = false
             git:
                 depth: false
-            php: 7.2
+            php: 7.4
             env: TYPO3="^9.5 ^10.4 ^11.5"
+            before_install:
+                - nvm install 12
+                - nvm use 12
             before_script:
                 - mkdir -p .Log/coverage/ .Log/junit/
                 - export TYPO3_PATH_WEB=$PWD/.Build/public
