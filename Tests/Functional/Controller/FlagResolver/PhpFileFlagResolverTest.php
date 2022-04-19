@@ -58,7 +58,7 @@ class PhpFileFlagResolverTest extends AbstractExportControllerTestCase
         $this->assertNotEmpty($files);
 
         foreach ($files as $file => $fileContent) {
-            $this->assertStringContainsString('call_user_func(function () {', $fileContent);
+            $this->assertStringContainsString('call_user_func(static function () {', $fileContent);
         }
     }
 

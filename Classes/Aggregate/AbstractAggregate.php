@@ -76,7 +76,7 @@ abstract class AbstractAggregate
 
         $this->maskConfiguration['tt_content']['elements'] = array_filter(
             $this->maskConfiguration['tt_content']['elements'],
-            function (array $element) {
+            static function (array $element) {
                 return empty($element['hidden']);
             }
         );
@@ -93,7 +93,7 @@ abstract class AbstractAggregate
             }
             $this->maskConfiguration[$table]['tca'] = array_filter(
                 $this->maskConfiguration[$table]['tca'],
-                function ($field) {
+                static function ($field) {
                     return empty($field['coreField']);
                 }
             );

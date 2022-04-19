@@ -34,7 +34,7 @@ class ClosureFunctionFlag implements FlagInterface
     public function execute($content)
     {
         return <<<EOS
-call_user_func(function () {
+call_user_func(static function () {
 
 {$content}
 });

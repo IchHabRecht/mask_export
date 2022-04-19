@@ -61,6 +61,6 @@ class PhpFileCollectionTest extends UnitTestCase
 
         $this->assertArrayHasKey('ext_tables.php', $files);
         $this->assertContains('defined(\'TYPO3_MODE\') || die();', $files['ext_tables.php']);
-        $this->assertContains('call_user_func(function () {', $files['ext_tables.php']);
+        $this->assertContains('call_user_func(static function () {', $files['ext_tables.php']);
     }
 }

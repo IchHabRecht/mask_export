@@ -245,12 +245,12 @@ EOS;
             $overrideColumns = $GLOBALS['TCA'][$table]['columns'][$columnName]['config']['foreign_record_defaults'];
         } elseif (!empty($GLOBALS['TCA'][$table]['columns'][$columnName]['config']['overrideChildTca']['columns'])) {
             $overrideColumns = array_map(
-                function ($value) {
+                static function ($value) {
                     return $value['config']['default'];
                 },
                 array_filter(
                     $GLOBALS['TCA'][$table]['columns'][$columnName]['config']['overrideChildTca']['columns'],
-                    function ($item) {
+                    static function ($item) {
                         return isset($item['config']['default']);
                     }
                 )
@@ -267,7 +267,7 @@ EOS;
         if (!empty($this->maskConfiguration[$table]['tca'][$columnName]['cTypes'])) {
             $types = array_combine(
                 array_map(
-                    function ($value) {
+                    static function ($value) {
                         return 'CType' . $value;
                     },
                     range(1, count($this->maskConfiguration[$table]['tca'][$columnName]['cTypes']))
@@ -285,7 +285,7 @@ EOS;
 
         uksort($markerArray, 'strnatcasecmp');
         $markers = implode("\n        ", array_map(
-            function ($key, $value) {
+            static function ($key, $value) {
                 return 'markers.' . $key . (strpos($key, '.') === false ? '.value' : '') . ' = ' . $value;
             },
             array_keys($markerArray),

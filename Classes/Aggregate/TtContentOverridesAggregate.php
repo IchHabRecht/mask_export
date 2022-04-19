@@ -55,7 +55,7 @@ class TtContentOverridesAggregate extends AbstractOverridesAggregate
         $newTypeFields = array_intersect_key(
             $tableConfiguration['types'],
             array_combine(
-                array_map(function ($value) {
+                array_map(static function ($value) {
                     return 'mask_' . $value;
                 }, $types),
                 $types

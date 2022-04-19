@@ -43,7 +43,7 @@ abstract class AbstractFlagResolver implements FlagResolverInterface
     public function resolveFlags(array $fileInformation)
     {
         $files = array_map(
-            function ($information) {
+            static function ($information) {
                 return $information['content'];
             },
             $fileInformation

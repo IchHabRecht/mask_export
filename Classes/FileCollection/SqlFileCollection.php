@@ -75,7 +75,7 @@ class SqlFileCollection extends AbstractFileCollection
                 unset($aggregatedFields['KEY ' . $index]);
             }
 
-            array_walk($aggregatedFields, function (&$definition, $field) {
+            array_walk($aggregatedFields, static function (&$definition, $field) {
                 $definition = sprintf('    %s %s', $field, $definition);
             });
             $fieldDefinitions = implode(',' . PHP_EOL, $aggregatedFields);
