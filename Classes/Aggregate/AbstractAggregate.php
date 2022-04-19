@@ -93,7 +93,7 @@ abstract class AbstractAggregate
             }
             $this->maskConfiguration[$table]['tca'] = array_filter(
                 $this->maskConfiguration[$table]['tca'],
-                function ($field) {
+                static function ($field) {
                     return empty($field['coreField']);
                 }
             );
