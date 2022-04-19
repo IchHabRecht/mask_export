@@ -111,7 +111,7 @@ class TcaCTypeItem implements FormDataProviderInterface
 
         \$result['processedTca']['columns']['CType']['config']['items'] = array_filter(
             \$result['processedTca']['columns']['CType']['config']['items'],
-            function (\$item) use (\$cTypes) {
+            static function (\$item) use (\$cTypes) {
                 return in_array(\$item[1], \$cTypes);
             }
         );
