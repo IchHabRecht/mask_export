@@ -1,4 +1,4 @@
-dist: xenial
+dist: bionic
 
 language: php
 
@@ -23,6 +23,8 @@ services:
 jobs:
     fast_finish: true
     allow_failures:
+        -   if: type != cron
+            env: TYPO3=11.5.x-dev
         -   if: type != cron
             env: TYPO3=10.4.x-dev
         -   if: type != cron
@@ -70,6 +72,12 @@ jobs:
                     echo;
                     echo;
                     find . -name \*.php ! -path "./.Build/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;;
+            php: 8.1
+            env: TYPO3=^11.5 MASK=^7.1
+        -   <<: *tests
+            php: 8.0
+            env: TYPO3=^11.5 MASK=^7.1
+        -   <<: *tests
             php: 7.4
             env: TYPO3=^11.5 MASK=^7.1
         -   <<: *tests
@@ -111,14 +119,17 @@ jobs:
 
         -   stage: 🚢 to ter
             if: tag IS present AND env(TYPO3_ORG_USERNAME) IS present AND env(TYPO3_ORG_PASSWORD) IS present
-            php: 7.0
+            php: 7.4
+            before_install:
+                - sudo sed 's/mozilla.DST_Root_CA_X3.crt/!mozilla\/DST_Root_CA_X3.crt/' -i /etc/ca-certificates.conf
+                - sudo update-ca-certificates
             script:
                 - >
                     echo;
                     echo "Preparing upload of release ${TRAVIS_TAG} to TER";
                     echo;
                     echo;
-                    composer global require helhum/ter-client;
+                    composer global require typo3/tailor;
 
                 - >
                     TAG_MESSAGE=`git tag -n10 -l $TRAVIS_TAG | sed 's/^[0-9.]*[ ]*//g'`;
@@ -126,7 +137,8 @@ jobs:
                     echo "Uploading release ${TRAVIS_TAG} to TER";
                     echo;
                     echo;
-                    $HOME/.config/composer/vendor/bin/ter-client upload mask_export . -u "$TYPO3_ORG_USERNAME" -p "$TYPO3_ORG_PASSWORD" -m "$TAG_MESSAGE";
+                    PATH=$PATH:$(composer global config bin-dir --absolute --quiet);
+                    TYPO3_API_USERNAME="$TYPO3_ORG_USERNAME" TYPO3_API_PASSWORD="$TYPO3_ORG_PASSWORD" tailor ter:publish --comment "$TAG_MESSAGE" ${TRAVIS_TAG} my_skeleton;
 
         -   stage: ✔ with sonarqube scanner
             if: type = push AND branch IN (main, pre-merge) AND env(SONAR_TOKEN) IS present AND fork = false
@@ -209,6 +221,12 @@ jobs:
                 - composer require --no-progress --no-suggest --no-update typo3/cms-extensionmanager:"@dev"
                 - composer require --no-progress --no-suggest --no-update typo3/cms-fluid:"@dev"
                 - composer require --no-progress --no-suggest --no-update typo3/cms-fluid-styled-content:"@dev"
+            php: 8.1.0
+            env: TYPO3=11.5.x-dev
+        -   <<: *dev-tests
+            php: 8.0
+            env: TYPO3=11.5.x-dev
+        -   <<: *dev-tests
             php: 7.4
             env: TYPO3=11.5.x-dev
         -   <<: *dev-tests
@@ -238,6 +256,18 @@ jobs:
                 - composer require --no-progress --no-suggest --no-update --prefer-lowest nimut/typo3-complete:"$TYPO3"
                 - composer update
                 - git checkout composer.json
+            php: 8.1.0
+            env: TYPO3=^11.5
+        -   <<: *lowest-tests
+            php: 8.1.0
+            env: TYPO3=11.5.x-dev
+        -   <<: *lowest-tests
+            php: 8.0
+            env: TYPO3=^11.5
+        -   <<: *lowest-tests
+            php: 8.0
+            env: TYPO3=11.5.x-dev
+        -   <<: *lowest-tests
             php: 7.4
             env: TYPO3=^11.5
         -   <<: *lowest-tests
