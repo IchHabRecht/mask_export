@@ -40,7 +40,7 @@ class EmptyColumnsTest extends AbstractExportControllerTestCase
         parent::setUp();
 
         $this->assertArrayHasKey('Configuration/TCA/Overrides/tt_content.php', $this->files);
-        $this->assertNotContains(
+        $this->assertStringNotContainsString(
             'ExtensionManagementUtility::addTCAcolumns',
             $this->files['Configuration/TCA/Overrides/tt_content.php']
         );

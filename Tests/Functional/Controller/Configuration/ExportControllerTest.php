@@ -118,11 +118,11 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         $this->assertArrayHasKey('ext_tables.php', $this->files);
         $this->assertArrayHasKey('ext_tables.sql', $this->files);
 
-        $this->assertNotContains(
+        $this->assertStringNotContainsString(
             'maskexampleexport_export',
             $this->files['ext_tables.php']
         );
-        $this->assertNotContains(
+        $this->assertStringNotContainsString(
             'maskexampleexport_export',
             $this->files['ext_tables.sql']
         );
