@@ -138,7 +138,7 @@ jobs:
                     echo;
                     echo;
                     PATH=$PATH:$(composer global config bin-dir --absolute --quiet);
-                    TYPO3_API_USERNAME="$TYPO3_ORG_USERNAME" TYPO3_API_PASSWORD="$TYPO3_ORG_PASSWORD" tailor ter:publish --comment "$TAG_MESSAGE" ${TRAVIS_TAG} my_skeleton;
+                    TYPO3_API_USERNAME="$TYPO3_ORG_USERNAME" TYPO3_API_PASSWORD="$TYPO3_ORG_PASSWORD" tailor ter:publish --comment "$TAG_MESSAGE" ${TRAVIS_TAG} mask_export;
 
         -   stage: ✔ with sonarqube scanner
             if: type = push AND branch IN (main, pre-merge) AND env(SONAR_TOKEN) IS present AND fork = false
