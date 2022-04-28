@@ -1,3 +1,7 @@
+2022-04-28         [RELEASE] Release of mask_export 4.0.1 (Nicole Cordes)
+2022-04-28 9c6e10b [BUGFIX] Prevent PHP (>=8.0) warning (Nicole Cordes)
+2022-04-28 da56348 [TASK] Update .gitignore file (Nicole Cordes)
+
 2022-04-25         [RELEASE] Release of mask_export 4.0.0 (Nicole Cordes)
 2022-04-24 c507e00 [TASK] Migrate PHPUnit assert functions (Nicole Cordes)
 2022-04-24 b299a74 [TASK] Add compatibility to PHP 8.1 (Nicole Cordes)
