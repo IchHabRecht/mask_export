@@ -7,10 +7,10 @@
                 <source>Mask Export</source>
             </trans-unit>
             <trans-unit id="mlang_labels_tablabel" resname="mlang_labels_tablabel">
-                <source>TYPO3 Extension Manager</source>
+                <source>Export your Masks as an extension</source>
             </trans-unit>
             <trans-unit id="mlang_labels_tabdescr" resname="mlang_labels_tabdescr">
-                <source>Manages TYPO3 extensions from a central repository. TYPO3 extensions include plugins, modules, class extensions, configuration code, etc. &lt;br /&gt;&lt;em&gt;Access for 'admin' users only!&lt;/em&gt;</source>
+                <source>Use mask_export to export the content elements created with the mask extension to a separate extension.</source>
             </trans-unit>
         </body>
     </file>
