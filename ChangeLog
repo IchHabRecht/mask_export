@@ -1,3 +1,9 @@
+2022-05-05         [RELEASE] Release of mask_export 4.0.2 (Nicole Cordes)
+2022-04-29 db7a3c1 [BUGFIX] Ensure compatibility of the HTML attributes for all supported TYPO3 versions (Noel Kayabasli)
+2022-04-29 f624a89 [TASK] Change the label and description of the backend module (Noel Kayabasli)
+2022-04-29 8ab468d [BUGFIX] Fix HTML attributes in the code preview panels (Noel Kayabasli)
+2022-04-29 f44cbd8 [TASK] Change the label and description of the module (Noel Kayabasli)
+
 2022-04-28         [RELEASE] Release of mask_export 4.0.1 (Nicole Cordes)
 2022-04-28 9c6e10b [BUGFIX] Prevent PHP (>=8.0) warning (Nicole Cordes)
 2022-04-28 da56348 [TASK] Update .gitignore file (Nicole Cordes)
