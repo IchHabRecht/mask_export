@@ -28,7 +28,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function ensureContentElementIconFromPreviewFolderInExport()
+    public function ensureContentElementIconFromPreviewFolderInExport(): void
     {
         $this->assertArrayHasKey('Resources/Public/Icons/Content/simple-element.png', $this->files);
 
@@ -41,7 +41,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function ensureContentElementIconFromFallbackPathInExport()
+    public function ensureContentElementIconFromFallbackPathInExport(): void
     {
         $this->assertArrayHasKey('Resources/Public/Icons/Content/nested-content-elements.png', $this->files);
 
@@ -54,7 +54,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function extensionIconIsUsedAsDefaultContentElementIcon()
+    public function extensionIconIsUsedAsDefaultContentElementIcon(): void
     {
         $this->assertArrayHasKey('Resources/Public/Icons/Content/default-extension-icon.svg', $this->files);
 
@@ -67,7 +67,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function contentElementsHaveRegisteredIconIdentifier()
+    public function contentElementsHaveRegisteredIconIdentifier(): void
     {
         $maskConfiguration = json_decode(file_get_contents(__DIR__ . '/../../Fixtures/Configuration/mask-default.json'), true);
         $this->assertNotEmpty($maskConfiguration['tt_content']['elements']);
@@ -94,7 +94,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function itemsLabelsAreMovedToLocallangFile()
+    public function itemsLabelsAreMovedToLocallangFile(): void
     {
         $this->assertArrayHasKey('Configuration/TCA/Overrides/tt_content.php', $this->files);
         $this->assertArrayHasKey('Resources/Private/Language/locallang_db.xlf', $this->files);

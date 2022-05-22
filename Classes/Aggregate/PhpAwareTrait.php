@@ -24,20 +24,12 @@ trait PhpAwareTrait
      */
     protected $phpFiles = [];
 
-    /**
-     * @return array
-     */
-    public function getPhpFiles()
+    public function getPhpFiles(): array
     {
         return $this->phpFiles;
     }
 
-    /**
-     * @param string $fileIdentifier
-     * @param string $content
-     * @param int $flags
-     */
-    protected function addPhpFile($fileIdentifier, $content, $flags = 0)
+    protected function addPhpFile(string $fileIdentifier, string $content, int $flags = 0): void
     {
         $this->phpFiles[$fileIdentifier] = [
             'content' => $content,
@@ -45,12 +37,7 @@ trait PhpAwareTrait
         ];
     }
 
-    /**
-     * @param string $fileIdentifier
-     * @param string $content
-     * @param array $flags
-     */
-    protected function appendPhpFile($fileIdentifier, $content, $flags = 0)
+    protected function appendPhpFile(string $fileIdentifier, string $content, int $flags = 0): void
     {
         if (!isset($this->phpFiles[$fileIdentifier])) {
             $this->phpFiles[$fileIdentifier] = [

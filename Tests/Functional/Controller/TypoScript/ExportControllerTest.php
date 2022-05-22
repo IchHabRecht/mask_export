@@ -26,7 +26,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function checkFluidTemplatePathsInTypoScript()
+    public function checkFluidTemplatePathsInTypoScript(): void
     {
         $this->assertArrayHasKey('Configuration/TypoScript/setup.typoscript', $this->files);
 
@@ -63,7 +63,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function ensureConstantsAreInitializedInTypoScript()
+    public function ensureConstantsAreInitializedInTypoScript(): void
     {
         $this->assertArrayHasKey('Configuration/TypoScript/constants.typoscript', $this->files);
         $this->assertArrayHasKey('Configuration/TypoScript/setup.typoscript', $this->files);
@@ -85,7 +85,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function ensureDataProcessingWhereClauseIsBuiltCompletely()
+    public function ensureDataProcessingWhereClauseIsBuiltCompletely(): void
     {
         $this->assertArrayHasKey('Configuration/TypoScript/setup.typoscript', $this->files);
         $this->assertStringContainsString(

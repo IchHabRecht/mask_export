@@ -22,9 +22,9 @@ use IchHabRecht\MaskExport\Aggregate\LanguageAwareInterface;
 class LanguageFileCollection extends AbstractFileCollection
 {
     /**
-     * @return array
+     * @throws \DOMException
      */
-    protected function processAggregateCollection()
+    protected function processAggregateCollection(): array
     {
         $labels = [];
         foreach ($this->aggregateCollection as $aggregate) {
@@ -44,10 +44,9 @@ class LanguageFileCollection extends AbstractFileCollection
     }
 
     /**
-     * @param array $body
-     * @return string
+     * @throws \DOMException
      */
-    protected function generateLanguageFile(array $body)
+    protected function generateLanguageFile(array $body): string
     {
         $domDocument = new \DOMDocument('1.0', 'utf-8');
         $domDocument->formatOutput = true;

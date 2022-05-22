@@ -33,7 +33,7 @@ class EmptyMaskConfigurationTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function basicExtensionFilesExistsWithoutMaskConfiguration()
+    public function basicExtensionFilesExistsWithoutMaskConfiguration(): void
     {
         $this->configurationToUseInTestInstance['EXTENSIONS']['mask']['json'] = 'typo3conf/mask.json';
 

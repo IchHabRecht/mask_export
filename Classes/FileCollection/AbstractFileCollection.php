@@ -39,10 +39,7 @@ abstract class AbstractFileCollection
         $this->aggregateCollection = $aggregateCollection;
     }
 
-    /**
-     * @return array
-     */
-    public function getFiles()
+    public function getFiles(): array
     {
         if (null === $this->files) {
             $this->files = $this->processAggregateCollection();
@@ -51,8 +48,5 @@ abstract class AbstractFileCollection
         return $this->files;
     }
 
-    /**
-     * @return array
-     */
-    abstract protected function processAggregateCollection();
+    abstract protected function processAggregateCollection(): array;
 }

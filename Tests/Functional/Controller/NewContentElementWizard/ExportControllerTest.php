@@ -26,7 +26,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
     /**
      * @test
      */
-    public function hiddenContentElementsIgnoredInExport()
+    public function hiddenContentElementsIgnoredInExport(): void
     {
         $this->assertArrayHasKey('Configuration/TsConfig/Page/NewContentElementWizard.tsconfig', $this->files);
         $this->assertStringNotContainsString(

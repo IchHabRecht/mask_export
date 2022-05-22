@@ -41,10 +41,7 @@ trait TcaAwareTrait
      */
     protected $table;
 
-    /**
-     * @param array $fieldArray
-     */
-    protected function addFieldsSqlDefinitions(array $fieldArray)
+    protected function addFieldsSqlDefinitions(array $fieldArray): void
     {
         foreach ($fieldArray as $field => $_) {
             // Always prefer the current table and search in all definitions as fallback
@@ -68,11 +65,7 @@ trait TcaAwareTrait
         }
     }
 
-    /**
-     * @param array $tableConfiguration
-     * @param string $field
-     */
-    protected function addFieldSqlDefinition(array $tableConfiguration, $field)
+    protected function addFieldSqlDefinition(array $tableConfiguration, string $field): void
     {
         $table = key($tableConfiguration['sql'][$field]);
         $definition = $tableConfiguration['sql'][$field][$table][$field];
@@ -100,12 +93,7 @@ trait TcaAwareTrait
         }
     }
 
-    /**
-     * @param array $fields
-     * @param string $table
-     * @return array
-     */
-    protected function replaceFieldLabels(array $fields, $table)
+    protected function replaceFieldLabels(array $fields, string $table): array
     {
         foreach ($fields as $field => &$configuration) {
             if (0 !== strpos($field, 'tx_mask_') || 0 === strpos(($configuration['label'] ?? ''), 'LLL:')) {
@@ -144,12 +132,7 @@ trait TcaAwareTrait
         return $fields;
     }
 
-    /**
-     * @param array $fields
-     * @param string $table
-     * @return array
-     */
-    protected function replaceItemsLabels(array $fields, $table)
+    protected function replaceItemsLabels(array $fields, string $table): array
     {
         foreach ($fields as $field => &$configuration) {
             if (0 !== strpos($field, 'tx_mask_') || empty($configuration['config']['items'])) {

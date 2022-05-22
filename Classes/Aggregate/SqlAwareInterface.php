@@ -19,8 +19,5 @@ namespace IchHabRecht\MaskExport\Aggregate;
 
 interface SqlAwareInterface
 {
-    /**
-     * @return array
-     */
-    public function getSqlDefinitions();
+    public function getSqlDefinitions(): array;
 }

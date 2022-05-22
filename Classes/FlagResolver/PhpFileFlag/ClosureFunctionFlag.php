@@ -22,16 +22,12 @@ use IchHabRecht\MaskExport\FlagResolver\FlagInterface;
 
 class ClosureFunctionFlag implements FlagInterface
 {
-    /**
-     * @param int $flags
-     * @return bool
-     */
-    public function isEnabled($flags)
+    public function isEnabled(int $flags): bool
     {
         return ($flags & PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION) === PhpAwareInterface::PHPFILE_CLOSURE_FUNCTION;
     }
 
-    public function execute($content)
+    public function execute(string $content): string
     {
         return <<<EOS
 call_user_func(static function () {

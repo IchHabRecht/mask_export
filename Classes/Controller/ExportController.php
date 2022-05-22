@@ -115,6 +115,8 @@ class ExportController extends ActionController
      * @param string $vendorName
      * @param string $extensionName
      * @param array $elements
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
     public function saveAction($vendorName = '', $extensionName = '', $elements = [])
     {
@@ -178,6 +180,8 @@ class ExportController extends ActionController
      * @param string $vendorName
      * @param string $extensionName
      * @param array $elements
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Object\Exception
      */
     public function installAction($vendorName, $extensionName, $elements)
     {
@@ -224,10 +228,7 @@ class ExportController extends ActionController
         $this->redirect('list');
     }
 
-    /**
-     * @return string
-     */
-    protected function getExtensionName()
+    protected function getExtensionName(): string
     {
         $extensionName = $this->defaultExtensionName;
 
@@ -238,7 +239,9 @@ class ExportController extends ActionController
             $extensionName = $this->maskConfiguration['mask_export']['extensionName'];
         } else {
             $backendUser = $this->getBackendUser();
-            if (!empty($backendUser->uc['mask_export']['extensionName'])) {
+            if ($backendUser instanceof BackendUserAuthentication
+                && !empty($backendUser->uc['mask_export']['extensionName'])
+            ) {
                 $extensionName = $backendUser->uc['mask_export']['extensionName'];
             }
         }
@@ -246,10 +249,7 @@ class ExportController extends ActionController
         return $extensionName;
     }
 
-    /**
-     * @return string
-     */
-    protected function getVendorName()
+    protected function getVendorName(): string
     {
         $vendorName = GeneralUtility::underscoredToUpperCamelCase($this->defaultExtensionName);
 
@@ -271,7 +271,7 @@ class ExportController extends ActionController
     /**
      * @return string[]
      */
-    protected function getElements()
+    protected function getElements(): array
     {
         $elements = [];
 
@@ -290,13 +290,7 @@ class ExportController extends ActionController
         return $elements;
     }
 
-    /**
-     * @param string $vendorName
-     * @param string $extensionName
-     * @param array $elements
-     * @return array
-     */
-    protected function getFiles($vendorName, $extensionName, $elements)
+    protected function getFiles(string $vendorName, string $extensionName, array $elements): array
     {
         $aggregatedMaskConfiguration = $this->prepareConfiguration($vendorName, $extensionName, $elements);
 
@@ -318,7 +312,7 @@ class ExportController extends ActionController
         return $files;
     }
 
-    protected function prepareConfiguration(string $vendorName, string $extensionName, array $elements)
+    protected function prepareConfiguration(string $vendorName, string $extensionName, array $elements): array
     {
         $aggregatedConfiguration = $this->maskConfiguration;
 
@@ -391,11 +385,7 @@ class ExportController extends ActionController
         return $aggregatedConfiguration;
     }
 
-    /**
-     * @param array $files
-     * @param string $extensionPath
-     */
-    protected function writeExtensionFilesToPath(array $files, $extensionPath)
+    protected function writeExtensionFilesToPath(array $files, string $extensionPath): void
     {
         if (file_exists($extensionPath)) {
             $finder = new Finder();
@@ -424,13 +414,7 @@ class ExportController extends ActionController
         }
     }
 
-    /**
-     * @param string $vendorName
-     * @param string $extensionKey
-     * @param array $files
-     * @return array
-     */
-    protected function replaceExtensionInformation($vendorName, $extensionKey, array $files)
+    protected function replaceExtensionInformation(string $vendorName, string $extensionKey, array $files): array
     {
         $newFiles = [];
         foreach ($files as $file => $fileContent) {
@@ -444,13 +428,7 @@ class ExportController extends ActionController
         return $newFiles;
     }
 
-    /**
-     * @param string $vendorName
-     * @param string $extensionKey
-     * @param string $string
-     * @return string
-     */
-    protected function replaceExtensionKey($vendorName, $extensionKey, $string)
+    protected function replaceExtensionKey(string $vendorName, string $extensionKey, string $string): string
     {
         $camelCasedExtensionKey = GeneralUtility::underscoredToUpperCamelCase($extensionKey);
         $lowercaseExtensionKey = strtolower($camelCasedExtensionKey);
@@ -504,11 +482,7 @@ class ExportController extends ActionController
         return $string;
     }
 
-    /**
-     * @param array $files
-     * @return array
-     */
-    protected function sortFiles(array $files)
+    protected function sortFiles(array $files): array
     {
         uksort($files, static function ($a, $b) {
             if (substr_count($a, '/') === 0 && substr_count($b, '/') > 0) {
@@ -535,10 +509,7 @@ class ExportController extends ActionController
         return $files;
     }
 
-    /**
-     * @return BackendUserAuthentication
-     */
-    protected function getBackendUser()
+    protected function getBackendUser(): ?BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];
     }

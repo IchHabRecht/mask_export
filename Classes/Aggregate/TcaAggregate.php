@@ -30,7 +30,7 @@ class TcaAggregate extends AbstractAggregate implements LanguageAwareInterface, 
      */
     protected $tcaFilePath = 'Configuration/TCA/';
 
-    protected function process()
+    protected function process(): void
     {
         if (empty($this->maskConfiguration)) {
             return;
@@ -72,11 +72,7 @@ EOS
         );
     }
 
-    /**
-     * @param array $tableConfiguration
-     * @return array
-     */
-    protected function replaceTableLabels(array $tableConfiguration)
+    protected function replaceTableLabels(array $tableConfiguration): array
     {
         $title = $this->table;
         if (empty($tableConfiguration['ctrl']['title']) || 0 !== strpos($tableConfiguration['ctrl']['title'], 'LLL:')) {
@@ -98,10 +94,7 @@ EOS
         return $tableConfiguration;
     }
 
-    /**
-     * @param array $tableConfiguration
-     */
-    protected function addTableSqlDefinitions(array $tableConfiguration)
+    protected function addTableSqlDefinitions(array $tableConfiguration): void
     {
         $sqlDefinitions = [
             'uid' => 'int(11) NOT NULL auto_increment',

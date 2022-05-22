@@ -24,12 +24,8 @@ class BackendFluidCodeGenerator
 {
     /**
      * Generate Fluid template according to field type
-     *
-     * @param string $table
-     * @param string $field
-     * @return string
      */
-    public function generateFluid($table, $field)
+    public function generateFluid(string $table, string $field): string
     {
         if (!isset($GLOBALS['TCA'][$table]['columns'][$field])) {
             return '';
@@ -67,13 +63,7 @@ EOS;
         return $content;
     }
 
-    /**
-     * @param string $field
-     * @param array $fieldConfiguration
-     * @param string $iteratorName
-     * @return string
-     */
-    protected function getInlineFluid($field, array $fieldConfiguration, $iteratorName = '')
+    protected function getInlineFluid(string $field, array $fieldConfiguration, string $iteratorName = ''): string
     {
         $foreignTable = $fieldConfiguration['config']['foreign_table'];
         $foreignLabelField = $GLOBALS['TCA'][$foreignTable]['ctrl']['label'];
@@ -124,12 +114,7 @@ EOS;
         return $content;
     }
 
-    /**
-     * @param string $field
-     * @param array $fieldConfiguration
-     * @return string
-     */
-    protected function getSelectFluid($field, array $fieldConfiguration)
+    protected function getSelectFluid(string $field, array $fieldConfiguration): string
     {
         if (empty($fieldConfiguration['config']['maxitems']) || 1 === (int)$fieldConfiguration['config']['maxitems']) {
             $content = <<<EOS
@@ -150,10 +135,7 @@ EOS;
         return $content;
     }
 
-    /**
-     * @return string
-     */
-    protected function getSysFileFluid()
+    protected function getSysFileFluid(): string
     {
         if (version_compare(TYPO3_version, '8.6.0', '>=')) {
             $content = <<<EOS

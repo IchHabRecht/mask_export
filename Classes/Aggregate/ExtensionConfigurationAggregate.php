@@ -31,8 +31,6 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
 
     /**
      * Own constructor method to ensure that the mask configuration is not changed before export.
-     *
-     * @param array $maskConfiguration
      */
     public function __construct(array $maskConfiguration, Typo3Version $typo3Version = null)
     {
@@ -44,7 +42,7 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
     /**
      * Adds typical extension files
      */
-    protected function process()
+    protected function process(): void
     {
         $this->addExtEmconf();
         $this->addComposerJson();
@@ -55,7 +53,7 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
     /**
      * Adds ext_emconf.php file
      */
-    protected function addExtEmconf()
+    protected function addExtEmconf(): void
     {
         $emConfUtility = GeneralUtility::makeInstance(EmConfUtility::class);
         $extensionData = [
@@ -94,7 +92,7 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
     /**
      * Adds composer.json file
      */
-    protected function addComposerJson()
+    protected function addComposerJson(): void
     {
         $composerData = [
             'name' => 'mask/mask',
@@ -132,7 +130,7 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
     /**
      * Adds ext_icon.png from mask_export extension
      */
-    protected function addExtIcon()
+    protected function addExtIcon(): void
     {
         $this->addPlainTextFile(
             'ext_icon.png',
@@ -147,7 +145,7 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
     /**
      * Adds mask.json configuration file
      */
-    protected function addMaskConfiguration()
+    protected function addMaskConfiguration(): void
     {
         $content = json_encode($this->maskConfiguration, JSON_PRETTY_PRINT);
         $this->addPlainTextFile(

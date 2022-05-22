@@ -41,10 +41,7 @@ class SqlFileCollection extends AbstractFileCollection
         $this->defaultSchema = $defaultSchema ?: GeneralUtility::makeInstance(DefaultTcaSchema::class);
     }
 
-    /**
-     * @return array
-     */
-    protected function processAggregateCollection()
+    protected function processAggregateCollection(): array
     {
         $files = [];
         $sqlDefinitions = [];

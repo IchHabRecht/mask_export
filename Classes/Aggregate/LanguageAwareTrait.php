@@ -24,10 +24,7 @@ trait LanguageAwareTrait
      */
     protected $labels = [];
 
-    /**
-     * @return array
-     */
-    public function getLabels()
+    public function getLabels(): array
     {
         return $this->labels;
     }

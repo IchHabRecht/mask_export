@@ -24,20 +24,12 @@ trait SqlAwareTrait
      */
     protected $sqlDefinitions = [];
 
-    /**
-     * @return array
-     */
-    public function getSqlDefinitions()
+    public function getSqlDefinitions(): array
     {
         return $this->sqlDefinitions;
     }
 
-    /**
-     * @param $table
-     * @param $field
-     * @param $definition
-     */
-    protected function addSqlDefinition($table, $field, $definition)
+    protected function addSqlDefinition(string $table, string $field, string $definition): void
     {
         if (!isset($this->sqlDefinitions[$table])) {
             $this->sqlDefinitions[$table] = [];
@@ -46,11 +38,7 @@ trait SqlAwareTrait
         $this->sqlDefinitions[$table][$field] = $definition;
     }
 
-    /**
-     * @param string $table
-     * @param array $definitions
-     */
-    protected function addSqlDefinitions($table, array $definitions)
+    protected function addSqlDefinitions(string $table, array $definitions): void
     {
         foreach ($definitions as $field => $definition) {
             $this->addSqlDefinition($table, $field, $definition);

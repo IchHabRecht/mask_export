@@ -22,20 +22,12 @@ use IchHabRecht\MaskExport\FlagResolver\FlagInterface;
 
 class DefinedTypo3ModeFlag implements FlagInterface
 {
-    /**
-     * @param int $flags
-     * @return bool
-     */
-    public function isEnabled($flags)
+    public function isEnabled(int $flags): bool
     {
         return ($flags & PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE) === PhpAwareInterface::PHPFILE_DEFINED_TYPO3_MODE;
     }
 
-    /**
-     * @param string $content
-     * @return string
-     */
-    public function execute($content)
+    public function execute(string $content): string
     {
         return <<<EOS
 defined('TYPO3_MODE') || die();

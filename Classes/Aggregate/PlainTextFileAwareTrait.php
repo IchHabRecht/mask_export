@@ -24,28 +24,17 @@ trait PlainTextFileAwareTrait
      */
     protected $plainTextFiles = [];
 
-    /**
-     * @return array
-     */
-    public function getPlainTextFiles()
+    public function getPlainTextFiles(): array
     {
         return $this->plainTextFiles;
     }
 
-    /**
-     * @param string $fileIdentifier
-     * @param string $content
-     */
-    protected function addPlainTextFile($fileIdentifier, $content)
+    protected function addPlainTextFile(string $fileIdentifier, string $content): void
     {
         $this->plainTextFiles[$fileIdentifier] = $content;
     }
 
-    /**
-     * @param string $fileIdentifier
-     * @param string $content
-     */
-    protected function appendPlainTextFile($fileIdentifier, $content)
+    protected function appendPlainTextFile(string $fileIdentifier, string $content): void
     {
         if (!isset($this->plainTextFiles[$fileIdentifier])) {
             $this->plainTextFiles[$fileIdentifier] = '';

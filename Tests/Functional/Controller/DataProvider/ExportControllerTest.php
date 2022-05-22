@@ -32,15 +32,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ExportControllerTest extends AbstractExportControllerTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    /**
-     * @return array
-     */
-    public function tcaColPosItemDataProviderAddsNestedContentColPosForSupportedRecordsDataProvider()
+    public function tcaColPosItemDataProviderAddsNestedContentColPosForSupportedRecordsDataProvider(): array
     {
         return [
             'Add nested inline record' => [
@@ -336,7 +328,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
      * @param array $formDataCompilerInput
      * @param bool $expectation
      */
-    public function tcaColPosItemDataProviderAddsNestedContentColPosForSupportedRecords(array $formDataCompilerInput, $expectation)
+    public function tcaColPosItemDataProviderAddsNestedContentColPosForSupportedRecords(array $formDataCompilerInput, $expectation): void
     {
         $this->installExtension();
 
@@ -383,10 +375,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         }
     }
 
-    /**
-     * @return array
-     */
-    public function tcaCTypeItemDataProviderRemovesRestrictedCTypesForSupportedRecordsDataProvider()
+    public function tcaCTypeItemDataProviderRemovesRestrictedCTypesForSupportedRecordsDataProvider(): array
     {
         return [
             'Add nested inline record' => [
@@ -626,7 +615,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
      * @param array $formDataCompilerInput
      * @param bool $expectation
      */
-    public function tcaCTypeItemDataProviderRemovesRestrictedCTypesForSupportedRecords(array $formDataCompilerInput, $expectation)
+    public function tcaCTypeItemDataProviderRemovesRestrictedCTypesForSupportedRecords(array $formDataCompilerInput, $expectation): void
     {
         $this->installExtension();
 
@@ -652,10 +641,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
         }
     }
 
-    /**
-     * @return array
-     */
-    public function tcaCTypeItemDataProviderRemovesRestrictedCTypesForMultiNestedRecordsDataProvider()
+    public function tcaCTypeItemDataProviderRemovesRestrictedCTypesForMultiNestedRecordsDataProvider(): array
     {
         return [
             'Add multi-nested inline record' => [
@@ -801,7 +787,7 @@ class ExportControllerTest extends AbstractExportControllerTestCase
      * @param array $formDataCompilerInput
      * @param bool $expectation
      */
-    public function tcaCTypeItemDataProviderRemovesRestrictedCTypesForMultiNestedRecords(array $formDataCompilerInput, $expectation)
+    public function tcaCTypeItemDataProviderRemovesRestrictedCTypesForMultiNestedRecords(array $formDataCompilerInput, $expectation): void
     {
         $this->installExtension();
 

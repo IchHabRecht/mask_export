@@ -49,9 +49,6 @@ abstract class AbstractAggregate
      */
     protected $typoScriptFilePath = 'Configuration/TypoScript/';
 
-    /**
-     * @param array $maskConfiguration
-     */
     public function __construct(array $maskConfiguration)
     {
         $this->maskConfiguration = $maskConfiguration;
@@ -63,12 +60,12 @@ abstract class AbstractAggregate
     /**
      * Evaluates the configuration and stores necessary Interface information
      */
-    abstract protected function process();
+    abstract protected function process(): void;
 
     /**
      * Remove hidden content elements from configuration
      */
-    protected function removeHiddenContentElements()
+    protected function removeHiddenContentElements(): void
     {
         if (empty($this->maskConfiguration['tt_content']['elements'])) {
             return;
@@ -85,7 +82,7 @@ abstract class AbstractAggregate
     /**
      * Remove core fields from configuration
      */
-    protected function removeCoreFields()
+    protected function removeCoreFields(): void
     {
         foreach ($this->maskConfiguration as $table => $configuration) {
             if (empty($configuration['tca'])) {
@@ -100,11 +97,7 @@ abstract class AbstractAggregate
         }
     }
 
-    /**
-     * @param string $string
-     * @return string
-     */
-    protected function escapeMaskExtensionKey($string)
+    protected function escapeMaskExtensionKey(string $string): string
     {
         return preg_replace('/(m)ask/i', '${\\1ask}', $string);
     }

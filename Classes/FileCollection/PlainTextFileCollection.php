@@ -21,10 +21,7 @@ use IchHabRecht\MaskExport\Aggregate\PlainTextFileAwareInterface;
 
 class PlainTextFileCollection extends AbstractFileCollection
 {
-    /**
-     * @return array
-     */
-    protected function processAggregateCollection()
+    protected function processAggregateCollection(): array
     {
         $files = [];
         foreach ($this->aggregateCollection as $aggregate) {

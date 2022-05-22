@@ -19,8 +19,5 @@ namespace IchHabRecht\MaskExport\Aggregate;
 
 interface PlainTextFileAwareInterface
 {
-    /**
-     * @return array
-     */
-    public function getPlainTextFiles();
+    public function getPlainTextFiles(): array;
 }

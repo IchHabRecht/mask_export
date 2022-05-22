@@ -36,10 +36,6 @@ class AggregateCollection
      */
     protected $maskConfiguration;
 
-    /**
-     * @param array $aggregateClassNames
-     * @param array $maskConfiguration
-     */
     public function __construct(array $aggregateClassNames, array $maskConfiguration)
     {
         $this->aggregateClassNames = $aggregateClassNames;
@@ -49,7 +45,7 @@ class AggregateCollection
     /**
      * @return AbstractAggregate[]
      */
-    public function getCollection()
+    public function getCollection(): array
     {
         if (null === $this->collection) {
             $this->initializeCollection();
@@ -61,7 +57,7 @@ class AggregateCollection
     /**
      * Initializes aggregate objects
      */
-    protected function initializeCollection()
+    protected function initializeCollection(): void
     {
         $this->collection = [];
         foreach ($this->aggregateClassNames as $className) {

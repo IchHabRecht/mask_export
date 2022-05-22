@@ -124,7 +124,7 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     /**
      * As the export extension cannot be installed over extensionmanager APi, this function loads data manually
      */
-    protected function installExtension()
+    protected function installExtension(): void
     {
         // Require PHP files and take care of TCA configuration
         $_EXTKEY = 'mask_example_export';

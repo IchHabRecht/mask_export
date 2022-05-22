@@ -36,11 +36,7 @@ abstract class AbstractFlagResolver implements FlagResolverInterface
         $this->flags = $dependencyOrderingService->orderByDependencies($this->flags);
     }
 
-    /**
-     * @param array $fileInformation
-     * @return array
-     */
-    public function resolveFlags(array $fileInformation)
+    public function resolveFlags(array $fileInformation): array
     {
         $files = array_map(
             static function ($information) {

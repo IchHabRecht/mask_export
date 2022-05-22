@@ -50,12 +50,8 @@ class HtmlCodeGenerator
 
     /**
      * Generates Fluid HTML for Contentelements
-     *
-     * @param string $key
-     * @param string $table
-     * @return string
      */
-    public function generateHtml($key, $table = 'tt_content')
+    public function generateHtml(string $key): string
     {
         $storage = $this->storageRepository->loadElement('tt_content', $key);
         $html = '';
@@ -74,15 +70,13 @@ EOS;
 
     /**
      * Generates HTML for a field
-     *
-     * @param string $fieldKey
-     * @param string $elementKey
-     * @param string $table
-     * @param string $datafield
-     * @return string
      */
-    protected function generateFieldHtml($fieldKey, $elementKey, $table = 'tt_content', $datafield = 'data')
-    {
+    protected function generateFieldHtml(
+        string $fieldKey,
+        string $elementKey,
+        string $table = 'tt_content',
+        string $datafield = 'data'
+    ): string {
         $formType = strtolower($this->fieldHelper->getFormType($fieldKey, $elementKey, $table));
         if (in_array($formType, ['linebreak', 'tab'], true)) {
             return '';

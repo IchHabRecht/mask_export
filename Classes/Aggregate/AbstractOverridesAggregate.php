@@ -30,10 +30,7 @@ abstract class AbstractOverridesAggregate extends AbstractAggregate implements L
      */
     protected $tcaOverridesFilePath = 'Configuration/TCA/Overrides/';
 
-    /**
-     * @param array $tableConfiguration
-     */
-    protected function addTableColumns(array $tableConfiguration)
+    protected function addTableColumns(array $tableConfiguration): void
     {
         if (empty($tableConfiguration['columns']) || empty($this->maskConfiguration[$this->table]['tca'])) {
             return;

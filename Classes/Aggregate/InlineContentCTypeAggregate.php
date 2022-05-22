@@ -26,7 +26,7 @@ class InlineContentCTypeAggregate extends AbstractInlineContentAggregate impleme
     /**
      * Adds dataProvider for inline content CType restriction
      */
-    protected function process()
+    protected function process(): void
     {
         $inlineFields = $this->getAvailableInlineFields();
         if (empty($inlineFields)) {

@@ -36,7 +36,7 @@ class NewContentElementWizardAggregate extends AbstractAggregate implements Lang
     /**
      * Adds content elements to the newContentElementWizard
      */
-    protected function process()
+    protected function process(): void
     {
         if (empty($this->maskConfiguration['tt_content']['elements'])) {
             return;
@@ -82,10 +82,7 @@ EOS
         );
     }
 
-    /**
-     * @param array $element
-     */
-    protected function processElement(array $element)
+    protected function processElement(array $element): void
     {
         $key = $element['key'];
         $iconIdentifier = 'tx_mask_' . $key;

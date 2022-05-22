@@ -35,7 +35,7 @@ class ContentElementIconAggregate extends TtContentOverridesAggregate implements
     /**
      * Adds content elements to the newContentElementWizard
      */
-    protected function process()
+    protected function process(): void
     {
         if (empty($this->maskConfiguration['tt_content']['elements'])) {
             return;

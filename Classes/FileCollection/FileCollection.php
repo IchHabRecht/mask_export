@@ -42,10 +42,7 @@ class FileCollection
         $this->aggregateCollection = $aggregateCollection;
     }
 
-    /**
-     * @return array
-     */
-    public function getFiles()
+    public function getFiles(): array
     {
         if (null === $this->files) {
             $this->initializeFiles();
@@ -57,7 +54,7 @@ class FileCollection
     /**
      * Initializes aggregate objects
      */
-    protected function initializeFiles()
+    protected function initializeFiles(): void
     {
         $this->files = [];
         foreach ($this->fileCollectionClassNames as $className) {

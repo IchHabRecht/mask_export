@@ -28,7 +28,7 @@ class PhpFileCollectionTest extends UnitTestCase
     /**
      * @test
      */
-    public function getFilesCombinesPhpFileFlags()
+    public function getFilesCombinesPhpFileFlags(): void
     {
         $aggregateOne = $this->prophesize(PhpAwareInterface::class);
         $aggregateOne->getPhpFiles()->willReturn(
