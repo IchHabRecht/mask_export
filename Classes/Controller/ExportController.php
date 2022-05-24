@@ -35,6 +35,7 @@ use IchHabRecht\MaskExport\FileCollection\SqlFileCollection;
 use MASK\Mask\Domain\Repository\StorageRepository;
 use Symfony\Component\Finder\Finder;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -181,12 +182,7 @@ class ExportController extends ActionController
      */
     public function installAction($vendorName, $extensionName, $elements)
     {
-        $paths = Extension::returnInstallPaths();
-        if (empty($paths['Local']) || !file_exists($paths['Local'])) {
-            throw new \RuntimeException('Local extension install path is missing', 1500061028);
-        }
-
-        $extensionPath = $paths['Local'] . $extensionName;
+        $extensionPath = $this->getExtensionsPath() . $extensionName;
         $files = $this->getFiles($vendorName, $extensionName, $elements);
         $this->writeExtensionFilesToPath($files, $extensionPath);
 
@@ -316,6 +312,53 @@ class ExportController extends ActionController
         $files = $this->sortFiles($files);
 
         return $files;
+    }
+
+    /**
+     * Return the extension install path including the trailing slash.
+     */
+    protected function getExtensionsPath(): string
+    {
+        // For non Composer installs early return the local extensions path
+        if (!Environment::isComposerMode()) {
+            $path = Extension::returnInstallPaths()['Local'] ?? '';
+            if (empty($path) || !file_exists($path)) {
+                throw new \RuntimeException('Local extension install path is missing.', 1500061028);
+            }
+
+            return $path;
+        }
+
+        // For Composer installs the composerPathRepository setting will be
+        // used with a fallback if possible to the local exensions path.
+        $composerPathRepository = GeneralUtility::makeInstance(ExtensionConfiguration::class)
+            ->get('mask_export', 'composerPathRepository');
+
+        if ($composerPathRepository === '') {
+            $path = Extension::returnInstallPaths()['Local'] ?? '';
+
+            $this->addFlashMessage(
+                'The path to the Composer path repository should be properly configured in the extension settings.',
+                'Warning',
+                AbstractMessage::WARNING
+            );
+        } else {
+            if (substr($composerPathRepository, 0, 1) !== '/') {
+                $path = Environment::getComposerRootPath() . '/' . $composerPathRepository;
+            } else {
+                $path = Environment::getComposerRootPath() . $composerPathRepository;
+            }
+        }
+
+        if (empty($path) || !file_exists($path)) {
+            throw new \RuntimeException('Path to the Composer path repository is missing. Please properly configure it in the extension settings.', 1653409378);
+        }
+
+        if (substr($path, -1) !== '/') {
+            $path .= '/';
+        }
+
+        return $path;
     }
 
     protected function prepareConfiguration(string $vendorName, string $extensionName, array $elements)

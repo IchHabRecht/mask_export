@@ -1,0 +1,2 @@
+# cat=Settings; type=string; label=Composer path repository: If set, this path will be used as export destination relative to the Composer root directory. Mandatory for typo3/cms-composer-installers v4 or higher. E.g. src/extensions
+composerPathRepository =
