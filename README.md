@@ -40,10 +40,14 @@ Simply install mask and mask_export with Composer or the Extension Manager.
 
 ## Usage
 
+### Backend
 - use the mask wizard to configure own content elements
 - change to tab "Code Export"
 - if you like change the extension key, the default one is *my_mask_export*
 - either install or download your extension
+
+### CLI
+./vendor/bin/typo3 mask:export MyVendor my_extension_name [save_path]
 
 ## Best practise
 
@@ -57,7 +61,7 @@ You can find some common configuration in the [my_maskexport_sitepackage](https:
 example site package.
 
 Furthermore you can refer to the slides [CCE (Custom Content Elements) - Best Practice ](https://de.slideshare.net/cpsitgmbh/cce-custom-content-elements-best-practice)
-for additional information. 
+for additional information.
 
 ## Community
 

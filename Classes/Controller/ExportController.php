@@ -178,15 +178,20 @@ class ExportController extends ActionController
      * @param string $vendorName
      * @param string $extensionName
      * @param array $elements
+     * @param string $path
      */
-    public function installAction($vendorName, $extensionName, $elements)
+    public function installAction($vendorName, $extensionName, $elements, $path = null)
     {
         $paths = Extension::returnInstallPaths();
         if (empty($paths['Local']) || !file_exists($paths['Local'])) {
             throw new \RuntimeException('Local extension install path is missing', 1500061028);
         }
 
-        $extensionPath = $paths['Local'] . $extensionName;
+        if (!$path) {
+            $path = $paths['Local'];
+        }
+
+        $extensionPath = $path . $extensionName;
         $files = $this->getFiles($vendorName, $extensionName, $elements);
         $this->writeExtensionFilesToPath($files, $extensionPath);
 
@@ -288,6 +293,14 @@ class ExportController extends ActionController
         }
 
         return $elements;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAvailableElements()
+    {
+        return $this->maskConfiguration['tt_content']['elements'] ?? [];
     }
 
     /**
