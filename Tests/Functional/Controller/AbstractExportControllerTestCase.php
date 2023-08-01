@@ -18,23 +18,28 @@ namespace IchHabRecht\MaskExport\Tests\Functional\Controller;
  */
 
 use IchHabRecht\MaskExport\Controller\ExportController;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use PHPUnit\Framework\MockObject\MockBuilder;
 use Prophecy\Argument;
+use TYPO3\CMS\Backend\Routing\Route;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Database\Schema\SchemaMigrator;
 use TYPO3\CMS\Core\Database\Schema\SqlReader;
+use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageStore;
 use TYPO3\CMS\Core\Localization\Locales;
 use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Mvc\ExtbaseRequestParameters;
 use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Extbase\Mvc\Response;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Fluid\View\TemplateView;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 abstract class AbstractExportControllerTestCase extends FunctionalTestCase
 {
@@ -43,10 +48,7 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
      */
     protected $runTestInSeparateProcess = true;
 
-    /**
-     * @var array
-     */
-    protected $configurationToUseInTestInstance = [
+    protected array $configurationToUseInTestInstance = [
         'EXTENSIONS' => [
             'mask' => [
                 'json' => 'typo3conf/ext/mask_export/Tests/Functional/Fixtures/Configuration/mask-default.json',
@@ -58,22 +60,13 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
         ],
     ];
 
-    /**
-     * @var array
-     */
-    protected $coreExtensionsToLoad = [
+    protected array $coreExtensionsToLoad = [
         'fluid_styled_content',
     ];
 
-    /**
-     * @var array
-     */
-    protected $files = [];
+    protected array $files = [];
 
-    /**
-     * @var array
-     */
-    protected $testExtensionsToLoad = [
+    protected array $testExtensionsToLoad = [
         'typo3conf/ext/mask',
         'typo3conf/ext/mask_export',
     ];
@@ -85,22 +78,28 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
     {
         parent::setUp();
 
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $GLOBALS['LANG'] = $this->getLanguageService();
+        $GLOBALS['BE_USER'] = $this->createMock(BackendUserAuthentication::class);
 
-        $request = new Request('IchHabRecht\\MaskExport\\Controller\\ExportController');
-        $request->setControllerObjectName('IchHabRecht\\MaskExport\\Controller\\ExportController');
-        $request->setControllerActionName('list');
-        $request->setFormat('html');
-        if (method_exists($request, 'setControllerAliasToClassNameMapping')) {
-            $request->setControllerAliasToClassNameMapping(['Export' => ExportController::class]);
-        }
+        $route = new Route('', []);
+        $route->setOption('packageName', 'mask_export');
+
+        $serverRequest = new ServerRequest();
+        $serverRequest = $serverRequest->withAttribute('extbase', new ExtbaseRequestParameters());
+        $serverRequest = $serverRequest->withAttribute('route', $route);
+        $serverRequest = $serverRequest->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE);
+
+        $request = new Request($serverRequest);
+        $request = $request->withControllerObjectName('IchHabRecht\\MaskExport\\Controller\\ExportController');
+        $request = $request->withControllerActionName('list');
+        $request = $request->withFormat('html');
 
         $response = null;
         if (class_exists('TYPO3\\CMS\\Extbase\\Mvc\\Response')) {
             $response = new Response();
         }
 
-        $view = $objectManager->get(TemplateView::class);
+        $view = GeneralUtility::makeInstance(TemplateView::class);
         $view->setLayoutRootPaths(['EXT:mask_export/Resources/Private/Layouts']);
         $view->setTemplateRootPaths(['EXT:mask_export/Tests/Functional/Fixtures/Templates']);
         if (method_exists(GeneralUtility::class, 'getContainer')) {
@@ -110,7 +109,7 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
             GeneralUtility::addInstance(TemplateView::class, $view);
         }
 
-        $subject = $objectManager->get(ExportController::class);
+        $subject = GeneralUtility::makeInstance(ExportController::class);
         $response = $subject->processRequest($request, $response) ?: $response;
 
         $closure = \Closure::bind(function () use ($view) {

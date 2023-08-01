@@ -20,11 +20,14 @@ namespace IchHabRecht\MaskExport\Tests\Unit\FileCollection;
 use IchHabRecht\MaskExport\Aggregate\PhpAwareInterface;
 use IchHabRecht\MaskExport\FileCollection\PhpFileCollection;
 use IchHabRecht\MaskExport\FlagResolver\PhpFileFlagResolver;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Service\DependencyOrderingService;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 class PhpFileCollectionTest extends UnitTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */
@@ -60,7 +63,7 @@ class PhpFileCollectionTest extends UnitTestCase
         $files = $phpFileCollection->getFiles();
 
         $this->assertArrayHasKey('ext_tables.php', $files);
-        $this->assertStringContainsString('defined(\'TYPO3_MODE\') || die();', $files['ext_tables.php']);
+        $this->assertStringContainsString('defined(\'TYPO3\') || die();', $files['ext_tables.php']);
         $this->assertStringContainsString('call_user_func(static function () {', $files['ext_tables.php']);
     }
 }

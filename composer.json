@@ -28,8 +28,9 @@
     },
     "require-dev": {
         "typo3/cms-fluid-styled-content": "^12.4",
-        "nimut/testing-framework": "6.x-dev",
-        "phpunit/phpunit": "^8.5"
+        "typo3/testing-framework": "^7.0",
+        "phpunit/phpunit": "^9.6",
+        "phpspec/prophecy-phpunit": "^2.0"
     },
     "replace": {
         "typo3-ter/mask-export": "self.version"
