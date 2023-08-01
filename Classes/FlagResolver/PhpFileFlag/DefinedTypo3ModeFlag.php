@@ -38,7 +38,7 @@ class DefinedTypo3ModeFlag implements FlagInterface
     public function execute($content)
     {
         return <<<EOS
-defined('TYPO3_MODE') || defined('TYPO3') || die('Access denied.');;
+defined('TYPO3') || die();
 
 {$content}
 

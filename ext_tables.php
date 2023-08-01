@@ -1,6 +1,6 @@
 <?php
 
-defined('TYPO3_MODE') || defined('TYPO3') || die('Access denied.');
+defined('TYPO3') || die();
 
 call_user_func(static function () {
     $maskElements = array_filter(
