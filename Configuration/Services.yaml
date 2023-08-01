@@ -6,3 +6,6 @@ services:
 
   IchHabRecht\MaskExport\:
     resource: '../Classes/*'
+
+  IchHabRecht\MaskExport\CodeGenerator\HtmlCodeGenerator:
+    public: true

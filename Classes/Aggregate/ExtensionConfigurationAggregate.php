@@ -102,11 +102,11 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
             'type' => 'typo3-cms-extension',
             'license' => 'GPL-2.0-or-later',
             'require' => [
-                'typo3/cms-backend' => '^' . TYPO3_branch,
-                'typo3/cms-core' => '^' . TYPO3_branch,
-                'typo3/cms-extbase' => '^' . TYPO3_branch,
-                'typo3/cms-fluid' => '^' . TYPO3_branch,
-                'typo3/cms-frontend' => '^' . TYPO3_branch,
+                'typo3/cms-backend' => '^' . $this->typo3Version->getBranch(),
+                'typo3/cms-core' => '^' . $this->typo3Version->getBranch(),
+                'typo3/cms-extbase' => '^' . $this->typo3Version->getBranch(),
+                'typo3/cms-fluid' => '^' . $this->typo3Version->getBranch(),
+                'typo3/cms-frontend' => '^' . $this->typo3Version->getBranch(),
             ],
             'replace' => [
                 'typo3-ter/mask' => 'self.version',

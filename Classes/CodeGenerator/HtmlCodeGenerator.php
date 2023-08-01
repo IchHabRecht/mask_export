@@ -18,8 +18,7 @@ namespace IchHabRecht\MaskExport\CodeGenerator;
  * LICENSE file that was distributed with this source code.
  */
 
-use MASK\Mask\Domain\Repository\StorageRepository;
-use MASK\Mask\Helper\FieldHelper;
+use MASK\Mask\Definition\TableDefinitionCollection;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -27,25 +26,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class HtmlCodeGenerator
 {
-    /**
-     * @var FieldHelper
-     */
-    protected $fieldHelper;
-
-    /**
-     * @var StorageRepository
-     */
-    protected $storageRepository;
-
-    public function __construct(StorageRepository $storageRepository = null, FieldHelper $fieldHelper = null)
+    public function __construct(protected TableDefinitionCollection $tableDefinitionCollection)
     {
-        $this->storageRepository = $storageRepository ?: GeneralUtility::makeInstance(StorageRepository::class);
-
-        if (method_exists($this->storageRepository, 'getFormType')) {
-            $this->fieldHelper = $this->storageRepository;
-        } else {
-            $this->fieldHelper = $fieldHelper ?: GeneralUtility::makeInstance(FieldHelper::class, $this->storageRepository);
-        }
     }
 
     /**
@@ -57,7 +39,7 @@ class HtmlCodeGenerator
      */
     public function generateHtml($key, $table = 'tt_content')
     {
-        $storage = $this->storageRepository->loadElement('tt_content', $key);
+        $storage = $this->tableDefinitionCollection->loadElement('tt_content', $key)->toArray();
         $html = '';
         if (!empty($storage['tca'])) {
             foreach ($storage['tca'] as $fieldKey => $fieldConfig) {
@@ -83,7 +65,7 @@ EOS;
      */
     protected function generateFieldHtml($fieldKey, $elementKey, $table = 'tt_content', $datafield = 'data')
     {
-        $formType = strtolower($this->fieldHelper->getFormType($fieldKey, $elementKey, $table));
+        $formType = strtolower((string)$this->tableDefinitionCollection->getFieldType($fieldKey, $table, $elementKey));
         if (in_array($formType, ['linebreak', 'tab'], true)) {
             return '';
         }
@@ -161,7 +143,7 @@ EOS;
                 break;
 
             case 'inline':
-                $inlineFields = $this->storageRepository->loadInlineFields($fieldKey);
+                $inlineFields = $this->tableDefinitionCollection->loadInlineFields($fieldKey);
                 $inlineFieldsHtml = '';
                 $datafieldInline = strtr($datafield, '.', '_');
                 if (!empty($inlineFields)) {

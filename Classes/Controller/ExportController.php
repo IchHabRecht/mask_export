@@ -33,11 +33,15 @@ use IchHabRecht\MaskExport\FileCollection\PhpFileCollection;
 use IchHabRecht\MaskExport\FileCollection\PlainTextFileCollection;
 use IchHabRecht\MaskExport\FileCollection\SqlFileCollection;
 use MASK\Mask\Domain\Repository\StorageRepository;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Finder\Finder;
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extensionmanager\Domain\Model\Extension;
@@ -81,25 +85,28 @@ class ExportController extends ActionController
      */
     protected $maskConfiguration;
 
-    public function __construct(StorageRepository $storageRepository)
-    {
+    public function __construct(
+        StorageRepository $storageRepository,
+        protected readonly PageRenderer $pageRenderer,
+        protected readonly ModuleTemplateFactory $moduleTemplateFactory
+    ) {
         $this->maskConfiguration = (array)$storageRepository->load();
     }
 
-    /**
-     * @param string $vendorName
-     * @param string $extensionName
-     * @param array $elements
-     */
-    public function listAction($vendorName = '', $extensionName = '', $elements = [])
-    {
+    public function listAction(
+        string $vendorName = '',
+        string $extensionName = '',
+        array $elements = []
+    ): ResponseInterface {
         $extensionName = $extensionName ?: $this->getExtensionName();
         $vendorName = $vendorName ?: $this->getVendorName();
         $elements = $elements ?: $this->getElements();
 
         $files = $this->getFiles($vendorName, $extensionName, $elements);
 
-        $this->view->assignMultiple(
+        $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
+        $moduleTemplate->setTitle('Mask Export');
+        $moduleTemplate->assignMultiple(
             [
                 'composerMode' => Environment::isComposerMode(),
                 'vendorName' => $vendorName,
@@ -109,6 +116,10 @@ class ExportController extends ActionController
                 'files' => $files,
             ]
         );
+
+        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/MaskExport/Toggler');
+        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Backend/Modal');
+        return $moduleTemplate->renderResponse();
     }
 
     /**
@@ -142,7 +153,7 @@ class ExportController extends ActionController
             }
         }
 
-        $this->forward($action, null, null, ['vendorName' => $vendorName, 'extensionName' => $extensionName, 'elements' => $elements]);
+        return new ForwardResponse($action);
     }
 
     /**
