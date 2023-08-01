@@ -122,13 +122,11 @@ class ExportController extends ActionController
         return $moduleTemplate->renderResponse();
     }
 
-    /**
-     * @param string $vendorName
-     * @param string $extensionName
-     * @param array $elements
-     */
-    public function saveAction($vendorName = '', $extensionName = '', $elements = [])
-    {
+    public function saveAction(
+        string $vendorName = '',
+        string $extensionName = '',
+        array $elements = []
+    ): ResponseInterface {
         if (empty($vendorName)) {
             $vendorName = $this->getVendorName();
         } else {
@@ -146,8 +144,8 @@ class ExportController extends ActionController
         $backendUser->writeUC();
 
         $action = 'list';
-        if ($this->request->hasArgument('submit')) {
-            $submit = strtolower($this->request->getArgument('submit'));
+        if ($this->request->hasArgument('submitted')) {
+            $submit = strtolower($this->request->getArgument('submitted'));
             if (in_array($submit, ['download', 'install'], true)) {
                 $action = $submit;
             }
@@ -156,12 +154,7 @@ class ExportController extends ActionController
         return new ForwardResponse($action);
     }
 
-    /**
-     * @param string $vendorName
-     * @param string $extensionName
-     * @param array $elements
-     */
-    public function downloadAction($vendorName, $extensionName, $elements)
+    public function downloadAction(string $vendorName, string $extensionName, array $elements): void
     {
         $files = $this->getFiles($vendorName, $extensionName, $elements);
 
@@ -185,25 +178,23 @@ class ExportController extends ActionController
         exit;
     }
 
-    /**
-     * @param string $vendorName
-     * @param string $extensionName
-     * @param array $elements
-     */
-    public function installAction($vendorName, $extensionName, $elements)
+    public function installAction(string $vendorName, string $extensionName, array $elements): ResponseInterface
     {
-        $paths = Extension::returnInstallPaths();
-        if (empty($paths['Local']) || !file_exists($paths['Local'])) {
-            throw new \RuntimeException('Local extension install path is missing', 1500061028);
+        if (Environment::isComposerMode()) {
+            $vendorFolder = strtolower($vendorName) . '/' . $extensionName;
+            $extensionPath = Environment::getComposerRootPath() . '/vendor/' . $vendorFolder;
+        } else {
+            $paths = Extension::returnInstallPaths();
+            if (empty($paths['Local']) || !file_exists($paths['Local'])) {
+                throw new \RuntimeException('Local extension install path is missing', 1500061028);
+            }
+            $extensionPath = $paths['Local'] . $extensionName;
         }
-
-        $extensionPath = $paths['Local'] . $extensionName;
         $files = $this->getFiles($vendorName, $extensionName, $elements);
         $this->writeExtensionFilesToPath($files, $extensionPath);
 
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         if (!Environment::isComposerMode()) {
-            $managementService = $objectManager->get(ExtensionManagementService::class);
+            $managementService = GeneralUtility::makeInstance(ExtensionManagementService::class);
             $managementService->reloadPackageInformation($extensionName);
             $extension = $managementService->getExtension($extensionName);
             $installInformation = $managementService->installExtension($extension);
@@ -222,17 +213,17 @@ class ExportController extends ActionController
                 );
             }
         } else {
-            $installUtility = $objectManager->get(InstallUtility::class);
+            $installUtility = GeneralUtility::makeInstance(InstallUtility::class);
             $installUtility->reloadCaches();
 
             $this->addFlashMessage(
                 '',
-                'Extension files of ' . $extensionName . ' were written successfully',
+                'Extension files were succesfully written to ' . $vendorFolder,
                 AbstractMessage::OK
             );
         }
 
-        $this->redirect('list');
+        return $this->redirect('list');
     }
 
     /**
