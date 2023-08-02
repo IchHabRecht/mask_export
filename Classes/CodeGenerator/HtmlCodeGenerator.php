@@ -143,11 +143,11 @@ EOS;
                 break;
 
             case 'inline':
-                $inlineFields = $this->tableDefinitionCollection->loadInlineFields($fieldKey);
+                $inlineFields = $this->tableDefinitionCollection->loadInlineFields($fieldKey, $elementKey);
                 $inlineFieldsHtml = '';
                 $datafieldInline = strtr($datafield, '.', '_');
                 if (!empty($inlineFields)) {
-                    foreach ($inlineFields as $inlineField) {
+                    foreach ($inlineFields->toArray() as $inlineField) {
                         $inlineFieldsHtml .= $this->generateFieldHtml($inlineField['maskKey'], $elementKey, $fieldKey, $datafieldInline . '_item.data');
                     }
                 }
