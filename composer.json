@@ -20,14 +20,14 @@
     ],
     "require": {
         "php": "^8.0",
-        "typo3/cms-core": "^12.4",
-        "typo3/cms-extbase": "^12.4",
-        "typo3/cms-extensionmanager": "^12.4",
-        "typo3/cms-fluid": "^12.4",
+        "typo3/cms-core": "^11.5 || ^12.4",
+        "typo3/cms-extbase": "^11.5 || ^12.4",
+        "typo3/cms-extensionmanager": "^11.5 || ^12.4",
+        "typo3/cms-fluid": "^11.5 || ^12.4",
         "mask/mask": "^8.0"
     },
     "require-dev": {
-        "typo3/cms-fluid-styled-content": "^12.4",
+        "typo3/cms-fluid-styled-content": "^11.5 || ^12.4",
         "typo3/testing-framework": "^7.0",
         "phpunit/phpunit": "^9.6",
         "phpspec/prophecy-phpunit": "^2.0"
