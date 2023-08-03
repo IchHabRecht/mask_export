@@ -20,29 +20,43 @@ namespace IchHabRecht\MaskExport\Tests\Functional\Controller;
 use IchHabRecht\MaskExport\Controller\ExportController;
 use PHPUnit\Framework\MockObject\MockBuilder;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Backend\Module\ModuleProvider;
 use TYPO3\CMS\Backend\Routing\Route;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
+use TYPO3\CMS\Backend\View\BackendViewFactory;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Database\Schema\SchemaMigrator;
 use TYPO3\CMS\Core\Database\Schema\SqlReader;
 use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageStore;
 use TYPO3\CMS\Core\Localization\Locales;
 use TYPO3\CMS\Core\Localization\LocalizationFactory;
+use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Package\PackageManager;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\View\FluidViewAdapter;
 use TYPO3\CMS\Extbase\Mvc\ExtbaseRequestParameters;
 use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Extbase\Mvc\Response;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
+use TYPO3\CMS\Fluid\Core\Rendering\RenderingContextFactory;
 use TYPO3\CMS\Fluid\View\TemplateView;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 abstract class AbstractExportControllerTestCase extends FunctionalTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var bool
      */
@@ -99,23 +113,18 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
             $response = new Response();
         }
 
-        $view = GeneralUtility::makeInstance(TemplateView::class);
+        $renderingContext = GeneralUtility::makeInstance(RenderingContextFactory::class)->create();
+        $renderingContext->setControllerName('Export');
+        $renderingContext->setControllerAction('list');
+
+        $view = GeneralUtility::makeInstance(TemplateView::class, $renderingContext);
         $view->setLayoutRootPaths(['EXT:mask_export/Resources/Private/Layouts']);
         $view->setTemplateRootPaths(['EXT:mask_export/Tests/Functional/Fixtures/Templates']);
-        if (method_exists(GeneralUtility::class, 'getContainer')) {
-            $container = GeneralUtility::getContainer();
-            $container->set(TemplateView::class, $view);
-        } else {
-            GeneralUtility::addInstance(TemplateView::class, $view);
-        }
 
         $subject = GeneralUtility::makeInstance(ExportController::class);
+        $subject->setModuleTemplate($this->buildModuleTemplateWithViewAndRequest($view, $request));
         $response = $subject->processRequest($request, $response) ?: $response;
 
-        $closure = \Closure::bind(function () use ($view) {
-            return $view->baseRenderingContext;
-        }, null, TemplateView::class);
-        $renderingContext = $closure();
         $variables = $renderingContext->getVariableProvider();
         $this->files = $variables->get('files');
     }
@@ -180,9 +189,30 @@ abstract class AbstractExportControllerTestCase extends FunctionalTestCase
                 );
         }
 
-        $languageService = new LanguageService(new Locales(), new LocalizationFactory(new LanguageStore($packageManager), $cacheManagerProphecy->reveal()), $cacheFrontendProphecy->reveal());
+        $languageService = new LanguageService(
+            new Locales(),
+            new LocalizationFactory(
+                new LanguageStore($packageManager),
+                $cacheManagerProphecy->reveal()
+            ),
+            $cacheFrontendProphecy->reveal()
+        );
         $languageService->init('default');
 
         return $languageService;
+    }
+
+    protected function buildModuleTemplateWithViewAndRequest(TemplateView $view, Request $request): ModuleTemplate
+    {
+        return new ModuleTemplate(
+            GeneralUtility::makeInstance(PageRenderer::class),
+            GeneralUtility::makeInstance(IconFactory::class),
+            GeneralUtility::makeInstance(UriBuilder::class),
+            GeneralUtility::makeInstance(ModuleProvider::class),
+            GeneralUtility::makeInstance(FlashMessageService::class),
+            GeneralUtility::makeInstance(ExtensionConfiguration::class),
+            new FluidViewAdapter($view),
+            $request
+        );
     }
 }

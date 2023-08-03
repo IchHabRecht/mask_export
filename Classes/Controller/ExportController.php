@@ -35,6 +35,7 @@ use IchHabRecht\MaskExport\FileCollection\SqlFileCollection;
 use MASK\Mask\Domain\Repository\StorageRepository;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Finder\Finder;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Core\Environment;
@@ -85,12 +86,19 @@ class ExportController extends ActionController
      */
     protected $maskConfiguration;
 
+    protected ?ModuleTemplate $moduleTemplate = null;
+
     public function __construct(
         StorageRepository $storageRepository,
         protected readonly PageRenderer $pageRenderer,
         protected readonly ModuleTemplateFactory $moduleTemplateFactory
     ) {
         $this->maskConfiguration = (array)$storageRepository->load();
+    }
+
+    public function setModuleTemplate(ModuleTemplate $moduleTemplate)
+    {
+        $this->moduleTemplate = $moduleTemplate;
     }
 
     public function listAction(
@@ -104,7 +112,7 @@ class ExportController extends ActionController
 
         $files = $this->getFiles($vendorName, $extensionName, $elements);
 
-        $moduleTemplate = $this->moduleTemplateFactory->create($this->request);
+        $moduleTemplate = $this->getModuleTemplate();
         $moduleTemplate->setTitle('Mask Export');
         $moduleTemplate->assignMultiple(
             [
@@ -543,5 +551,14 @@ class ExportController extends ActionController
     protected function getBackendUser()
     {
         return $GLOBALS['BE_USER'];
+    }
+
+    protected function getModuleTemplate(): ModuleTemplate
+    {
+        if (!$this->moduleTemplate) {
+            $this->moduleTemplate = $this->moduleTemplateFactory->create($this->request);
+        }
+
+        return $this->moduleTemplate;
     }
 }
