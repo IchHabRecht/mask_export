@@ -73,6 +73,15 @@ jobs:
                     echo;
                     find . -name \*.php ! -path "./.Build/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;;
             php: 8.1
+            env: TYPO3=^11.5 MASK=^8.0
+        -   <<: *tests
+            php: 8.0
+            env: TYPO3=^11.5 MASK=^8.0
+        -   <<: *tests
+            php: 7.4
+            env: TYPO3=^11.5 MASK=^8.0
+        -   <<: *tests
+            php: 8.1
             env: TYPO3=^11.5 MASK=^7.1
         -   <<: *tests
             php: 8.0

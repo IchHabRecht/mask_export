@@ -19,17 +19,17 @@ $EM_CONF[$_EXTKEY] = array (
   'author_company' => 'CPS-IT GmbH | biz-design.biz',
   'state' => 'stable',
   'version' => '4.0.2',
-  'constraints' => 
+  'constraints' =>
   array (
-    'depends' => 
+    'depends' =>
     array (
       'typo3' => '9.5.0-11.5.99',
-      'mask' => '4.0.0-7.99.99',
+      'mask' => '4.0.0-8.99.99',
     ),
-    'conflicts' => 
+    'conflicts' =>
     array (
     ),
-    'suggests' => 
+    'suggests' =>
     array (
     ),
   ),

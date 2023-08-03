@@ -20,16 +20,18 @@
     ],
     "require": {
         "php": "^7.2 || ^8.0",
+        "ext-json": "*",
         "typo3/cms-core": "^9.5 || ^10.4.16 || ^11.5",
         "typo3/cms-extbase": "^9.5 || ^10.4.16 || ^11.5",
         "typo3/cms-extensionmanager": "^9.5 || ^10.4.16 || ^11.5",
         "typo3/cms-fluid": "^9.5 || ^10.4.16 || ^11.5",
-        "mask/mask": "^4.0 || ^5.0 || ^6.0 || ^7.1"
+        "mask/mask": "^4.0 || ^5.0 || ^6.0 || ^7.1 || ^8.0"
     },
     "require-dev": {
         "typo3/cms-fluid-styled-content": "^9.5 || ^10.4.16 || ^11.5",
         "nimut/testing-framework": "6.x-dev",
-        "phpunit/phpunit": "^8.5"
+        "phpunit/phpunit": "^8.5",
+        "phpspec/prophecy": "^1.17"
     },
     "replace": {
         "typo3-ter/mask-export": "self.version"
@@ -46,7 +48,11 @@
     },
     "config": {
         "vendor-dir": ".Build/vendor",
-        "bin-dir": ".Build/bin"
+        "bin-dir": ".Build/bin",
+        "allow-plugins": {
+            "typo3/class-alias-loader": true,
+            "typo3/cms-composer-installers": true
+        }
     },
     "extra": {
         "branch-alias": {
