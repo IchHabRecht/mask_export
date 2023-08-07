@@ -39,9 +39,12 @@ abstract class AbstractOverridesAggregate extends AbstractAggregate implements L
             return;
         }
 
+        // allow new TCA parent structure which was introduced in mask 8
+        $allowedTableFields = array_merge($this->maskConfiguration[$this->table]['tca'], ['tx_mask_content_parent_uid' => []]);
+
         $newTableFields = array_intersect_key(
             $tableConfiguration['columns'],
-            $this->maskConfiguration[$this->table]['tca']
+            $allowedTableFields,
         );
         if (empty($newTableFields)) {
             return;

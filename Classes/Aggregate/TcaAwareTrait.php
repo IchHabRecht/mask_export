@@ -17,6 +17,9 @@ namespace IchHabRecht\MaskExport\Aggregate;
  * LICENSE file that was distributed with this source code.
  */
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+
 trait TcaAwareTrait
 {
     use LanguageAwareTrait;
@@ -86,17 +89,33 @@ trait TcaAwareTrait
             && 'inline' === $this->maskConfiguration[$table]['tca'][$field]['config']['type']
             && 'tt_content' === $this->maskConfiguration[$table]['tca'][$field]['config']['foreign_table']
         ) {
-            $this->addSqlDefinition(
-                'tt_content',
-                $field . '_parent',
-                $definition
-            );
-            $this->addSqlDefinitions(
-                'tt_content',
-                [
-                    'KEY ' . $field . '_parent' => '(' . $field . '_parent,pid,deleted)',
-                ]
-            );
+            // allow new TCA parent structure which was introduced in mask 8
+            $maskVersion = preg_replace('/[^0-9\.]/', '', ExtensionManagementUtility::getExtensionVersion('mask'));
+            if (version_compare($maskVersion, '8.0.0', '>=')) {
+                $this->maskConfiguration['tt_content']['tx_mask_content_parent_uid'] = [
+                    'config' => [
+                        'type' => 'passthrough',
+                    ],
+                ];
+                $this->addSqlDefinitions('tt_content', [
+                    'tx_mask_content_parent_uid' => 'int(11) unsigned DEFAULT \'0\' NOT NULL',
+                    'tx_mask_content_role' => 'varchar(255) DEFAULT \'\' NOT NULL',
+                    'tx_mask_content_tablenames' => 'varchar(255) DEFAULT \'\' NOT NULL',
+                    'KEY tx_mask_content_parent_uid' => '(tx_mask_content_parent_uid)',
+                ]);
+            } else {
+                $this->addSqlDefinition(
+                    'tt_content',
+                    $field . '_parent',
+                    $definition
+                );
+                $this->addSqlDefinitions(
+                    'tt_content',
+                    [
+                        'KEY ' . $field . '_parent' => '(' . $field . '_parent,pid,deleted)',
+                    ]
+                );
+            }
         }
     }
 
