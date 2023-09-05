@@ -168,7 +168,8 @@ EOS
         $index = 10;
         foreach ($fields as $field) {
             if (empty($GLOBALS['TCA'][$table]['columns'][$field]['config']['type'])
-                || 'inline' !== $GLOBALS['TCA'][$table]['columns'][$field]['config']['type']
+                || ('inline' !== $GLOBALS['TCA'][$table]['columns'][$field]['config']['type']
+                    && 'file' !== $GLOBALS['TCA'][$table]['columns'][$field]['config']['type'])
                 || empty($GLOBALS['TCA'][$table]['columns'][$field]['config']['foreign_table'])
             ) {
                 continue;
