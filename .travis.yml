@@ -54,7 +54,7 @@ jobs:
                         echo "Running unit tests";
                         echo;
                         echo;
-                        .Build/bin/phpunit --bootstrap .Build/vendor/nimut/testing-framework/res/Configuration/UnitTestsBootstrap.php --testsuite unit;
+                        .Build/bin/phpunit --bootstrap .Build/vendor/typo3/testing-framework/Resources/Core/Build/UnitTestsBootstrap.php --testsuite unit;
                     fi
 
                 - >
@@ -63,7 +63,7 @@ jobs:
                         echo "Running functional tests";
                         echo;
                         echo;
-                        find 'Tests/Functional' -wholename '*Test.php' | parallel --gnu 'echo; echo "Running functional test suite {}"; .Build/bin/phpunit --bootstrap .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTestsBootstrap.php {}';
+                        find 'Tests/Functional' -wholename '*Test.php' | parallel --gnu 'echo; echo "Running functional test suite {}"; .Build/bin/phpunit --bootstrap .Build/vendor/typo3/testing-framework/Resources/Core/Build/FunctionalTestsBootstrap.php {}';
                     fi
 
                 - >
@@ -179,7 +179,7 @@ jobs:
                               echo "Running unit tests";
                               echo;
                               echo;
-                              .Build/bin/phpunit --bootstrap .Build/vendor/nimut/testing-framework/res/Configuration/UnitTestsBootstrap.php --log-junit .Log/junit/unit_$VERSION.xml --coverage-php .Log/coverage/unit_$VERSION.cov  --testsuite unit;
+                              .Build/bin/phpunit --bootstrap .Build/vendor/typo3/testing-framework/Resources/Core/Build/UnitTestsBootstrap.php --log-junit .Log/junit/unit_$VERSION.xml --coverage-php .Log/coverage/unit_$VERSION.cov  --testsuite unit;
                             fi
 
                             if [ -d "Tests/Functional" ]; then

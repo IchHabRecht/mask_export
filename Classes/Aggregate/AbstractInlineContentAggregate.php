@@ -30,7 +30,8 @@ abstract class AbstractInlineContentAggregate extends AbstractAggregate
                 continue;
             }
             foreach ($configuration['tca'] as $field => $fieldConfiguration) {
-                if ('inline' === $fieldConfiguration['config']['type']
+                if (isset($fieldConfiguration['config']['type'])
+                    && 'inline' === $fieldConfiguration['config']['type']
                     && 'tt_content' === $fieldConfiguration['config']['foreign_table']
                 ) {
                     if (empty($inlineFields[$table])) {
