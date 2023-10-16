@@ -107,6 +107,7 @@ class ExtensionConfigurationAggregate extends AbstractAggregate implements PhpAw
                 'typo3/cms-extbase' => '^' . $this->typo3Version->getBranch(),
                 'typo3/cms-fluid' => '^' . $this->typo3Version->getBranch(),
                 'typo3/cms-frontend' => '^' . $this->typo3Version->getBranch(),
+                'friendsoftypo3/fontawesome-provider' => '^1.0',
             ],
             'replace' => [
                 'typo3-ter/mask' => 'self.version',
