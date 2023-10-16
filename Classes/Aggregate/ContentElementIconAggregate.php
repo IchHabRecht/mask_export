@@ -86,7 +86,7 @@ EOS;
 <<<EOS
 \$iconRegistry->registerIcon(
     '$iconIdentifier',
-    \TYPO3\CMS\Core\Imaging\IconProvider\FontawesomeIconProvider::class,
+    \FriendsOfTYPO3\FontawesomeProvider\Imaging\IconProvider\FontawesomeIconProvider::class,
     [
         'name' => '$iconName',
     ]
